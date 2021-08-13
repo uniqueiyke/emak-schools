@@ -1,0 +1,32 @@
+const subject = [
+    {"English Language": "all"},
+    {"Mathematics": "all"},
+    {"Igbo Language": "all"},
+    {"Computer Science": "all"},
+    {"Agricultural Science": "all"},
+    {"English Literature": "all"},
+    {"Cultural and Creative Art": "junior"},
+    {"Biology": "Senior"},
+    {"Physical and Health Education": "junior"},
+    {"Christian Religious Studies": "all"},
+    {"Civic Education": "all"},
+    {"Physics": "senior"},
+    {"Chemistry": "senior"},
+    {"Animal Husbandary": "senior"},
+    {"Music": "junior"},
+    {"Social Studies": "junior"},
+    {"Business Studies": "junior"},
+    {"Geography": "senior"},
+    {"Home Economics": "junior"},
+    {"Economics": "senior"},
+    {"Comerce": "senior"},
+    {"Marketing": "senior"},
+    {"Basic Science": "junior"},
+    {"Basic Technology": "junior"},
+    {"Current Affiers": "all"},
+    {"Government": "senior"},
+    {"French": "junior"},
+    {"Accounting": "senior"}
+]
+
+export default subject;

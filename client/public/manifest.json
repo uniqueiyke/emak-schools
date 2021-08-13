@@ -1,0 +1,60 @@
+{
+  "short_name": "Emak Schools",
+  "name": "Emak God's Own Schools",
+  "display": "standalone",
+  "start_url": ".",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/img/emak_logo_72x47.png",
+      "type": "image/png",
+      "sizes": "72x47"
+    },
+    {
+      "src": "/img/emak_logo_128x84.png",
+      "type": "image/png",
+      "sizes": "128x84"
+    },
+    {
+      "src": "/img/emak_logo_144x94.png",
+      "type": "image/png",
+      "sizes": "144x94"
+    },
+    {
+      "src": "/img/emak_logo_152x99.png",
+      "type": "image/png",
+      "sizes": "152x99"
+    },
+    {
+      "src": "/img/emak_logo_192x125.png",
+      "type": "image/png",
+      "sizes": "192x125"
+    },
+    {
+      "src": "/img/emak_logo_256x167.png",
+      "type": "image/png",
+      "sizes": "256x167"
+    },
+    {
+      "src": "/img/emak_logo_356x233.png",
+      "type": "image/png",
+      "sizes": "356x233"
+    },
+    {
+      "src": "/img/emak_logo_512x334.png",
+      "type": "image/png",
+      "sizes": "512x334"
+    },
+    {
+      "src": "/img/emak_logo_534x349.png",
+      "type": "image/png",
+      "sizes": "534x349"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+node_modules
+client/node_modules
+server/node_modules
+npm-debug.log
+*.env
+
+/.pnp
+client/.pnp.js
+
+# testing
+client/coverage
+
+# production
+client/build
+
+# misc
+client/.DS_Store
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
+
+#file file for testing func code
+server\libs\test-code.js
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
