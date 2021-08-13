@@ -30,7 +30,6 @@ app.use(cookieParser());
 app.use(cors({origin: process.env.origin}));
 //app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', require('./routes/index'));
 app.use('/staffs', require('./routes/staffs'));
 app.use('/students', require('./routes/students'));
 
