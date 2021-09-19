@@ -44,7 +44,7 @@ const passwordResetEamil = (resetCode ) => (`
 
         <div class="flex-container">
             <div class="img-contener">
-            <img src="${process.env.domainName}/server/public/img/sch_logo-200x144.png" alt="" srcset="">
+            <img src="https://emakgodsownschools.herokuapp.com/static/media/sch-logo-250x180.5eeed096.png" alt="" srcset="">
         </div>
         <div class="title">
             Password reset request

@@ -19,7 +19,7 @@ import { CssBaseline } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginTop: theme.spacing(3.1),
+    marginTop: theme.spacing(7),
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
-    height: 48.3,
   },
   menuItem: {
     fontSize: '0.7rem',

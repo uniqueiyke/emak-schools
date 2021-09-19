@@ -119,6 +119,7 @@ export default function SendStaffRegDetails() {
             setRegData(initialDataState);
             setKeyCode('');
         } else {
+            console.log(errors);
             setFormSubmitErr(errors);
         }
     }

@@ -9,12 +9,12 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
 import AdminSideNav from '../pages/admin/AdminSideNav';
 import ConditionalNavLink from './ConditionalNavLink';
 import schoolLogo from '../../images/sch-logo-250x180.png';
-import {themeColor} from "../../libs/css-constants";
+import { themeColor } from "../../libs/css-constants";
+import { isAdmin } from '../../libs/client-page-auth';
 
 const useStyles = makeStyles(theme => ({
     img: {
@@ -38,17 +38,17 @@ const useStyles = makeStyles(theme => ({
 
     listItemText: {
         color: themeColor,
-        fontSize: '0.7rem',
+        fontSize: '1rem',
     },
     listItems: {
         display: 'grid',
-        paddingLeft: theme.spacing(1.4),
+        paddingLeft: theme.spacing(2),
         gridTemplateColumns: '1fr 5fr',
         paddingBottom: 0,
         paddingTop: 0,
     },
     listItemIcon: {
-        fontSize: '0.9rem',
+        fontSize: '1.2rem',
         color: themeColor,
     },
 }))
@@ -61,7 +61,6 @@ const NavDrawer = ({ children, open,
 }) => {
     const style = useStyles();
     const history = useHistory();
-    const { data } = useSelector(state => state.staff.staff);
 
     const handleMobileLinkClick = path => {
         if (onClose) {
@@ -83,11 +82,9 @@ const NavDrawer = ({ children, open,
                 className={className}
                 {...props}
             >
-                <div className={style.toolbar} >
-                    <div className={style.img}>
-                        <img src={schoolLogo} alt='school logo' height='100' />
-                    </div>
-                    </div>
+                <div className={style.img}>
+                    <img src={schoolLogo} alt='school logo' height='100' />
+                </div>
                 <Divider className={style.divider} />
                 <List dense >
                     <ListItem
@@ -97,10 +94,10 @@ const NavDrawer = ({ children, open,
                         className={style.listItems}
                     >
                         <ListItemIcon> <HomeIcon className={style.listItemIcon} /> </ListItemIcon>
-                        <ListItemText 
-                        className={style.listItemText}
-                        disableTypography
-                        primary={'Home'} />
+                        <ListItemText
+                            className={style.listItemText}
+                            disableTypography
+                            primary={'Home'} />
                     </ListItem>
                     <ListItem
                         button
@@ -109,10 +106,10 @@ const NavDrawer = ({ children, open,
                         className={style.listItems}
                     >
                         <ListItemIcon> <PermContactCalendarIcon className={style.listItemIcon} /> </ListItemIcon>
-                        <ListItemText 
-                        className={style.listItemText}
-                        disableTypography
-                        primary={'Contacts'} />
+                        <ListItemText
+                            className={style.listItemText}
+                            disableTypography
+                            primary={'Contacts'} />
                     </ListItem>
                     <ListItem
                         button
@@ -121,21 +118,21 @@ const NavDrawer = ({ children, open,
                         className={style.listItems}
                     >
                         <ListItemIcon> <InfoIcon className={style.listItemIcon} /> </ListItemIcon>
-                        <ListItemText 
-                        className={style.listItemText}
-                        disableTypography
-                        primary={'About'} />
+                        <ListItemText
+                            className={style.listItemText}
+                            disableTypography
+                            primary={'About'} />
                     </ListItem>
                 </List>
                 <Divider className={style.divider} />
-                {(data  && data.roles && (data.roles.includes('admin') || data.roles.includes('super-admin'))) && <AdminSideNav onClose={onClose} />}
+                {isAdmin() && <AdminSideNav onClose={onClose} />}
                 <List dense className={style.appBarLink}>
                     <ConditionalNavLink onClick={handleMobileLinkClick} color='#527175' onClose={onClose} />
                 </List>
-                
+
             </Drawer>
         </>
     )
 }
 
-export default NavDrawer
+export default NavDrawer;

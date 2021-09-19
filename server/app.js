@@ -34,9 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({origin: process.env.origin}));
-//app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', require('./routes/index'));
+app.use('/admin', require('./routes/admin'));
 app.use('/staffs', require('./routes/staffs'));
 app.use('/students', require('./routes/students'));
 

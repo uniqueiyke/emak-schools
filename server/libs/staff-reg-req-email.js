@@ -44,7 +44,7 @@ const staffRegRequestEmail = (link, codeKey) => {
         
        <div class="flex-container">
         <div>
-           <img src="" alt="school logo" >
+           <img src="https://emakgodsownschools.herokuapp.com/static/media/sch-logo-250x180.5eeed096.png" alt="school logo" >
         </div>
         <div class="title">
             Registration Link

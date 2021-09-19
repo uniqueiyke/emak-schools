@@ -15,17 +15,17 @@ import BallotIcon from '@material-ui/icons/Ballot';
 const useStyles = makeStyles(theme => ({
     listItemText: {
         color: themeColor,
-        fontSize: '0.7rem',
+        fontSize: '1rem',
     },
     listItems: {
         display: 'grid',
-        paddingLeft: theme.spacing(1.4),
+        paddingLeft: theme.spacing(2),
         gridTemplateColumns: '1fr 5fr',
         paddingBottom: 0,
         paddingTop: 0,
     },
     listItemIcon: {
-        fontSize: '0.9rem',
+        fontSize: '1.2rem',
         color: themeColor,
     },
 }))

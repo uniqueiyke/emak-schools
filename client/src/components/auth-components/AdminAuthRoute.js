@@ -2,29 +2,9 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import jwtDecode from 'jwt-decode';
+import { isAdmin } from '../../libs/client-page-auth';
 
-const isAdmin = (superOnly = false) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    let decodedJWT = jwtDecode(token);
-    const tokenExpiration = decodedJWT.exp
-    let dateNow = new Date();
-    if (tokenExpiration > dateNow.getTime() / 1000) {
-      const {roles} = decodedJWT.user;
-      if(superOnly){
-        if(roles.includes('super-admin')){
-          return true;
-        }
-      }else if(roles.includes('admin') || roles.includes('super-admin')){
-        return true;
-      }
-    }
-  }
-  return false
-}
-
-export default function AuthRoute({children, superOnly, ...rest}) {
+export default function AdminAuthRoute({children, superOnly, ...rest}) {
   const isSuper = superOnly ? true : false;
   const {isAuthenticated} = useSelector(state => state.staff)
   return (isAuthenticated && isAdmin(isSuper)) ? (
@@ -35,7 +15,7 @@ export default function AuthRoute({children, superOnly, ...rest}) {
   (<Redirect to='/staff/data/profile' />)
 }
 
-AuthRoute.propTypes = {
+AdminAuthRoute.propTypes = {
   children: PropTypes.object,
   superOnly: PropTypes.bool,
 }

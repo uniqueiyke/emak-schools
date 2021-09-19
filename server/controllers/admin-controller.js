@@ -28,7 +28,7 @@ exports.send_staff_register_token = async (req, res) => {
             return res.status(404).json({ message: "An account with this email or phone number already exist." })
         }
         const token = await getApikey();
-        const link = `http://localhost:3000/staff/registration?key=${token}`;
+        const link = `${process.env.domainName}/staff/registration?key=${token}`;
         const htmlStr = staffRegRequestEmail(link, req.body.key_code);
         const info = await sendEmail(req.body.email, htmlStr, "Registration token for emak schools staff");
 
@@ -50,12 +50,12 @@ exports.send_staff_register_token = async (req, res) => {
 }
 
 exports.fetch_all_students = async (req, res) => {
+
     try{
         const students = await Student.find({}).sort({reg_number: -1});
         res.json(students);
     }
     catch(err){
-        console.error(err);
         res.status(401).json(err.message);
     }
 }
