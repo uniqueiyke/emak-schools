@@ -2,274 +2,299 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const Staff = require('../models/staff');
-const StaffToJoin = require('../models/staff-join-reqeust');
-
-// const getApiKey = require('../lib/gen-api-key');
-const { formatPhoneNumber } = require('../libs/utility-functions');
+const StaffRegToken = require('../models/staff-registration-token');
+const getApikey = require('../libs/gen-api-key');
+const { formatPhoneNumber, isEmptyArrayOrObject, getTimeElapse } = require('../libs/utility-functions');
 const FormFieldsValidator = require('../libs/form-fields-validator');
-
+const { validateFormFields } = require('../libs/validate-form-fields');
+const generateCodeOfLenth = require('../libs/generate-random-code');
+const sendEmail = require('../libs/send-email');
+const StaffPasswordReset = require('../models/staff-password-reset');
+const passwordResetEamil = require('../libs/password-reset-email');
+const successfulPasswordReset = require('../libs/successful-password-reset');
+const signInToken = (userData) => {
+    return jwt.sign(
+        { user: { id: userData._id, roles: userData.roles } },
+        process.env.jwtSecret,
+        { expiresIn: 86400 },
+    )
+}
 const SALT_ROUND = 10;
 
-
-
-exports.register_new_staff = async (req, res) => {
+exports.register_staff = async (req, res) => {
     try {
-        const alreadyAcct = await Staff.findOne({ $or: [{ email: req.body.email }, { username: req.body.username }] });
+
+        //Validate the data from the user inputs
+        const validateErr = validateFormFields(req.body, {
+            password: 'password',
+            password_match: 'password_match',
+            username: 'min_length',
+            email: 'email',
+            phone_number: 'phone',
+            key_code: ''
+        }, { minLength: 8 });
+        if (!isEmptyArrayOrObject(validateErr)) {
+            return res.status(404).json(validateErr);
+        }
+
+        const {
+            username,
+            email,
+            phone_number,
+            key_code
+        } = req.body;
+
+        //Check if the is a user with the provided email already
+        const alreadyAcct = await Staff.findOne({ $or: [{ email: email }, { username: username }, { phone_number: phone_number }] });
         if (alreadyAcct) {
             let message = {};
-            if (alreadyAcct.username === req.body.username) {
-                message.username = `${req.body.username} is not available`;
+            if (alreadyAcct.username === username) {
+                message.username = `${username} is not available`;
             }
 
-            if (alreadyAcct.email === req.body.email) {
-                message.email = `${req.body.email} is not available. Is like you already have an account with ${req.body.email}. Sign in instead.`;
+            if (alreadyAcct.email === email || alreadyAcct.phone_number === phone_number) {
+                message.email = `${email} or ${phone_number} is not available. Is like you've created an account before consult the school admin for assisstance`;
             }
-
             return res.status(400).json({ message });
         }
-        const formFieldsValidator = new FormFieldsValidator(req.body);
-        formFieldsValidator.field('last_name').trim().isLength({ minLength: 3 }).withMessage('Name is too short');
-        formFieldsValidator.field('first_name').trim().isLength({ minLength: 3 }).withMessage('Name is too short');
-        formFieldsValidator.field('username').trim().isLength({ minLength: 8 }).withMessage('username is too short');
-        formFieldsValidator.field('email').trim().isValidEmail({ minLength: 3 }).withMessage('Please enter a valid email address');
-        formFieldsValidator.field('password_match').isStringMatch(req.body.password, req.body.password_match)
-            .withMessage('The password did not match');
-        formFieldsValidator.field('password').isPasswordStrong().withMessage('This password is too weak. Your password should have at least one upper case leter, one lower case letter, one nomber and one special character');
-        const errors = formFieldsValidator.errorMessage();
 
-        if (JSON.stringify(errors) !== "{}") {
-            return res.status(400).json({ message: valErr });
+        //Authenticate that the user has been authorised to sign in to the platform
+        let data = await StaffRegToken.find({ token: req.query.token })
+        data = data[0];
+
+        if (
+            !(data.phone_number === phone_number &&
+                data.key_code === key_code &&
+                data.email === email)
+        ) {
+            return res.status(403).json({ message: "You are not Authorised to sign up on this platform. Please meet with the school admistrator for help" });
         }
+        if (data.join_link.used === true) {
+            return res.status(400).json({ message: "This link has been use. login instead" })
+        }
+
+        if (getTimeElapse(data.req_date) > 259200) {
+            return res.status(400).json({ message: "This link has expired. Call the schooladministrator to resend another link." })
+        }
+
         const hash = await bcrypt.hash(req.body.password, SALT_ROUND);
-        const {
-            first_name,
-            last_name,
-            username,
-            gender,
-            email,
-            phone_number
-        } = req.body;
 
         const newStaff = new Staff({
-            first_name,
-            last_name,
             username,
             email,
-            gender,
-            phone_number,
+            phone_number: formatPhoneNumber(phone_number),
             password: hash,
+            key_code,
+            roles: data.roles,
         });
 
-        const newRegStaff = await newStaff.save();
-        console.log(newRegStaff);
-        res.json(newRegStaff);
+        const staff = await newStaff.save();
+
+        // update StaffRegToken
+        data.join_link.used = true;
+        await data.save();
+
+        const token = signInToken(staff);
+
+        res.json({
+            token,
+            staff_data: staff
+        });
     } catch (error) {
-        console.log(error);
         res.json(error);
     }
 
-
-    // try {
-
-    //     const exitAcct = await Staff.findOne({ $or: [{email: req.body.email}, {username: req.body.username}] });
-    //     if (exitAcct) {
-    //         let message = {};
-    //         if (exitAcct.username === req.body.username) {
-    //             message.username = `${req.body.username} is not available`;
-    //         }
-
-    //         if (exitAcct.email === req.body.email) {
-    //             message.email = `${req.body.email} is not available. Is like you already have an account with ${req.body.email}. Sign in instead.`;
-    //         }
-
-    //         return res.status(400).json({message});
-    //     }
-
-    //     const valErr = validateInput(req.body);
-
-    //     if(JSON.stringify(valErr) !== '{}'){
-    //         return res.status(400).json({message: valErr});
-    //     }
-
-    //     const hash = await bcrypt.hash(req.body.password, SALT_ROUND)
-    //     const newStaff = new Staff({
-    //         username: req.body.username,
-    //         email: req.body.email,
-    //         password: hash,
-    //     });
-
-    //     await newStaff.save();
-
-    //     const token = jwt.sign(
-    //         { id: newStaff._id },
-    //         process.env.jwtSecret,
-    //         { expiresIn: 3600 },
-    //     )
-
-    //     res.json({
-    //         token, 
-    //         staff: {
-    //             id: newStaff._id,
-    //             username: newStaff.username,
-    //             email: newStaff.email,
-    //         }
-    //     })
-    // } catch (error) {
-    //     console.log(error);
-    //     res.status(401).json(error.message);
-    // }
 }
 
 
-exports.init_staff_registration = async (req, res) => {
+
+exports.login_staff = async (req, res) => {
     try {
-        const alreadyAcct = await Staff.findOne({ $or: [{ email: req.body.email }, { username: req.body.username }] });
-        if (alreadyAcct) {
-            let message = {};
-            if (alreadyAcct.username === req.body.username) {
-                message.username = `${req.body.username} is not available`;
-            }
+        const { username, password } = req.body;
 
-            if (alreadyAcct.email === req.body.email) {
-                message.email = `${req.body.email} is not available. Is like you already have an account with ${req.body.email}. Sign in instead.`;
-            }
-
-            return res.status(400).json({ message });
+        const staff = await Staff.findOne({ $or: [{ email: username }, { username: username }, { phone_number: username }] });
+        if (!staff) {
+            return res.status(400).json({ message: "Invalid credentials" });
         }
-        const formFieldsValidator = new FormFieldsValidator(req.body);
-        formFieldsValidator.field('username').trim().isLength({ minLength: 8 }).withMessage('username is too short');
-        formFieldsValidator.field('email').trim().isValidEmail({ minLength: 3 }).withMessage('Please enter a valid email address');
-        formFieldsValidator.field('password_match').isStringMatch(req.body.password, req.body.password_match).withMessage('The password did not match');
-        formFieldsValidator.field('password').isPasswordStrong().withMessage('This password is too weak. Your password should have at least one upper case leter, one lower case letter, one nomber and one special character');
-        const errors = formFieldsValidator.errorMessage();
-
-        if (JSON.stringify(errors) !== "{}") {
-            return res.status(400).json({ message: valErr });
+        const isMatch = await bcrypt.compare(password, staff.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        const hash = await bcrypt.hash(req.body.password, SALT_ROUND);
-        const {
-            username,
-            email,
-            phone_number
-        } = req.body;
-
-        const formatedPhoneNumber = formatPhoneNumber(phone_number);
-        if (!formatedPhoneNumber) {
-            errors['phone_number'] = 'Please enter a valid phone number';
-        }
-
-        const newStaff = new StaffToJoin({
-            username,
-            email,
-            phone_number: formatedPhoneNumber,
-            password: hash,
+        const token = signInToken(staff);
+        res.json({
+            token,
+            staff_data: staff
         });
-
-        const newRegStaff = await newStaff.save();
-        console.log(newRegStaff);
-        res.json(newRegStaff);
     } catch (error) {
-        console.log(error);
-        res.json(error);
+        res.status(401).json(error.message);
     }
-
 }
 
-
-
-exports.login_staff = [
-    async (req, res) => {
-        try {
-            const staff = await Staff.findOne({ $or: [{ email: req.body.username }, { username: req.body.username }] });
-            if (!staff) {
-                // console.log('no match user')
-                return res.status(400).json({ message: "Invalid credentials" });
-            }
-            const isMatch = await bcrypt.compare(req.body.password, user.password);
-            if (!isMatch) {
-                // console.log('no match password')
-                return res.status(400).json({ message: "Invalid credentials" });
-            }
-
-            const token = jwt.sign(
-                { id: staff._id },
-                process.env.jwtSecret,
-                { expiresIn: 3600 },
-            )
-
-            res.json({
-                token,
-                staff: {
-                    id: staff._id,
-                    username: staff.username,
-                    email: staff.email
-                }
-            })
-        } catch (error) {
-            console.log(error);
-            res.status(401).json(error.message);
-        }
-    }
-]
 
 
 exports.get_staff = async (req, res) => {
     try {
-        const staff = await Staff.findById(req.user.id);
+        const staff = await Staff.findById(req.staff_token.user.id);
         if (!staff) {
             return res.status(400).json({ message: "User not found" });
         }
-
+        const token = signInToken(staff);
         res.json({
-            id: staff._id,
-            email: staff.email,
-            username: staff.username
-        })
+            token,
+            staff_data: staff
+        });
     } catch (error) {
-        console.log(error);
         res.status(401).json(error.message);
 
     }
 }
 
-// exports.refresh_api_key = async (req, res) => {
-//     try {
-//         const user = await User.findById(req.user.id);
-//         if(!user){
-//             return res.status(400).json({message: "User not found"});
-//         }
+exports.confirm_staff_reg_token = async (req, res) => {
+    try {
+        if (isEmptyArrayOrObject(req.query)) {
+            res.status(400).json({ message: 'No access token' });
+            return;
+        }
+        let data = await StaffRegToken.find({ token: req.query.token })
+        if (isEmptyArrayOrObject(data)) {
+            res.status(401).json({ message: 'Wrong or expired access token' });
+            return;
+        }
 
-//         const api_key = await getApiKey();
-//         user.api_key = api_key;
-//         await user.save()
-//         res.json({
-//             id: user._id,
-//             email: user.email,
-//             username: user.username,
-//             api_key: user.api_key
-//         })
-//         // res.json({success: true});
-//     } catch (error) {
-//         console.log(error);
-//         res.status(401).json(error);
+        data = data[0];
 
-//     }
-// }
+        if (data.join_link.used === true) {
+            return res.status(400).json({ message: "This link has been use. login instead" })
+        }
 
-// exports.register_student = async (req, res) => {
-//     const {
-//         last_name, first_name,
-//         other_names, gender,
-//         subjects
-//     } = req.body;
+        if (getTimeElapse(data.req_date) > 72) {
+            return res.status(400).json({ message: "This link has expired. Call the schooladministrator to resend another link." })
+        }
 
-//     newStaffReg = new StaffModel({
-//         last_name, first_name,
-//         other_names, gender,
-//         subjects
-//     })
+        res.json(data);
+    } catch (err) {
+        res.status(404).json(err);
+    }
+}
 
-//     const newStaff = await newStaffReg.save();
-//     res.json(newStaff);
-// }
+exports.update_staff_data = async (req, res) => {
+    try {
+        const fields = Object.keys(req.body);
+        const staff = await Staff.findById(req.staff_token.user.id);
+        if (!staff) {
+            return res.status(400).json({ message: "User not found" });
+        }
+        for (const field of fields) {
+            let err = null;
+            if (field === 'email') {
+                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'email' });
+            }
+            else if (field === 'phone_number') {
+                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'phone' });
+            }
+            else if (field === 'username') {
+                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'min_length' }, { minLength: 8 });
+            } else {
+                err = validateFormFields({ [field]: req.body[field] }, {
+                    [field]: 'min_length',
+                }, { optionalFields: ['other_names'], minLength: 3 })
+            }
+            if (!isEmptyArrayOrObject(err)) {
+                return res.status(400).json([err, 'updateErr']);
+            }
+            staff[field] = req.body[field];
+        }
+        await staff.save();
+
+        res.json({
+            staff_data: staff
+        });
+    } catch (error) {
+        res.status(401).json(error.message);
+
+    }
+}
+
+exports.confirm_email = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const staff = await Staff.findOne({ email });
+        if (!staff) {
+            return res.status(400).json({ message: "No such email address. Please enter the email with which you create the account" });
+        }
+
+        const resetPasswordCode = await generateCodeOfLenth(9, 'nu');
+
+
+        const staffResetDetails = await StaffPasswordReset.findOne({ email });
+        if (staffResetDetails) {
+            staffResetDetails.reset_code && staffResetDetails.old_reset_codes.push(staffResetDetails.reset_code)
+            staffResetDetails.reset_code = resetPasswordCode;
+            await staffResetDetails.save();
+        } else {
+            const newResetDetail = new StaffPasswordReset({
+                email,
+                staff_id: staff._id,
+                reset_code: resetPasswordCode,
+            });
+            await newResetDetail.save();
+        }
+        await sendEmail(email, passwordResetEamil(resetPasswordCode), "Password reset code");
+        res.json({
+            confirmed: 'An email has been to your emial box. Use the provide code to reset your password',
+        });
+    } catch (error) {
+        res.status(401).json(error.message);
+    }
+}
+
+exports.reset_password = async (req, res) => {
+    try {
+        const { password, password_match, reset_code } = req.body;
+        const validateErr = validateFormFields(req.body, {
+            password: 'password',
+            password_match: 'password_match',
+            reset_code: ''
+        });
+
+        if (!isEmptyArrayOrObject(validateErr)) {
+            return res.status(404).json(validateErr);
+        }
+
+        const staffPWReset = await StaffPasswordReset.findOne({ reset_code });
+        if (!staffPWReset) {
+            return res.status(400).json({ message: "Cannot continue with this activity. There is no reset code" });
+        }
+
+        if (getTimeElapse(staffPWReset.code_date) > 1800) {
+            return res.status(400).json({ message: "This code has expired after thirty minuites." });
+        }
+
+
+        const staff = await Staff.findById(staffPWReset.staff_id);
+        if (!staff) {
+            return res.status(400).json({ message: "Unidentify user. you do not have an account with us" });
+        }
+
+        const passwordHash = await bcrypt.hash(password, SALT_ROUND);
+        staffPWReset.old_reset_codes.push(staffPWReset.reset_code);
+        staffPWReset.reset_code = undefined;
+        staffPWReset.old_passwords.push(staff.password);
+        staff.password = passwordHash;
+
+        await staff.save();
+
+        await staffPWReset.save();
+
+        await sendEmail(staffPWReset.email, successfulPasswordReset(), "Password reset successful");
+        const token = signInToken(staff);
+        res.json({
+            token,
+            staff_data: staff
+        });
+    } catch (error) {
+        res.status(401).json(error.message);
+    }
+}

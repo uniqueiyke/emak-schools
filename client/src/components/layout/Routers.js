@@ -3,17 +3,24 @@ import { Route, Switch } from 'react-router-dom';
 import Home from '../pages/Home';
 import About from '../pages/About';
 import Contacts from '../pages/Contacts';
-// import Cards from './card/Cards';
-// import Page404 from './Page404';
-// import UserProfile from './users/UserProfile';
-// import UserLoginForm from './users/UserLoginForm';
-// import UserRegForm from './users/UserRegForm';
-// import AuthRoute from './AuthRoute';
-// import CreateCards from './card/CreateCards';
+import StaffRegForm from '../pages/staffs/StaffRegForm';
+import StudentRegForm from '../pages/students/StudentRegForm';
+import StaffLogin from '../pages/staffs/StaffLogin';
+import StaffProfile from '../pages/staffs/StaffProfile';
+import AuthRoute from '../auth-components/AuthRoute';
+import StaffDashboard from '../pages/staffs/StaffDashboard';
+import Page404 from '../other-components/Page404';
+import ToAdminPanel from '../auth-components/ToAdminPanel';
+import ErrorBoundary from '../other-components/ErrorBoundary'
+import ListOfStudents from '../pages/students/ListOfStudents';
+import StudentProfile from '../pages/students/StudentProfile';
+import AdminAuthRoute from '../auth-components/AdminAuthRoute';
+import ResetPassword from '../pages/staffs/ResetPassword';
+import ConfirmEmail from '../pages/staffs/ConfirmEmail';
 
 export default function Routers() {
     return (
-        <div >
+        <ErrorBoundary>
             <Switch>
                 <Route exact path="/">
                     <Home />
@@ -24,25 +31,40 @@ export default function Routers() {
                 <Route exact path="/contacts">
                     <Contacts />
                 </Route>
-                {/* <AuthRoute exact path="/users/scratch-cards/:id?">
-                    <Cards />
-                </AuthRoute>
-                <AuthRoute exact path="/users/create-cards">
-                    <CreateCards />
-                </AuthRoute>
-                <Route exact path="/users/login">
-                <UserLoginForm />
+                <AdminAuthRoute exact path="/admin/admin-panel">
+                    <ToAdminPanel />
+                </AdminAuthRoute>
+                <Route exact path="/staff/registration">
+                    <StaffRegForm />
                 </Route>
-                <Route exact path="/users/register">
-                    <UserRegForm />
-                </Route>
-                <AuthRoute exact path="/user/profile">
-                    <UserProfile />
+                <AuthRoute exact path="/staff/data/profile">
+                    <StaffProfile />
                 </AuthRoute>
+                <Route exact path="/staffs/login">
+                    <StaffLogin />
+                </Route>
+                <Route exact path="/staffs/confirm-email">
+                    <ConfirmEmail />
+                </Route>
+                <Route exact path="/staffs/password/reset">
+                    <ResetPassword />
+                </Route>
+                <AdminAuthRoute exact path="/admin/add-student">
+                    <StudentRegForm />
+                </AdminAuthRoute>
+                <AuthRoute exact path="/staff/data/dashboard">
+                    <StaffDashboard />
+                </AuthRoute>
+                <AdminAuthRoute exact path="/admin/students/list">
+                    <ListOfStudents />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact path="/admin/students/student/profile/:id">
+                    <StudentProfile />
+                </AdminAuthRoute>
                 <Route path="*">
                     <Page404 />
-                </Route> */}
+                </Route>
             </Switch>
-        </div>
+        </ErrorBoundary>
     )
 }

@@ -1,14 +1,17 @@
+const { formatPhoneNumber, isEmptyArrayOrObject } = require("./utility-functions");
 if (!Number.MAX_SAFE_INTEGER) {
     Number.MAX_SAFE_INTEGER = 9007199254740991; // Math.pow(2, 53) - 1;
 }
+
+
 
 class FormFieldsValidator {
     errorObj = {};
     errorMgs;
     formInputs = {};
     currentField = {};
-    DEFAULT_LENGTH_VALUE = {minLength:0, maxLength:Number.MAX_SAFE_INTEGER};
-    constructor(formInputs){
+    DEFAULT_LENGTH_VALUE = { minLength: 0, maxLength: Number.MAX_SAFE_INTEGER };
+    constructor(formInputs) {
         this.formInputs = formInputs;
     }
 
@@ -57,37 +60,44 @@ class FormFieldsValidator {
         length.maxLength = length.maxLength ? length.maxLength : this.DEFAULT_LENGTH_VALUE.maxLength;
         length.minLength = length.minLength ? length.minLength : this.DEFAULT_LENGTH_VALUE.minLength;
         this.currentField.isError = false; // reset error flag
-        if (this.currentField.value.length < length.minLength){
+        if (this.currentField.value.length < length.minLength) {
             this.currentField.isError = true
-        }else if (this.currentField.value.length > length.maxLength){
+        } else if (this.currentField.value.length > length.maxLength) {
             this.currentField.isError = true
         }
         return this;
     }
 
-    /** 
-     * @param{string} string1
-     * @param{string} string2
-     * @returns{this}
-     * Compares if the two string value are lexicographically equal.
-     * This can be use to compare password fields for a match
-    */
-    isStringMatch = (string1, string2) => {
+    isEmpty = () => {
         this.currentField.isError = false; // reset error flag
-        if (string1.trim() !== string2.trim())
+        if (this.currentField.value.length <= 0 || this.currentField.value === '') {
+            this.currentField.isError = true
+        }
+        return this;
+    }
+    /** 
+    * @param{string} string
+    * @returns{this}
+    * Compares if the two string value are lexicographically equal.
+    * This can be use to compare password fields for a match
+   */
+    isStringMatch = (string) => {
+        this.currentField.isError = false; // reset error flag
+        if (this.currentField.value.trim() !== string.trim())
             this.currentField.isError = true
         return this;
     }
+
 
     /**
      * Validate input string to be a valid email address
      * @returns 
      */
-    isValidEmail = () => { 
+    isValidEmail = () => {
         // eslint-disable-next-line
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; 
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.currentField.isError = false; //reset error flag
-        if(!emailRegex.test(this.currentField.value)){
+        if (!emailRegex.test(this.currentField.value)) {
             this.currentField.isError = true;
         }
 
@@ -110,16 +120,24 @@ class FormFieldsValidator {
      */
     isPasswordStrong = (veryStrong = true) => {
         let passwordRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/;
-        
+
         //use a strong regular expression for a stonger password instead        
-        if(veryStrong===true){ // eslint-disable-next-line
-            passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+        if (veryStrong === true) { // eslint-disable-next-line
+            passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#_\-\+\$%\^&\*=\\])(?=.{8,})/;
         }
         this.currentField.isError = false; //reset error flag
         if (!passwordRegex.test(this.currentField.value)) {
             this.currentField.isError = true;
         }
-        return this; 
+        return this;
+    }
+
+    arrayValues = () => {
+        this.currentField.isError = false; //reset error flag
+        if (!Array.isArray(this.currentField.value) || this.currentField.value.length <= 0) {
+            this.currentField.isError = true;
+        }
+        return this;
     }
 
     /**
@@ -130,8 +148,8 @@ class FormFieldsValidator {
      * @returns 
      */
     withMessage = message => {
-        if(this.currentField.isError)
-        this.errorObj[this.currentField.fieldName] = message;
+        if (this.currentField.isError)
+            this.errorObj[this.currentField.fieldName] = message;
         return this;
     };
 
