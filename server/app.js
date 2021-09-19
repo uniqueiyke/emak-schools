@@ -9,7 +9,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('./middlewares/cors');
 
-// import and create the mongoDB connection
+// import and create the mongoDB connection to mongoDB atlas
 mongoose.connect(process.env.mongodbURL, {  
     useNewUrlParser: true, 
     useUnifiedTopology: true,
@@ -18,8 +18,14 @@ mongoose.connect(process.env.mongodbURL, {
 .then(()=> console.log('mongo conneted'))
 .catch(error => console.log('mongo connection error', error));
 
-// const indexRouter = require('./routes/index');
-// const usersRouter = require('./routes/users');
+// import and create the mongoDB connection to local mongoDB
+// mongoose.connect(process.env.localMongoDB1, {  
+//     useNewUrlParser: true, 
+//     useUnifiedTopology: true,
+//     useCreateIndex: true 
+// })
+// .then(()=> console.log('mongo conneted'))
+// .catch(error => console.log('mongo connection error', error));
 
 const app = express();
 
@@ -45,5 +51,6 @@ if(process.env.NODE_ENV === 'production'){
         res.sendFile(path.resolve(rootPath, 'client', 'build', 'index.html'))
     });
 }
+
 
 module.exports = app;

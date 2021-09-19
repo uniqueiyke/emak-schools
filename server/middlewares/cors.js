@@ -48,9 +48,6 @@ const cors = (options = defaultOption) => {
     const origin = options.origin;
     const headers = parseCorsHeaders(options.headers ? options.headers : defaultOption.headers);
     const methods = parseCorsMethods(options.methods ? options.methods : defaultOption.methods);
-    console.log('origin', origin);
-    console.log('headers', headers);
-    console.log('methods', methods);
     return (
         (req, res, next) => {
             res.set('Access-Control-Allow-Headers', headers);
@@ -60,8 +57,6 @@ const cors = (options = defaultOption) => {
             }else if(typeof(origin) === 'object' && Array.isArray(origin)){
                 try {
                     const url = new URL(req.header('Referer'));
-                    console.log(url)
-                    console.log('url.origin', url.origin)
                     if(origin.includes(url.origin))
                         res.set('Access-Control-Allow-Origin', url.origin);
                 } catch (error) {

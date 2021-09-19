@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
-// import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
-import { isEmptyString, isEmptyObject, registerStudent } from '../../../libs/utility-functions';
-import FormFieldsValidator from '../../libs/form-input-validator';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmptyString, isEmptyArrayOrObject, formatPhoneNumber } from '../../../libs/utility-functions';
+import { validateFormFields } from '../../../libs/form-fields-validator';
+import { classes, bloodGroups, genotypes } from '../../../libs/students-data'
+import SingleSelect from '../../other-components/SingleSelect';
+import ParentsData from './ParentsData';
+import { registerStudent } from '../../../redux/actions/student-action';
+import MessageAlert from '../../other-components/MessageAlert';
 
 
 const useStyle = makeStyles({
   formField: {
     marginTop: 10,
     marginBottom: 10
-  }
+  },
+  iconColor: {
+    color: '#008800',
+},
 })
 const StudentRegForm = () => {
 
   const styles = useStyle();
-
+  const dispatch = useDispatch();
+  const { data, error } = useSelector(state => state.student.student);
 
   const initialDataState = {
     last_name: '',
@@ -34,7 +39,15 @@ const StudentRegForm = () => {
     other_names: '',
     gender: 'male',
     reg_class: '',
-    date_of_birth: ''
+    date_of_birth: '',
+    genotype: '',
+    blood_group: '',
+    parent_last_name: '',
+    parent_first_name: '',
+    parent_phone_number: '',
+    parent_email: '',
+    last_sch_attend: '',
+    parent_occpation: ''
   };
 
   const [regData, setRegData] = useState(initialDataState);
@@ -45,28 +58,45 @@ const StudentRegForm = () => {
       [e.target.name]: e.target.value
     });
   }
-  
+
   const handleSubmit = e => {
     e.preventDefault();
-    const formFieldsValidator = new FormFieldsValidator(regData);
-    formFieldsValidator.field('last_name').trim().isLength({minLength: 3}).withMessage('The name is too short. Please supply a valid name');
-    formFieldsValidator.field('first_name').trim().isLength({minLength: 3}).withMessage('The name is too short. Please supply a valid name');
-    formFieldsValidator.field('reg_class').trim().isLength({minLength: 3}).withMessage('Please select the class of registration');
-
-    const regDataErr = formFieldsValidator.errorMessage(regData);
-    if (isEmptyObject(regDataErr)) {
-      registerStudent(regData)
-      .then(data => console.log(data))
-      .catch(err => console.log('error', err));
+    const regDataErr = validateFormFields(regData, {
+      last_name: 'min_length',
+      first_name: 'min_length',
+      other_names: 'min_length',
+      gender: 'select',
+      reg_class: 'select',
+      date_of_birth: 'date',
+      genotype: 'select',
+      blood_group: 'select',
+      parent_last_name: 'min_length',
+      parent_first_name: 'min_length',
+      parent_phone_number: 'phone',
+      parent_email: 'email',
+      last_sch_attend: 'min_length',
+      parent_occpation: 'min_length'
+    }, {optionalFields: ['parent_email', 'date_of_birth', 'blood_group', 'genotype', 'other_names', 'last_sch_attend', 'parent_occpation'], minLength: 3});
+    if (isEmptyArrayOrObject(regDataErr)) {
+      dispatch(registerStudent({
+        ...regData,
+        parent_phone_number: formatPhoneNumber(regData.parent_phone_number)
+      }));
       setRegData(initialDataState)
       setFormSubmitErr(null)
     } else {
-      console.log(regDataErr);
       setFormSubmitErr(regDataErr)
     }
   }
 
   return (
+    <>
+    {
+    !isEmptyArrayOrObject(error) ? 
+    <MessageAlert error={error} >{error.message ? error.message : error.statusText ? error.statusText : ''}</MessageAlert> :
+    !isEmptyArrayOrObject(data) ? 
+    <MessageAlert data={data} >{`Student registered. Reg. No. ${data.student.reg_number}. Name ${data.student.name.last_name} ${data.student.name.first_name}`}</MessageAlert> : <></>
+    }
     <form onSubmit={handleSubmit} noValidate>
       <FormControl fullWidth className={styles.formField}>
         <TextField
@@ -98,41 +128,29 @@ const StudentRegForm = () => {
           value={regData.other_names}
           onChange={handleDataChange}
           variant="outlined"
+          error={(formSubmitErr && formSubmitErr.other_names) ? !isEmptyString(formSubmitErr.other_names) : false}
+          helperText={(formSubmitErr && formSubmitErr.other_names) && formSubmitErr.other_names}
         />
       </FormControl>
-      <FormControl component="fieldset" className={styles.formField}>
+      <FormControl component="fieldset" className={styles.formField} variant='outlined'>
         <FormLabel component="legend">Gender</FormLabel>
         <RadioGroup aria-label="gender" name="gender" value={regData.gender} onChange={handleDataChange}>
           <FormControlLabel value="female" control={<Radio />} label="Female" />
           <FormControlLabel value="male" control={<Radio />} label="Male" />
         </RadioGroup>
       </FormControl>
-      <FormControl fullWidth component="fieldset"
-        error={(formSubmitErr && formSubmitErr.reg_class) ? !isEmptyString(formSubmitErr.reg_class) : false}
-        variant="outlined"
+      <SingleSelect
+        listOptions={classes}
         className={styles.formField}
-      >
-        <FormLabel component="legend" >Select Class You are to be enroled</FormLabel>
-        <Select
-          name="reg_class"
-          value={regData.reg_class}
-          required
-          onChange={handleDataChange}
-          displayEmpty
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value="jss 1">JSS 1</MenuItem>
-          <MenuItem value="jss 2">JSS 2</MenuItem>
-          <MenuItem value="jss 3">JSS 3</MenuItem>
-          <MenuItem value="ss 1">SS 1</MenuItem>
-          <MenuItem value="ss 2">SS 2</MenuItem>
-          <MenuItem value="ss 3" >SS 3</MenuItem>
-        </Select>
-        <FormHelperText>{(formSubmitErr && formSubmitErr.reg_class) && formSubmitErr.reg_class}</FormHelperText>
-      </FormControl>
+        name="reg_class"
+        label="Select enrolment class"
+        labelId="classes"
+        onChange={handleDataChange}
+        value={regData.reg_class}
+        required
+        error={(formSubmitErr && formSubmitErr.reg_class) ? true : false}
+        helperText={(formSubmitErr && formSubmitErr.reg_class) && formSubmitErr.reg_class}
+      />
       <FormControl className={styles.formField} fullWidth>
         <TextField
           name="date_of_birth"
@@ -144,8 +162,54 @@ const StudentRegForm = () => {
           InputLabelProps={{
             shrink: true,
           }}
+          required
+        error={(formSubmitErr && formSubmitErr.date_of_birth) ? true : false}
+        helperText={(formSubmitErr && formSubmitErr.date_of_birth) && formSubmitErr.date_of_birth}
         />
       </FormControl>
+      <SingleSelect
+        listOptions={bloodGroups}
+        className={styles.formField}
+        name="blood_group"
+        label="Select Your blood group"
+        labelId="bloodgroup"
+        onChange={handleDataChange}
+        value={regData.blood_group}
+        required
+        error={(formSubmitErr && formSubmitErr.blood_group) ? true : false}
+        helperText={(formSubmitErr && formSubmitErr.blood_group) && formSubmitErr.blood_group}
+      />
+      <SingleSelect
+        listOptions={genotypes}
+        className={styles.formField}
+        name="genotype"
+        label="Select Your blood genotype"
+        labelId="genotype"
+        onChange={handleDataChange}
+        value={regData.genotype}
+        required
+        error={(formSubmitErr && formSubmitErr.genotype) ? true : false}
+        helperText={(formSubmitErr && formSubmitErr.genotype) && formSubmitErr.genotype}
+      />
+      <FormControl fullWidth className={styles.formField}>
+        <TextField name="last_sch_attend"
+          label="Last School Attend"
+          value={regData.last_sch_attend}
+          onChange={handleDataChange}
+          variant="outlined"
+          error={(formSubmitErr && formSubmitErr.last_sch_attend) ? !isEmptyString(formSubmitErr.last_sch_attend) : false}
+          helperText={(formSubmitErr && formSubmitErr.last_sch_attend) && formSubmitErr.last_sch_attend}
+        />
+      </FormControl>
+      <fieldset>
+        <legend>Parents/Guardian Data</legend>
+        <ParentsData 
+        handleDataChange={handleDataChange} 
+        styles={styles} 
+        parentData={regData}
+        inputErrMsg={formSubmitErr}
+         />
+      </fieldset>
       <Button variant="contained"
         color="primary" type="submit"
         endIcon={<SendIcon />}
@@ -153,6 +217,7 @@ const StudentRegForm = () => {
         Send
       </Button>
     </form>
+    </>
   )
 }
 
