@@ -26,7 +26,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://emakgodsownschools.herokuapp.com",
+  "proxy": "http://localhost:3002",
   "eslintConfig": {
     "extends": [
       "react-app",

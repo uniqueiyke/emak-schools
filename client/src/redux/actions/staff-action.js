@@ -113,7 +113,7 @@ export const confirmStaffRegToken = token => async dispatch => {
     try {
         console.log('from staff action', token)
         const response = await axios({
-            url: 'http://localhost:3002/staffs/get/reg-token',
+            url: '/staffs/get/reg-token',
             params: { token },
             headers: {
                 'Content-Type': 'application/json',
