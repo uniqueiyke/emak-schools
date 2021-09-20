@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   menuItem: {
-    fontSize: '0.7rem',
+    fontSize: '1rem',
     marginTop: 0,
     marginBottom: 0,
     paddingTop: 3,
