@@ -9,6 +9,7 @@ const checkStaffRegToken = (WrappedComponenet) => {
     return function CheckStaffRegToken(props) {
         const location = useLocation();
         const token = location.search.split('=')[1];
+        console.log(token, 'from checkStaffRegToken');
         const dispatch = useDispatch();
         useEffect(() => {
             dispatch(confirmStaffRegToken(token));

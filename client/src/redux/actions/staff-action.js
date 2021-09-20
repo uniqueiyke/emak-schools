@@ -111,6 +111,7 @@ const isConfirmingEmail =  () =>({
 
 export const confirmStaffRegToken = token => async dispatch => {
     try {
+        console.log('from staff action', token)
         const response = await axios({
             url: 'http://localhost:3002/staffs/get/reg-token',
             params: { token },
@@ -121,6 +122,8 @@ export const confirmStaffRegToken = token => async dispatch => {
 
         dispatch(staffRegTokenConfirmed(response.data));
     } catch (errors) {
+        console.log(errors.data)
+        console.log(errors.data.message)
         dispatch(staffRegTokenConfirmFailed(errorParser(errors.response)));
     }
 }

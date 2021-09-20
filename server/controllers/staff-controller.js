@@ -152,6 +152,7 @@ exports.get_staff = async (req, res) => {
 
 exports.confirm_staff_reg_token = async (req, res) => {
     try {
+        console.log(req.query);
         if (isEmptyArrayOrObject(req.query)) {
             res.status(400).json({ message: 'No access token' });
             return;
@@ -161,7 +162,7 @@ exports.confirm_staff_reg_token = async (req, res) => {
             res.status(401).json({ message: 'Wrong or expired access token' });
             return;
         }
-
+ 
         data = data[0];
 
         if (data.join_link.used === true) {
@@ -174,7 +175,8 @@ exports.confirm_staff_reg_token = async (req, res) => {
 
         res.json(data);
     } catch (err) {
-        res.status(404).json(err);
+        console.log(err.message);
+        res.status(404).json(err.message);
     }
 }
 
