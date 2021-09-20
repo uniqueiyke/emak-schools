@@ -56,7 +56,7 @@ const passwordResetEamil = (resetCode ) => (`
             You will require to provid new strong password. <br />
         </p>
         <p>
-            Your recieved this message because you requested for password reset. The code will expire after 20 minutes.
+            Your recieved this message because you requested for password reset. The code will expire after 30 minutes.
         </p>
         <p>
             if you have never apply to the school or never accept any offer from the school,
