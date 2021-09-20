@@ -268,8 +268,8 @@ exports.reset_password = async (req, res) => {
             return res.status(400).json({ message: "Cannot continue with this activity. There is no reset code" });
         }
 
-        if (getTimeElapse(staffPWReset.code_date) > 1800) {
-            return res.status(400).json({ message: "This code has expired after thirty minuites." });
+        if (getTimeElapse(staffPWReset.code_date) > 3600) {
+            return res.status(400).json({ message: "This code has expired after twenty minuites." });
         }
 
 
