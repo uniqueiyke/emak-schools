@@ -93,9 +93,9 @@ const StudentRegForm = () => {
     <>
     {
     !isEmptyArrayOrObject(error) ? 
-    <MessageAlert error={error} >{error.message ? error.message : error.statusText ? error.statusText : ''}</MessageAlert> :
+    <MessageAlert error >{error.message ? error.message : error.statusText ? error.statusText : ''}</MessageAlert> :
     !isEmptyArrayOrObject(data) ? 
-    <MessageAlert data={data} >{`Student registered. Reg. No. ${data.student.reg_number}. Name ${data.student.name.last_name} ${data.student.name.first_name}`}</MessageAlert> : <></>
+    <MessageAlert data >{`Student registered. Reg. No. ${data.reg_number}. Name ${data.name.last_name} ${data.name.first_name}`}</MessageAlert> : <></>
     }
     <form onSubmit={handleSubmit} noValidate>
       <FormControl fullWidth className={styles.formField}>
