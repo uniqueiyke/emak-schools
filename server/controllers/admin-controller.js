@@ -29,7 +29,7 @@ exports.send_staff_register_token = async (req, res) => {
             return res.status(404).json({ message: "An account with this email or phone number already exist." })
         } 
         const token = await getApikey();
-        const link = `https://emakgodsownschools.herokuapp.com/staff/registration?key=${token}`;
+        const link = `${process.env.origin}/staff/registration?key=${token}`;
         const htmlStr = staffRegRequestEmail(link, req.body.key_code);
         const info = await sendEmail(req.body.email, htmlStr, "Registration token for emak schools staff");
 

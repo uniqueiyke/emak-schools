@@ -72,7 +72,6 @@ exports.register_staff = async (req, res) => {
         if (data.join_link.used === true) {
             return res.status(400).json({ message: "This link has been use. login instead" })
         }
-
         if (getTimeElapse(data.req_date) > 259200) {
             return res.status(400).json({ message: "This link has expired. Call the schooladministrator to resend another link." })
         }
@@ -152,7 +151,6 @@ exports.get_staff = async (req, res) => {
 
 exports.confirm_staff_reg_token = async (req, res) => {
     try {
-        console.log(req.query);
         if (isEmptyArrayOrObject(req.query)) {
             res.status(400).json({ message: 'No access token' });
             return;
@@ -169,7 +167,7 @@ exports.confirm_staff_reg_token = async (req, res) => {
             return res.status(400).json({ message: "This link has been use. login instead" })
         }
 
-        if (getTimeElapse(data.req_date) > 72) {
+        if (getTimeElapse(data.req_date) > 259200) {
             return res.status(400).json({ message: "This link has expired. Call the schooladministrator to resend another link." })
         }
 

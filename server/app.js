@@ -33,7 +33,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors({origin: 'https://emakgodsownschools.herokuapp.com'})); 
+app.use(cors({origin: process.env.origin})); 
 
 app.use('/admin', require('./routes/admin'));
 app.use('/staffs', require('./routes/staffs'));

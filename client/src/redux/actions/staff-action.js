@@ -119,11 +119,10 @@ export const confirmStaffRegToken = token => async dispatch => {
                 'Content-Type': 'application/json',
             },
         });
-
+        console.log(response)
         dispatch(staffRegTokenConfirmed(response.data));
     } catch (errors) {
-        console.log(errors.data)
-        console.log(errors.data.message)
+        console.log(errors)
         dispatch(staffRegTokenConfirmFailed(errorParser(errors.response)));
     }
 }

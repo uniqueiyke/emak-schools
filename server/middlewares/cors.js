@@ -56,8 +56,7 @@ const cors = (options = defaultOption) => {
                 res.set('Access-Control-Allow-Origin', origin);
             }else if(typeof(origin) === 'object' && Array.isArray(origin)){
                 try {
-                    const url = new URL(req.header('Referer'));
-                    console.log(url.origin)
+                    const url = new URL(req.header('Referer'));s
                     if(origin.includes(url.origin))
                         res.set('Access-Control-Allow-Origin', url.origin);
                 } catch (error) {
