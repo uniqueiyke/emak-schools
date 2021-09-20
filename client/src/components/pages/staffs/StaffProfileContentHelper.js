@@ -25,26 +25,23 @@ const StaffProfileContentHelper = ({
 
     const { data, isUpdatingStaffData } = staff;
     const [editMode, isEditMode] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [value, setValue] = useState(data ? data[fieldName] : '');
     const [valueError, setValueError] = useState(null);
 
     const dispatch = useDispatch();
+    const checkVal = data[fieldName];
     useEffect(() => {
-        if(staff.error){
+        if (staff.error) {
             const key = Object.keys(staff.error.message)
             const keyValue = key[0];
-            setValueError({[keyValue]: staff.error.message[keyValue]})
+            setValueError({ [keyValue]: staff.error.message[keyValue] })
         }
-        if (isUpdatingStaffData === 1 || isUpdatingStaffData === -1) {
-            isEditMode(true);
-            setIsDisabled(true);
-        }
-        if (isUpdatingStaffData === 2) {
-            isEditMode(false);
-            setIsDisabled(false);
-        }
-    }, [staff.error, isUpdatingStaffData]);
+        setValue(data ? data[fieldName] : '');
+        isEditMode(false);
+        setIsUpdating(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [staff.error, checkVal, isUpdatingStaffData]);
 
     const handleValueChange = e => {
         setValue(e.target.value);
@@ -73,7 +70,7 @@ const StaffProfileContentHelper = ({
         if (!isEmptyArrayOrObject(err)) {
             setValueError(err);
         } else {
-            setIsDisabled(true);
+            setIsUpdating(true);
             if (fieldName === 'phone_number') {
                 dispatch(updateStaffData({ [fieldName]: formatPhoneNumber(value) }));
             } else {
@@ -82,7 +79,7 @@ const StaffProfileContentHelper = ({
             setValueError(null);
             setValue(data ? data[fieldName] : '');
             isEditMode(false);
-            setIsDisabled(false);
+            setIsUpdating(true);
         }
     }
 
@@ -105,7 +102,7 @@ const StaffProfileContentHelper = ({
                                     value={value}
                                     onChange={handleValueChange}
                                     error={valueError ? true : false}
-                                    disabled={isDisabled}
+                                    disabled={isUpdating}
                                     type={fieldType ? fieldType : 'text'}
                                 />
                             </FormControl>
@@ -119,6 +116,7 @@ const StaffProfileContentHelper = ({
                                 color='primary'
                                 edge='end'
                                 onClick={() => isEditMode(true)}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>
@@ -138,7 +136,7 @@ const StaffProfileContentHelper = ({
                                 edge='end'
                                 color='primary'
                                 onClick={cancelEditValue}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>
@@ -151,7 +149,7 @@ const StaffProfileContentHelper = ({
                                 color='primary'
                                 edge='end'
                                 onClick={handleSumit}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>

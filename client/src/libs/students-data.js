@@ -1,27 +1,31 @@
 export const classes = [
     {
-        label: "JS 1",
-        value: "JS 1"
+        label: "JSS1",
+        value: "jss1"
     },
     {
-        label: "JS 2",
-        value: "JS 2"
+        label: "JSS2",
+        value: "jss2"
     },
     {
-        label: "JS 3",
-        value: "JS 3"
+        label: "JSS3",
+        value: "jss3"
     },
     {
-        label: "SS 1",
-        value: "SS 1"
+        label: "SS1",
+        value: "ss1"
     },
     {
-        label: "SS 2",
-        value: "SS 2"
+        label: "SS2",
+        value: "ss2"
     },
     {
-        label: "SS 3",
-        value: "SS 3"
+        label: "SS3",
+        value: "ss3"
+    },
+    {
+        label: "None",
+        value: "none"
     },
 ]
 

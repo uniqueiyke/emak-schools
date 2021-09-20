@@ -17,34 +17,49 @@ import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
 import { updateStudentData } from '../../../redux/actions/student-action';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles((theme) => ({
+    formField: {
+        marginTop: 10,
+        marginBottom: 10
+    },
+}));
+
 
 const ProfileNamePage = ({
     profileData, rootStyle, titleStyle,
-    title, error,
+    title,
 }) => {
 
-    const { data } = profileData;
+    const classes = useStyles();
+    const { data, error } = profileData;
     const [editMode, isEditMode] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
-    const [value, setValue] = useState({
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    const initState = {
         first_name: data ? data.name.first_name : '',
         last_name: data ? data.name.last_name : '',
         other_names: data ? data.name.other_names : '',
-    });
+    };
+
+    const [value, setValue] = useState(initState);
     const [valueError, setValueError] = useState(null);
     const dispatch = useDispatch();
-
+ 
     useEffect(() => {
-        if(profileData.error){
-            const key = Object.keys(profileData.error.message)
+        if(error){
+            const key = Object.keys(error.message)
             for(const k of key){
-                setValueError({...valueError, [k]: profileData.error.message[k]})
+                setValueError({...valueError, [k]: error.message[k]})
             }
         }
         isEditMode(false);
-        setIsDisabled(false);
+        setIsUpdating(false);
+        setValue(initState);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profileData.error])
+    }, [error, data])
 
     const handleValueChange = e => {
         setValue({
@@ -54,11 +69,7 @@ const ProfileNamePage = ({
     }
 
     const cancelEditValue = () => {
-        setValue({
-            first_name: data ? data.name.first_name : '',
-            last_name: data ? data.name.last_name : '',
-            other_names: data ? data.name.other_names : '',
-        });
+        setValue(initState);
         isEditMode(false);
         setValueError(null);
     }
@@ -75,15 +86,10 @@ const ProfileNamePage = ({
             setValueError(err);
         } else {
             dispatch(updateStudentData(value, data._id));
-            setIsDisabled(true);
             setValueError(null);
-            setValue({
-                first_name: data ? data.name.first_name : '',
-                last_name: data ? data.name.last_name : '',
-                other_names: data ? data.name.other_names : '',
-            })
+            setValue(initState)
             isEditMode(false);
-            setIsDisabled(false)
+            setIsUpdating(true)
         }
     }
 
@@ -96,7 +102,7 @@ const ProfileNamePage = ({
                     </Typography>
                     {editMode ?
                         <>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth className={classes.formField}>
                                 <TextField
                                     name='last_name'
                                     label='Last Name'
@@ -106,11 +112,11 @@ const ProfileNamePage = ({
                                     value={value.last_name}
                                     onChange={handleValueChange}
                                     error={(valueError && valueError.last_name) ? true : false}
-                                    disabled={isDisabled}
+                                    disabled={isUpdating}
                                     type='text'
                                 />
                             </FormControl>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth className={classes.formField}>
                                 <TextField
                                     name='first_name'
                                     label='First Name'
@@ -120,11 +126,11 @@ const ProfileNamePage = ({
                                     value={value.first_name}
                                     onChange={handleValueChange}
                                     error={(valueError && valueError.first_name) ? true : false}
-                                    disabled={isDisabled}
+                                    disabled={isUpdating}
                                     type='text'
                                 />
                             </FormControl>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth className={classes.formField}>
                                 <TextField
                                     name='other_names'
                                     label='Other Names'
@@ -133,7 +139,7 @@ const ProfileNamePage = ({
                                     value={value.other_names}
                                     onChange={handleValueChange}
                                     error={(valueError && valueError.other_names) ? true : false}
-                                    disabled={isDisabled}
+                                    disabled={isUpdating}
                                     type='text'
                                 />
                             </FormControl>
@@ -147,6 +153,7 @@ const ProfileNamePage = ({
                                 color='primary'
                                 edge='end'
                                 onClick={() => isEditMode(true)}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>
@@ -185,7 +192,7 @@ const ProfileNamePage = ({
                                 edge='end'
                                 color='primary'
                                 onClick={cancelEditValue}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>
@@ -198,7 +205,7 @@ const ProfileNamePage = ({
                                 color='primary'
                                 edge='end'
                                 onClick={handleSumit}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>

@@ -46,16 +46,18 @@ export default function StaffProfileData({ staff }) {
 
     const classes = useStyles();
     const [editNames, isEditNames] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const dispatch = useDispatch();
     const [namesError, setNamesError] = useState(null);
     const { data, isUpdatingStaffData } = staff;
 
-    const [names, setNames] = useState({
+    const initState = {
         first_name: data ? data.first_name : '',
         last_name: data ? data.last_name : '',
         other_names: data ? data.other_names : '',
-    })
+    };
+    const [names, setNames] = useState(initState);
+
     useEffect(() => {
         if (staff.error) {
             const key = Object.keys(staff.error.message)
@@ -63,17 +65,13 @@ export default function StaffProfileData({ staff }) {
                 setNamesError({ ...namesError, [k]: staff.error.message[k] })
             }
             isEditNames(true);
-            setIsDisabled(true);
-        } if (isUpdatingStaffData === 1 || isUpdatingStaffData === -1) {
-            isEditNames(true);
-            setIsDisabled(true);
+            setIsUpdating(true);
         }
-        if (isUpdatingStaffData === 2) {
-            isEditNames(false);
-            setIsDisabled(false);
-        }
+        isEditNames(false);
+        setIsUpdating(false);
+        setNames(initState);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [staff.error, isUpdatingStaffData])
+    }, [staff.error, isUpdatingStaffData, data])
     const handleChange = e => {
         e.preventDefault();
         setNames({
@@ -93,14 +91,10 @@ export default function StaffProfileData({ staff }) {
         if (!isEmptyArrayOrObject(err)) {
             setNamesError(err);
         } else {
-            setIsDisabled(true);
             dispatch(updateStaffData(names));
             setNamesError(null);
-            setNames({
-                first_name: data ? data.first_name : '',
-                last_name: data ? data.last_name : '',
-                other_names: data ? data.other_names : '',
-            })
+            setIsUpdating(true);
+            setNames(initState);
         }
     }
 
@@ -154,7 +148,7 @@ export default function StaffProfileData({ staff }) {
                                             helperText={(namesError && namesError.last_name) && namesError.last_name}
                                             value={names.last_name}
                                             onChange={handleChange}
-                                            disabled={isDisabled}
+                                            disabled={isUpdating}
                                             error={(namesError && namesError.last_name) ? true : false}
                                         />
                                     </FormControl>
@@ -167,7 +161,7 @@ export default function StaffProfileData({ staff }) {
                                             helperText={(namesError && namesError.first_name) && namesError.first_name}
                                             value={names.first_name}
                                             onChange={handleChange}
-                                            disabled={isDisabled}
+                                            disabled={isUpdating}
                                             error={(namesError && namesError.first_name) ? true : false}
                                         />
                                     </FormControl>
@@ -178,7 +172,7 @@ export default function StaffProfileData({ staff }) {
                                             variant="outlined"
                                             value={names.other_names}
                                             onChange={handleChange}
-                                            disabled={isDisabled}
+                                            disabled={isUpdating}
                                             error={(namesError && namesError.other_names) ? true : false}
                                             helperText={(namesError && namesError.other_names) && namesError.other_names}
                                         />
@@ -193,6 +187,7 @@ export default function StaffProfileData({ staff }) {
                                         color='primary'
                                         edge='end'
                                         onClick={() => isEditNames(true)}
+                                        disabled={isUpdating}
                                     >
                                         <Hidden xsDown>
                                             <Typography variant='body1' component='span'>
@@ -212,6 +207,7 @@ export default function StaffProfileData({ staff }) {
                                         color='primary'
                                         edge='end'
                                         onClick={() => isEditNames(true)}
+                                        disabled={isUpdating}
                                     >
                                         <Hidden xsDown>
                                             <Typography variant='body1' component='span'>
@@ -231,7 +227,7 @@ export default function StaffProfileData({ staff }) {
                                         edge='end'
                                         color='primary'
                                         onClick={cancelEditNames}
-                                        disabled={isDisabled}
+                                        disabled={isUpdating}
                                     >
                                         <Hidden xsDown>
                                             <Typography variant='body1' component='span'>
@@ -244,7 +240,7 @@ export default function StaffProfileData({ staff }) {
                                         color='primary'
                                         edge='end'
                                         onClick={handleSumit}
-                                        disabled={isDisabled}
+                                        disabled={isUpdating}
                                     >
                                         <Hidden xsDown>
                                             <Typography variant='body1' component='span'>

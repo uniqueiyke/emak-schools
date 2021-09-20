@@ -11,6 +11,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { ListItemIcon } from '@material-ui/core';
 import { themeColor } from '../../libs/css-constants';
 import BallotIcon from '@material-ui/icons/Ballot';
+import { isAdmin } from '../../libs/client-page-auth';
 
 const useStyles = makeStyles(theme => ({
     listItemText: {
@@ -70,8 +71,8 @@ export default function ConditionalNavLink({ onClose, ...props }) {
                     <ListItemIcon ><AccountBoxIcon className={classes.listItemIcon} /></ListItemIcon>
                     <ListItemText primary={'Profile'} className={classes.listItemText} disableTypography />
                 </ListItem>
-                {(staff.staff.data && (staff.staff.data.roles.includes('admin') || staff.staff.data.roles.includes('super-admin'))) &&
-                    <ListItem
+                {isAdmin() &&
+                    <ListItem 
                         button
                         key={'adminpanel'}
                         onClick={() => handleMobileLinkClick('/admin/admin-panel')}

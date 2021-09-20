@@ -9,6 +9,7 @@ const Student = require('../models/student');
 const { isEmptyArrayOrObject, formatPhoneNumber } = require('../libs/utility-functions');
 const { validateFormFields } = require('../libs/validate-form-fields');
 
+
 exports.send_staff_register_token = async (req, res) => {
     try {
         const validateErr = validateFormFields(req.body,{
@@ -26,9 +27,9 @@ exports.send_staff_register_token = async (req, res) => {
         const usedEmail = await Staff.find({ $or: [{ email: email }, { phone_number: phone_number }] });
         if (!isEmptyArrayOrObject(usedEmail)) {
             return res.status(404).json({ message: "An account with this email or phone number already exist." })
-        }
+        } 
         const token = await getApikey();
-        const link = `${process.env.domainName}/staff/registration?key=${token}`;
+        const link = `${process.env.origin}/staff/registration?key=${token}`;
         const htmlStr = staffRegRequestEmail(link, req.body.key_code);
         const info = await sendEmail(req.body.email, htmlStr, "Registration token for emak schools staff");
 

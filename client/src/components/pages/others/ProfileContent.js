@@ -27,12 +27,13 @@ const ProfileContent = ({
 
     const { data } = profileData;
     const [editMode, isEditMode] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
-    const [editValue, setValue] = useState(data ? data[fieldName] : '');
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [editValue, setValue] = useState((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? data[fieldName]: '');
     const [valueError, setValueError] = useState(null);
 
     const dispatch = useDispatch();
     const checkVal = data[fieldName];
+    
     useEffect(() => {
         if (profileData.error) {
             const key = Object.keys(profileData.error.message)
@@ -40,7 +41,10 @@ const ProfileContent = ({
             setValueError({ [keyValue]: profileData.error.message[keyValue] })
         }
         isEditMode(false);
-        setIsDisabled(false);
+        setIsUpdating(false);
+        setValue(data ? data[fieldName] : '');
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profileData.error, checkVal])
 
     const handleValueChange = e => {
@@ -70,7 +74,6 @@ const ProfileContent = ({
         if (!isEmptyArrayOrObject(err)) {
             setValueError(err);
         } else {
-            setIsDisabled(true);
             if (fieldName === 'phone_number') {
                 dispatch(updateStudentData({ [fieldName]: formatPhoneNumber(editValue) }, data._id));
             } else {
@@ -79,7 +82,7 @@ const ProfileContent = ({
             setValueError(null);
             setValue(data ? data[fieldName] : '');
             isEditMode(false);
-            setIsDisabled(false);
+            setIsUpdating(true);
         }
     }
 
@@ -116,7 +119,7 @@ const ProfileContent = ({
                                             value={editValue}
                                             onChange={handleValueChange}
                                             error={valueError ? true : false}
-                                            disabled={isDisabled}
+                                            disabled={isUpdating}
                                             type={fieldType ? fieldType : 'text'}
                                         />
                                     </FormControl>
@@ -129,6 +132,7 @@ const ProfileContent = ({
                                 {data[fieldName]}
                             </Typography>
                             <IconButton
+                                disabled={isUpdating}
                                 color='primary'
                                 edge='end'
                                 onClick={() => isEditMode(true)}
@@ -151,7 +155,7 @@ const ProfileContent = ({
                                 edge='end'
                                 color='primary'
                                 onClick={cancelEditValue}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>
@@ -164,7 +168,7 @@ const ProfileContent = ({
                                 color='primary'
                                 edge='end'
                                 onClick={handleSumit}
-                                disabled={isDisabled}
+                                disabled={isUpdating}
                             >
                                 <Hidden xsDown>
                                     <Typography variant='body1' component='span'>

@@ -16,20 +16,19 @@ import { useSelector } from 'react-redux';
 
 import { drawerWidth } from '../../libs/css-constants';
 import { CssBaseline } from '@material-ui/core';
+import { isAdmin } from '../../libs/client-page-auth';
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginTop: theme.spacing(7),
   },
   menuButton: {
-    marginRight: theme.spacing(2),
-    padding: 7,
+    marginRight: theme.spacing(7),
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
-  },
-  menuButtonIcon: {
-    fontSize: '1rem',
   },
   title: {
     flexGrow: 1,
@@ -61,9 +60,6 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#00897b',
       color: theme.palette.common.white,
     },
-  },
-  iconButton: {
-    padding: 0
   },
 }));
 
@@ -110,7 +106,7 @@ export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
             aria-label="sidenav button"
             onClick={handleMenuButtonClick}
           >
-            <MenuIcon className={classes.menuButtonIcon} />
+            <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             Emak Schools
@@ -123,7 +119,6 @@ export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
-                className={classes.iconButton}
               >
                 <AccountCircle />
               </IconButton>
@@ -148,24 +143,35 @@ export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
                   dense
                   className={classes.menuItem}
                   onClick={() => goToPath('/staff/data/profile')}
-                >Profile</MenuItem>
+                >
+                  Profile
+                </MenuItem>
                 <MenuItem
                   selected={currentPath('/staff/data/dashboard')}
                   dense
                   className={classes.menuItem}
                   onClick={() => goToPath('/staff/data/dashboard')}
-                >Dashboard</MenuItem>
-                <MenuItem
-                  selected={currentPath('/admin/admin-panel')}
-                  dense
-                  className={classes.menuItem}
-                  onClick={() => goToPath('/admin/admin-panel')}
-                >AdminPanel</MenuItem>
+                >
+                  Dashboard
+                </MenuItem>
+                {
+                  isAdmin() &&
+                  <MenuItem
+                    selected={currentPath('/admin/admin-panel')}
+                    dense
+                    className={classes.menuItem}
+                    onClick={() => goToPath('/admin/admin-panel')}
+                  >
+                    AdminPanel
+                  </MenuItem>
+                }
                 <MenuItem
                   dense
                   className={classes.menuItem}
                   onClick={logoutClose}
-                >logout</MenuItem>
+                >
+                  logout
+                </MenuItem>
               </Menu>
             </div>
             :

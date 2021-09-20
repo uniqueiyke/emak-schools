@@ -4,9 +4,9 @@ const NameSchema = require('./name-schema');
 
 const ParentSchema = new Schema({
     name: {type: NameSchema, default: () => ({})},
-    phone_number: String,
-    email: String,
-    occpation: String,
+    phone_number: {type: String, default: ""},
+    email: {type: String, default: ""},
+    occpation: {type: String, default: ""},
     office: {type: AddressSchema, default: () => ({})},
     children: [{type: Schema.Types.ObjectId, ref: 'Student'}],
 })

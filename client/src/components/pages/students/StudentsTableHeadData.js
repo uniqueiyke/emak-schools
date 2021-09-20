@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyle = makeStyles({
     tableCell: {
         color: 'blue',
-        fontSize: '0.7rem',
+        fontSize: '1rem',
         lineHeight: 1.2,
         textAlign: 'center',
         backgroundColor: 'black',

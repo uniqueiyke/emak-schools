@@ -22,17 +22,15 @@ const useStyle = makeStyles({
 
 const StudentProfile = () => {
     const classes = useStyle();
-    const {id} = useParams();
+    const { id } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
-    const {student} = useSelector(state => state.student);
+    const { student } = useSelector(state => state.student);
     useEffect(() => {
-        if(!student){
-            if(id) {
-                dispatch(fetchStudent(id))
-            }
+        if (id) {
+            dispatch(fetchStudent(id))
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
     if (student.isFetchingStudents || (!student.data && !student.error)) {
@@ -40,12 +38,13 @@ const StudentProfile = () => {
             <DataFetchingProgress />
         )
     } else {
-    return (
-        <>
-      <StudentProfileData profileData={student} />  
-      <IconButton onClick={() => history.push('/admin/students/list')} className={classes.backBtn}> <ArrowBackIosIcon /> </IconButton>
-      </>
-    )}
+        return (
+            <>
+                <StudentProfileData profileData={student} />
+                <IconButton onClick={() => history.push('/admin/students/list')} className={classes.backBtn}> <ArrowBackIosIcon /> </IconButton>
+            </>
+        )
+    }
 }
 
 export default StudentProfile
