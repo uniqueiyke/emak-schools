@@ -11,12 +11,12 @@ import { useHistory } from 'react-router-dom';
 
 
 const useStyle = makeStyles({
-    backBtn: {
+    addBtn: {
         position: 'fixed',
-        bottom: 25,
-        right: 10,
+        bottom: '25vh',
+        right: '10vw',
         zIndex: 10,
-        color: 'purple',
+        color: '#f3ef1c',
     }
 })
 
@@ -42,7 +42,7 @@ const ListOfStudents = () => {
             <>
                 <Typography variant='h5' align='center'>Student Table</Typography>
                 <StudentsTable studentsData={students.data}/>
-                <IconButton onClick={() => history.push('/admin/add-student')} className={classes.backBtn}> <AddCircleOutlineOutlinedIcon /> </IconButton>
+                <IconButton onClick={() => history.push('/admin/add-student')} className={classes.addBtn}> <AddCircleOutlineOutlinedIcon /> </IconButton>
             </>
         )
     }

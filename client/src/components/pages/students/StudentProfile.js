@@ -12,8 +12,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 const useStyle = makeStyles({
     backBtn: {
         position: 'fixed',
-        bottom: 25,
-        right: 10,
+        bottom: '25vh',
+        right: '10vw',
         zIndex: 10,
         color: 'purple',
     }

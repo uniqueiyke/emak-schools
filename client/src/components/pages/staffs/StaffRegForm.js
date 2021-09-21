@@ -15,9 +15,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PersonIcon from '@material-ui/icons/Person';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
-
 import { useDispatch, useSelector } from 'react-redux'
-
 import { isEmptyString, formatPhoneNumber, isEmptyArrayOrObject, setPageTitle } from '../../../libs/utility-functions';
 import { validateFormFields } from '../../../libs/form-fields-validator';
 import checkStaffRegToken from '../../auth-components/CheckStaffRegToken';

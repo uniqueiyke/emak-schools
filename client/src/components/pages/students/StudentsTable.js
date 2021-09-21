@@ -11,6 +11,9 @@ const useStyles = makeStyles({
   table: {
     minWidth: '100%',
   },
+  divScroll: {
+    scrollBehavior: 'auto',
+  }
 });
 
 const StudentsTable = ({studentsData}) => {
@@ -21,6 +24,7 @@ const StudentsTable = ({studentsData}) => {
     history.push(path)
   }
   return (
+    <div className={classes.divScroll}>
       <Table className={classes.table} aria-label="students table">
         <TableHead className={classes.thead}>
           <StudentsTableHeadData />
@@ -36,6 +40,7 @@ const StudentsTable = ({studentsData}) => {
           }
         </TableBody>
       </Table>
+      </div>
   );
 }
 

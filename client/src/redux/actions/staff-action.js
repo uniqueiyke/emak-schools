@@ -119,10 +119,8 @@ export const confirmStaffRegToken = token => async dispatch => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log(response)
         dispatch(staffRegTokenConfirmed(response.data));
     } catch (errors) {
-        console.log(errors)
         dispatch(staffRegTokenConfirmFailed(errorParser(errors.response)));
     }
 }
@@ -212,23 +210,6 @@ export const confirmEmail = email => async dispatch => {
         return false;
     }
 }
-
-// export const confirmEmail = async email => {
-//     try {
-//         const response = await axios({
-//             url: '/staffs/staff/confirm/email',
-//             method: 'POST',
-//             data: email,
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         });
-//         return response.data;
-//     } catch (errors) {
-//         return errors.response;
-//     }
-// }
-
 
 export const resetPassword = email => async dispatch => {
     try {
