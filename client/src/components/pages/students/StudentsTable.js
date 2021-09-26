@@ -19,10 +19,11 @@ const useStyles = makeStyles({
   tableContainer: {
     overflow: 'scroll',
     width: '100%',
+    height: 400,
   },
   addBtn: {
     position: 'fixed',
-    bottom: '40px',
+    bottom: '40%',
     right: '10vw',
     zIndex: 10,
     color: '#f3ef1c',
