@@ -7,7 +7,12 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import ProfileContent from '../others/ProfileContent';
 import ProfileNamePage from '../others/ProfileNamePage';
-import { genotypes, bloodGroups, classes as studentClass } from '../../../libs/students-data'
+import { 
+    genotypes, 
+    bloodGroups, 
+    classes as studentClass, 
+    gender, studentStatus,
+} from '../../../libs/students-data'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,6 +65,29 @@ export default function StaffProfileData({ profileData }) {
                 <ProfileContent
                     profileData={profileData}
                     select
+                    listOptions={gender}
+                    fieldLabel='Select Your Gender'
+                    fieldName='gender'
+                    title='Gender'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    labelId='gender'
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    select
+                    listOptions={studentStatus}
+                    fieldLabel='Change Status'
+                    fieldName='status'
+                    title='Status'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    labelId='status'
+                />
+                {(profileData && profileData.data && profileData.data.status === 'student') &&
+                    <ProfileContent
+                    profileData={profileData}
+                    select
                     listOptions={studentClass}
                     fieldLabel='Change Current Class'
                     fieldName='current_class'
@@ -68,6 +96,7 @@ export default function StaffProfileData({ profileData }) {
                     rootStyle={classes.root}
                     labelId='currentclass'
                 />
+                }
                 <ProfileContent
                     profileData={profileData}
                     select
@@ -78,6 +107,15 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='regclass'
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    fieldLabel='Date of Birth'
+                    fieldType='date'
+                    fieldName='date_of_birth'
+                    title='Born on'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -109,6 +147,33 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     title='Genotype'
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    fieldLabel='Registration Date'
+                    fieldType='date'
+                    fieldName='reg_date'
+                    title='Registered on'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    fieldLabel='Height'
+                    fieldType='number'
+                    fieldName='height'
+                    title='Height'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    fieldLabel='Weight'
+                    fieldType='number'
+                    fieldName='weight'
+                    title='Weight'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
                 />
             </Grid>
         </Container>

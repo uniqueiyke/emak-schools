@@ -1,30 +1,28 @@
 import { TableHead, TableRow } from '@material-ui/core';
 import React from 'react';
+import CheckableTableCell from './CheckableTableCell';
 import SortableTableCell from './SortableTableCell';
-import TableCell from '@material-ui/core/TableCell';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useStyle = makeStyles({
-    tableCell: {
-        color: 'blue',
-        fontSize: '1rem',
-        lineHeight: 1.2,
-        textAlign: 'center',
-        backgroundColor: 'black',
-    }
-  })
 
-const StudentsTableHeadData = ({
+
+const SortTableHead = ({
     indeterminate, checked,
     onChange, inputProps,
     order, orderBy, orderID,
     active, onClick, direction,
 }) => {
-    const classes = useStyle();
+
     return (
         <TableHead>
             <TableRow>
-                <TableCell className={classes.tableCell}>S/N</TableCell>
+                <CheckableTableCell
+                    size='small'
+                    padding='checkbox'
+                    indeterminate={indeterminate}
+                    checked={checked}
+                    onChange={onChange}
+                    inputProps={inputProps}
+                />
                 <SortableTableCell
                     order={order}
                     orderBy={orderBy}
@@ -56,14 +54,6 @@ const StudentsTableHeadData = ({
                     active={active}
                     onClick={onClick}
                     direction={direction}
-                >Other Names</SortableTableCell>
-                <SortableTableCell
-                    order={order}
-                    orderBy={orderBy}
-                    orderID={orderID}
-                    active={active}
-                    onClick={onClick}
-                    direction={direction}
                 >Current Class</SortableTableCell>
                 <SortableTableCell
                     order={order}
@@ -78,4 +68,4 @@ const StudentsTableHeadData = ({
     )
 }
 
-export default StudentsTableHeadData;
+export default SortTableHead

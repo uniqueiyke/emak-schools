@@ -31,11 +31,15 @@ const GreenRadio = withStyles({
 })((props) => <Radio color="default" {...props} />);
 
 
-const SingleSelect = ({ listOptions, labelId, helperText, label, onChange, className, value, name, required, error, ...props }) => {
+const SingleSelect = ({ 
+  listOptions, labelId, helperText, 
+  label, onChange, className, value, variant,
+  name, required, error, fullWidth, ...props
+}) => {
 
   return (
     <div>
-      <FormControl required={required} error={error} variant="outlined" fullWidth className={className} >
+      <FormControl required={required} error={error} variant={variant ? variant : "outlined"} fullWidth={fullWidth ? fullWidth : true} className={className} >
         <InputLabel id={labelId}>{label}</InputLabel>
         <Select
           labelId={labelId}
@@ -78,6 +82,8 @@ SingleSelect.propTypes = {
   error: PropTypes.bool,
   label: PropTypes.string,
   value: PropTypes.any,
+  fullWidth: PropTypes.bool,
+  variant: PropTypes.string,
 }
 
 export default SingleSelect

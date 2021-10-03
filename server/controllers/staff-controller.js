@@ -45,7 +45,7 @@ exports.register_staff = async (req, res) => {
         } = req.body;
 
         //Check if the is a user with the provided email already
-        const alreadyAcct = await Staff.findOne({ $or: [{ email: email }, { username: username }, { phone_number: phone_number }] });
+        const alreadyAcct = await Staff.findOne({ $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }, { phone_number: phone_number }] });
         if (alreadyAcct) {
             let message = {};
             if (alreadyAcct.username === username) {
@@ -110,8 +110,8 @@ exports.register_staff = async (req, res) => {
 exports.login_staff = async (req, res) => {
     try {
         const { username, password } = req.body;
-
-        const staff = await Staff.findOne({ $or: [{ email: username }, { username: username }, { phone_number: username }] });
+        const usernameL = username.toLowerCase();
+        const staff = await Staff.findOne({ $or: [{ email: usernameL }, { username: usernameL }, { phone_number: usernameL }] });
         if (!staff) {
             return res.status(400).json({ message: "Invalid credentials" });
         }

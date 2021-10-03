@@ -32,10 +32,10 @@ const useStyle = makeStyles({
     }
   })
 
-const StudentsTableBodyData = ({studentData, index, onClick}) => {
+const StudentsTableBodyData = ({studentData, onDoubleClick, index, onClick}) => {
     const classes = useStyle();
     return (
-        <TableRow onDoubleClick={onClick} className={classes.rows} >
+        <TableRow onDoubleClick={onDoubleClick} className={classes.rows} >
             <TableCell className={clsx(classes.tableCell, classes.firstRow)} >{index + 1}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.reg_number}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.last_name}</TableCell>

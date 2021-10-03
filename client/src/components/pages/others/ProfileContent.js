@@ -15,7 +15,10 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import SendIcon from '@material-ui/icons/Send';
 import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
-import { isEmptyArrayOrObject, formatPhoneNumber } from '../../../libs/utility-functions';
+import { isEmptyArrayOrObject, 
+    formatPhoneNumber, parseInputValue,
+    formatDatePrint, isValidDate, 
+} from '../../../libs/utility-functions';
 import SingleSelect from '../../other-components/SingleSelect';
 import { updateStudentData } from '../../../redux/actions/student-action';
 const ProfileContent = ({
@@ -28,7 +31,7 @@ const ProfileContent = ({
     const { data } = profileData;
     const [editMode, isEditMode] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
-    const [editValue, setValue] = useState((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? data[fieldName]: '');
+    const [editValue, setValue] = useState((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
     const [valueError, setValueError] = useState(null);
 
     const dispatch = useDispatch();
@@ -42,7 +45,7 @@ const ProfileContent = ({
         }
         isEditMode(false);
         setIsUpdating(false);
-        setValue(data ? data[fieldName] : '');
+        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profileData.error, checkVal])
@@ -52,7 +55,7 @@ const ProfileContent = ({
     }
 
     const cancelEditValue = () => {
-        setValue(data ? data[fieldName] : '');
+        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
         isEditMode(false);
         setValueError(null);
     }
@@ -80,7 +83,7 @@ const ProfileContent = ({
                 dispatch(updateStudentData({ [fieldName]: editValue }, data._id));
             }
             setValueError(null);
-            setValue(data ? data[fieldName] : '');
+            setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
             isEditMode(false);
             setIsUpdating(true);
         }
@@ -129,7 +132,7 @@ const ProfileContent = ({
                         :
                         <Typography component='div' align='center'>
                             <Typography color="textSecondary" component='span'>
-                                {data[fieldName]}
+                                {!isValidDate(data[fieldName]) ? data[fieldName] : formatDatePrint(data[fieldName])}
                             </Typography>
                             <IconButton
                                 disabled={isUpdating}

@@ -90,3 +90,33 @@ export const genotypes = [
         value: "Others"
     },
 ]
+
+export const gender = [
+    {
+        label: "Female",
+        value: "female"
+    },
+    {
+        label: "Male",
+        value: "male"
+    },
+]
+
+export const studentStatus = [
+    {
+        label: 'Graduate',
+        value: 'graduate',
+    }, 
+    {
+        label: 'Left School',
+        value:'left school'
+    }, 
+    {
+        label: 'Student',
+        value:'student'
+    }, 
+    {
+        label: 'Others', 
+        value: 'indeterminant'
+    }
+]

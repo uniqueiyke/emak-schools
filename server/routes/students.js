@@ -6,7 +6,7 @@ const { register_student, get_student, update_student_data } = require('../contr
 
 /* Student Registration */
 router.post('/registration/register/student', register_student);
-router.get('/get/student/data', auth,  get_student);
-router.post('/student/data/update', auth,  update_student_data);
+router.get('/get/student/data', auth('admin'),  get_student);
+router.post('/student/data/update', auth('admin'),  update_student_data);
 
 module.exports = router;

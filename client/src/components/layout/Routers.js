@@ -11,12 +11,15 @@ import AuthRoute from '../auth-components/AuthRoute';
 import StaffDashboard from '../pages/staffs/StaffDashboard';
 import Page404 from '../other-components/Page404';
 import ToAdminPanel from '../auth-components/ToAdminPanel';
-import ErrorBoundary from '../other-components/ErrorBoundary'
-import ListOfStudents from '../pages/students/ListOfStudents';
+import ErrorBoundary from '../other-components/ErrorBoundary';
 import StudentProfile from '../pages/students/StudentProfile';
 import AdminAuthRoute from '../auth-components/AdminAuthRoute';
 import ResetPassword from '../pages/staffs/ResetPassword';
 import ConfirmEmail from '../pages/staffs/ConfirmEmail';
+import StudentSelectTable from '../pages/students/StudentSelectTable';
+// import TestApp from '../test-components/TestApp';
+import CurrentStudentsList from '../pages/students/CurrentStudentsList';
+import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 
 export default function Routers() {
     return (
@@ -55,12 +58,21 @@ export default function Routers() {
                 <AuthRoute exact path="/staff/data/dashboard">
                     <StaffDashboard />
                 </AuthRoute>
-                <AdminAuthRoute exact path="/admin/students/list">
-                    <ListOfStudents />
+                <AdminAuthRoute exact path="/admin/current-students/list">
+                    <CurrentStudentsList />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact path="/admin/all-students/list">
+                    <StudentPresentAndPast />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact path="/admin/students/select-students">
+                    <StudentSelectTable />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact path="/admin/students/student/profile/:id">
                     <StudentProfile />
                 </AdminAuthRoute>
+                {/* <Route exact path="/test/components">
+                    <TestApp />
+                </Route> */}
                 <Route path="*">
                     <Page404 />
                 </Route>

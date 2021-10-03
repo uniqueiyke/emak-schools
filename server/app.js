@@ -18,7 +18,7 @@ mongoose.connect(process.env.mongodbURL, {
 .then(()=> console.log('mongo conneted'))
 .catch(error => console.log('mongo connection error', error));
 
-// // import and create the mongoDB connection to local mongoDB
+// import and create the mongoDB connection to local mongoDB
 // mongoose.connect(process.env.localMongoDB1, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,

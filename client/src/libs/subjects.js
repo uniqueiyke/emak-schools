@@ -1,218 +1,245 @@
-const subject = [
+export const subjects = [
     {
         serial_code: 1,
         subject_code: "001",
-        subject_title: "English Language",
+        label: "English Language",
+        value: "eng_lang",
         offer_by: "all",
         short_title: "ENG"
     },
     {
         serial_code: 2,
         subject_code: "002",
-        subject_title: "Mathematics",
+        label: "Mathematics",
+        value: "maths",
         offer_by: "all",
         short_title: "MTH"
     },
     {
         serial_code: 3,
         subject_code: "003",
-        subject_title: "Igbo Language",
+        label: "Igbo Language",
+        value: "igbo_lang",
         offer_by: "all",
         short_title: "IGO"
     },
     {
         serial_code: 4,
         subject_code: "004",
-        subject_title: "Civic Education",
+        label: "Civic Education",
+        value: "civic_edu",
         offer_by: "all",
         short_title: "CIV"
     },
     {
         serial_code: 5,
         subject_code: "005",
-        subject_title: "Biology",
+        label: "Biology",
+        value: "biology",
         offer_by: "senior",
         short_title: "BIO"
     },
     {
         serial_code: 6,
         subject_code: "006",
-        subject_title: "Physics",
+        label: "Physics",
+        value: "physics",
         offer_by: "senior",
         short_title: "PHY"
     },
     {
         serial_code: 7,
         subject_code: "007",
-        subject_title: "Chemistry",
+        label: "Chemistry",
+        value: "chemistry",
         offer_by: "senior",
         short_title: "CHEM"
     },
     {
         serial_code: 8,
         subject_code: "008",
-        subject_title: "Animal Husbandary",
+        label: "Animal Husbandary",
+        value: "animal_hus",
         offer_by: "senior",
         short_title: "AHB"
     },
     {
         serial_code: 9,
         subject_code: "009",
-        subject_title: "Computer Science",
+        label: "Computer Science",
+        value: "com_sci",
         offer_by: "all",
         short_title: "COM"
     },
     {
         serial_code: 10,
         subject_code: "010",
-        subject_title: "Agricultural Science",
+        label: "Agricultural Science",
+        value: "agric_sci",
         offer_by: "all",
         short_title: "AGS"
     },
     {
         serial_code: 11,
         subject_code: "011",
-        subject_title: "Economics",
+        label: "Economics",
+        value: "economics",
         offer_by: "senior",
         short_title: "ECO"
     },
     {
         serial_code: 12,
         subject_code: "012",
-        subject_title: "Christian Religious Studies",
+        label: "Christian Religious Studies",
+        value: "crs",
         offer_by: "all",
         short_title: "CRS"
     },
     {
         serial_code: 13,
         subject_code: "013",
-        subject_title: "Government",
+        label: "Government",
+        value: "government",
         offer_by: "senior",
         short_title: "GOV"
     },
     {
         serial_code: 14,
         subject_code: "014",
-        subject_title: "English Literature",
+        label: "English Literature",
+        value: "eng_lit",
         offer_by: "all",
         short_title: "ENL"
     },
     {
         serial_code: 15,
         subject_code: "015",
-        subject_title: "Geography",
+        label: "Geography",
+        value: "geography",
         offer_by: "senior",
         short_title: "GEO"
     },
     {
         serial_code: 16,
         subject_code: "016",
-        subject_title: "Acounting",
+        label: "Accounting",
+        value: "accounting",
         offer_by: "senior",
         short_title: "ACO"
     },
     {
         serial_code: 17,
         subject_code: "017",
-        subject_title: "Marketing",
+        label: "Marketing",
+        value: "marketing",
         offer_by: "senior",
         short_title: "MAK"
     },
     {
         serial_code: 18,
         subject_code: "018",
-        subject_title: "Comerce",
+        label: "Comerce",
+        value: "comerce",
         offer_by: "senior",
         short_title: "CME"
     },
     {
         serial_code: 19,
         subject_code: "019",
-        subject_title: "Basic Science",
+        label: "Basic Science",
+        value: "basic_sci",
         offer_by: "junior",
         short_title: "BCI"
     },
     {
         serial_code: 20,
         subject_code: "020",
-        subject_title: "Basic Technology",
+        label: "Basic Technology",
+        value: "basic_tech",
         offer_by: "junior",
         short_title: "BTEC"
     },
     {
         serial_code: 21,
         subject_code: "021",
-        subject_title: "Social Studies",
+        label: "Social Studies",
+        value: "social_stud",
         offer_by: "junior",
         short_title: "SOS"
     },
     {
         serial_code: 22,
         subject_code: "022",
-        subject_title: "Cultural and Creative Art",
+        label: "Cultural and Creative Art",
+        value: "cca",
         offer_by: "junior",
         short_title: "CCA"
     },
     {
         serial_code: 23,
         subject_code: "023",
-        subject_title: "Business Studies",
+        label: "Business Studies",
+        value: "bus_stud",
         offer_by: "junior",
         short_title: "BUS"
     },
     {
         serial_code: 24,
         subject_code: "024",
-        subject_title: "Music",
+        label: "Music",
+        value: "music",
         offer_by: "junior",
         short_title: "MUS"
     },
     {
         serial_code: 25,
         subject_code: "025",
-        subject_title: "Physical and Health Education",
+        label: "Physical and Health Education",
+        value: "phe",
         offer_by: "junior",
         short_title: "PHE"
     },
     {
         serial_code: 26,
         subject_code: "026",
-        subject_title: "Home Economics",
+        label: "Home Economics",
+        value: "home_econs",
         offer_by: "junior",
         short_title: "HOM"
     },
     {
         serial_code: 27,
         subject_code: "027",
-        subject_title: "French",
+        label: "French",
+        value: "french",
         offer_by: "junior",
         short_title: "FRE"
     },
     {
         serial_code: 28,
         subject_code: "028",
-        subject_title: "Current Affiers",
+        label: "Current Affiers",
+        value: "current_affiers",
         offer_by: "all",
         short_title: "CAF"
     },
 ]
 
-export default subject;
 
 export const terms = [
     {
         code: 1,
-        short_title: "1st Term",
-        long_title: "First Term"
+        value: "First Term",
+        label: "First Term"
     },
     {
         code: 2,
-        short_title: "2nd Term",
-        long_title: "Second Term"
+        value: "Second Term",
+        label: "Second Term"
     },
     {
         code: 3,
-        short_title: "3rd Term",
-        long_title: "Third Term"
+        value: "Third Term",
+        label: "Third Term"
     },
 ]

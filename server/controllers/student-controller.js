@@ -81,14 +81,15 @@ exports.register_student = async (req, res) => {
 
         await Promise.all([student.save(), parent.save()]);
         res.json(student);
-    } catch (err) {
-        console.log(err.message);
-        res.status(401).json(err.message);
+    } catch (error) {
+        console.log(error.message);
+        res.status(401).json(error.message);
     }
 }
 
 exports.get_student = async (req, res) => {
     try {
+        console.log('get student')
         if (isEmptyArrayOrObject(req.query)) {
             res.status(400).json({ message: 'Not a registered student' });
         }
@@ -116,6 +117,7 @@ exports.update_student_data = async (req, res) => {
         }
         const fields = Object.keys(req.body);
         if ((fields.length === 2 || fields.length === 3) && fields.includes('last_name')) {
+            let err = null;
             for (const field of fields) {
                 err = validateFormFields({ [field]: req.body[field] }, {
                     [field]: 'min_length',
@@ -141,9 +143,7 @@ exports.update_student_data = async (req, res) => {
                     err = validateFormFields({ [field]: req.body[field] }, { [field]: 'phone' });
                 }
                 else {
-                    err = validateFormFields({ [field]: req.body[field] }, {
-                        [field]: 'min_length',
-                    }, { optionalFields: ['other_names'], minLength: 3 })
+                    err = validateFormFields({ [field]: req.body[field] }, {[field]: ''});
                 }
                 if (!isEmptyArrayOrObject(err)) {
                     return res.status(400).json([err, 'updateErr']);

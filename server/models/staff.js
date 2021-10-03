@@ -2,9 +2,9 @@ const {Schema, model} = require('mongoose');
 const AddressSchema = require('./address-schema');
 
 const StaffSchema = new Schema({
-    username: {type: String, require: true, unique: true, minlength: 8, trim: true},
+    username: {type: String, require: true, lowercase: true, unique: true, minlength: 8, trim: true},
     password: {type: String, require: true, trim: true},
-    email: {type: String, require: true, unique: true, trim: true},
+    email: {type: String, lowercase: true,  require: true, unique: true, trim: true},
     last_name: {type: String, trim: true, default: ""},
     first_name: {type: String, trim: true, default: ""},
     other_names: {type: String, trim: true, default: ""},

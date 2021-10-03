@@ -7,8 +7,8 @@ export default function MessageAlert( {data, error, children, ...props} ) {
     
     useEffect(() => {
         if(data || error)
-            setIsOpen(true)
-        
+            setIsOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, error])
 
     return (

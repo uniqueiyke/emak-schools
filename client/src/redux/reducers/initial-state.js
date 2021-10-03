@@ -49,6 +49,10 @@ const initialState = (options = defaulOptions) => {
                 error: null,
                 isFetchingStudents: false,
             },
+            resultManager: {
+                data: null,
+                error: null,
+            }
         }
     }
 

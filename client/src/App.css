@@ -47,4 +47,6 @@
   text-align: left;
   cursor: all-scroll;
   scroll-behavior: auto;
+  overflow: scroll;
+  text-overflow: clip;
 }

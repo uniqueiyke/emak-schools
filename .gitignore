@@ -6,7 +6,7 @@ npm-debug.log
 
 /.pnp
 client/.pnp.js
-
+client/src/components/test-components
 # testing
 client/coverage
 
