@@ -62,6 +62,7 @@ exports.register_student = async (req, res) => {
             }, gender,
             date_of_birth, reg_class,
             genotype, blood_group, last_sch_attend,
+            current_class: reg_class,
         });
 
         const nparent = new Parent({

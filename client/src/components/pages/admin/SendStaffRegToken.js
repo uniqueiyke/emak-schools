@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -20,7 +20,7 @@ import { Divider } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { generateCodeOfLenth } from '../../../libs/gen-api-key';
 import { sendStaffRegistrationToken } from '../../../redux/actions/admin-action';
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
 import MultipleSelect from '../../other-components/MultipleSelect';
 import { roles } from '../../../libs/staff-roles'
 
@@ -70,16 +70,30 @@ export default function SendStaffRegDetails() {
         roles: [],
     };
 
+    const initServerError = { isError: false, errorMsg: null };
+
     const { data, error } = useSelector(state => state.admin.staffRegPassport);
     const { staff } = useSelector(state => state.staff);
     const [regData, setRegData] = useState(initialDataState);
     const [formSubmitErr, setFormSubmitErr] = useState(null);
+    const [serverError, setServerError] = useState(initServerError);
+    const [isSuccessful, setIsSuccessful] = useState(false);
     const [keyCode, setKeyCode] = useState('');
 
+    useEffect(() => {
+        if (error) {
+            setServerError({ isError: error.is_error, errorMsg: error.error_msg })
+        }
+        if (data) {
+            setIsSuccessful(data.is_successful)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, error])
+
     const filterRoles = () => {
-        if( staff.data && staff.data.roles.includes('super-admin')) 
+        if (staff.data && staff.data.roles.includes('super-admin'))
             return roles;
-        return roles.filter(item => (item.value !== 'super-admin' && item.value !== 'admin' && item.value !=='bursar' ) && item)
+        return roles.filter(item => (item.value !== 'super-admin' && item.value !== 'admin' && item.value !== 'bursar') && item)
     }
     const handleDataChange = (e) => {
         setRegData({
@@ -93,7 +107,7 @@ export default function SendStaffRegDetails() {
         generateCodeOfLenth(8, 'nu')
             .then(code => {
                 setKeyCode(code);
-            }).catch(err => {throw err});
+            }).catch(err => { throw err });
     }
 
     const handleSubmit = e => {
@@ -106,7 +120,7 @@ export default function SendStaffRegDetails() {
                 roles: 'array',
                 key_code: '',
             }
-            );
+        );
 
         if (isEmptyArrayOrObject(errors)) {
             const data = {
@@ -129,12 +143,24 @@ export default function SendStaffRegDetails() {
         <>
             <Card className={classes.root}>
                 <CardContent>
-                    <MessageAlert
-                        error={error}
-                        data={data}
-                    >
-                        {error ? `${error.statusText}. ${error.message}` : data ? `A mail has been sent to ${data.email}` : ''}
-                    </MessageAlert>
+                    {(serverError && serverError.isError) &&
+                        <AlertMessage
+                            severity='error'
+                            open={serverError.isError}
+                            onClose={() => setServerError(initServerError)}
+                        >
+                            {serverError.errorMsg.message}
+                        </AlertMessage>
+                    }
+                    {isSuccessful &&
+                        <AlertMessage
+                            severity='success'
+                            open={isSuccessful}
+                            onClose={() => setIsSuccessful(false)}
+                        >
+                            {`A mail has been sent to ${data.email}`}
+                        </AlertMessage>
+                    }
                     <Typography className={classes.title} gutterBottom>
                         Send Staff Registration Code
                     </Typography>
@@ -178,7 +204,7 @@ export default function SendStaffRegDetails() {
                         onChange={handleDataChange}
                         required
                         helperText={(formSubmitErr && formSubmitErr.roles) && formSubmitErr.roles}
-                        error={(formSubmitErr && formSubmitErr.roles ) ? !isEmptyString(formSubmitErr.roles) : false}
+                        error={(formSubmitErr && formSubmitErr.roles) ? !isEmptyString(formSubmitErr.roles) : false}
                     />
                     <FormControl fullWidth className={classes.formField}>
                         <TextField

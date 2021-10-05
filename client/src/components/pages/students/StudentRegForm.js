@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -15,7 +15,8 @@ import { classes, bloodGroups, genotypes } from '../../../libs/students-data'
 import SingleSelect from '../../other-components/SingleSelect';
 import ParentsData from './ParentsData';
 import { registerStudent } from '../../../redux/actions/student-action';
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
+import { Typography } from '@material-ui/core';
 
 
 const useStyle = makeStyles({
@@ -25,7 +26,7 @@ const useStyle = makeStyles({
   },
   iconColor: {
     color: '#008800',
-},
+  },
 })
 const StudentRegForm = () => {
 
@@ -59,6 +60,20 @@ const StudentRegForm = () => {
     });
   }
 
+  const initErrorState = { isError: false, errorMsg: null }
+  const [errState, setErrState] = useState(initErrorState);
+  const [newRegistration, setNewRegistration] = useState(false);
+
+  useEffect(() => {
+    if (error) {
+      setErrState({ isError: error.is_error, errorMsg: error.error_msg })
+    }
+    if (data && data.new_registration) {
+      setNewRegistration(data.new_registration)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, error])
+
   const handleSubmit = e => {
     e.preventDefault();
     const regDataErr = validateFormFields(regData, {
@@ -76,7 +91,7 @@ const StudentRegForm = () => {
       parent_email: 'email',
       last_sch_attend: 'min_length',
       parent_occpation: 'min_length'
-    }, {optionalFields: ['parent_email', 'date_of_birth', 'blood_group', 'genotype', 'other_names', 'last_sch_attend', 'parent_occpation'], minLength: 3});
+    }, { optionalFields: ['parent_email', 'date_of_birth', 'blood_group', 'genotype', 'other_names', 'last_sch_attend', 'parent_occpation'], minLength: 3 });
     if (isEmptyArrayOrObject(regDataErr)) {
       dispatch(registerStudent({
         ...regData,
@@ -91,132 +106,139 @@ const StudentRegForm = () => {
 
   return (
     <>
-    {
-    !isEmptyArrayOrObject(error) ? 
-    <MessageAlert error >{error.message ? error.message : error.statusText ? error.statusText : ''}</MessageAlert> :
-    !isEmptyArrayOrObject(data) ? 
-    <MessageAlert data >{`Student registered. Reg. No. ${data.reg_number}. Name ${data.name.last_name} ${data.name.first_name}`}</MessageAlert> : <></>
-    }
-    <form onSubmit={handleSubmit} noValidate>
-      <FormControl fullWidth className={styles.formField}>
-        <TextField
-          name="last_name"
-          label="Last Name"
-          value={regData.last_name}
+      {
+        errState.isError &&
+        <AlertMessage severity='error' open={errState.isError} onClose={() => setErrState(initErrorState)} >
+          {errState.errorMsg.message ? errState.errorMsg.message : errState.errorMsg.statusText ? errState.errorMsg.statusText : ''}
+        </AlertMessage>
+      }
+      {newRegistration &&
+        <AlertMessage severity='success' open={newRegistration} onClose={() => setNewRegistration(false)} >
+          Student registered
+          <Typography>{`Name: ${data.name.last_name} ${data.name.first_name}`}</Typography>
+          <Typography>Reg. No: {`${data.reg_number}`}</Typography>
+        </AlertMessage>
+      }
+      <form onSubmit={handleSubmit} noValidate>
+        <FormControl fullWidth className={styles.formField}>
+          <TextField
+            name="last_name"
+            label="Last Name"
+            value={regData.last_name}
+            required
+            onChange={handleDataChange}
+            variant="outlined"
+            error={(formSubmitErr && formSubmitErr.last_name) ? !isEmptyString(formSubmitErr.last_name) : false}
+            helperText={(formSubmitErr && formSubmitErr.last_name) && formSubmitErr.last_name}
+          />
+        </FormControl>
+        <FormControl fullWidth className={styles.formField}>
+          <TextField
+            name="first_name"
+            label="First Name"
+            value={regData.first_name}
+            required
+            onChange={handleDataChange}
+            variant="outlined"
+            error={(formSubmitErr && formSubmitErr.first_name) ? !isEmptyString(formSubmitErr.first_name) : false}
+            helperText={(formSubmitErr && formSubmitErr.first_name) && formSubmitErr.first_name}
+          />
+        </FormControl>
+        <FormControl fullWidth className={styles.formField}>
+          <TextField name="other_names"
+            label="Other Names"
+            value={regData.other_names}
+            onChange={handleDataChange}
+            variant="outlined"
+            error={(formSubmitErr && formSubmitErr.other_names) ? !isEmptyString(formSubmitErr.other_names) : false}
+            helperText={(formSubmitErr && formSubmitErr.other_names) && formSubmitErr.other_names}
+          />
+        </FormControl>
+        <FormControl component="fieldset" className={styles.formField} variant='outlined'>
+          <FormLabel component="legend">Gender</FormLabel>
+          <RadioGroup aria-label="gender" name="gender" value={regData.gender} onChange={handleDataChange}>
+            <FormControlLabel value="female" control={<Radio />} label="Female" />
+            <FormControlLabel value="male" control={<Radio />} label="Male" />
+          </RadioGroup>
+        </FormControl>
+        <SingleSelect
+          listOptions={classes}
+          className={styles.formField}
+          name="reg_class"
+          label="Select enrolment class"
+          labelId="classes"
+          onChange={handleDataChange}
+          value={regData.reg_class}
           required
-          onChange={handleDataChange}
-          variant="outlined"
-          error={(formSubmitErr && formSubmitErr.last_name) ? !isEmptyString(formSubmitErr.last_name) : false}
-          helperText={(formSubmitErr && formSubmitErr.last_name) && formSubmitErr.last_name}
+          error={(formSubmitErr && formSubmitErr.reg_class) ? true : false}
+          helperText={(formSubmitErr && formSubmitErr.reg_class) && formSubmitErr.reg_class}
         />
-      </FormControl>
-      <FormControl fullWidth className={styles.formField}>
-        <TextField
-          name="first_name"
-          label="First Name"
-          value={regData.first_name}
+        <FormControl className={styles.formField} fullWidth>
+          <TextField
+            name="date_of_birth"
+            label="Date Of Birth"
+            value={regData.date_of_birth}
+            type="date"
+            variant="outlined"
+            onChange={handleDataChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            required
+            error={(formSubmitErr && formSubmitErr.date_of_birth) ? true : false}
+            helperText={(formSubmitErr && formSubmitErr.date_of_birth) && formSubmitErr.date_of_birth}
+          />
+        </FormControl>
+        <SingleSelect
+          listOptions={bloodGroups}
+          className={styles.formField}
+          name="blood_group"
+          label="Select Your blood group"
+          labelId="bloodgroup"
+          onChange={handleDataChange}
+          value={regData.blood_group}
           required
-          onChange={handleDataChange}
-          variant="outlined"
-          error={(formSubmitErr && formSubmitErr.first_name) ? !isEmptyString(formSubmitErr.first_name) : false}
-          helperText={(formSubmitErr && formSubmitErr.first_name) && formSubmitErr.first_name}
+          error={(formSubmitErr && formSubmitErr.blood_group) ? true : false}
+          helperText={(formSubmitErr && formSubmitErr.blood_group) && formSubmitErr.blood_group}
         />
-      </FormControl>
-      <FormControl fullWidth className={styles.formField}>
-        <TextField name="other_names"
-          label="Other Names"
-          value={regData.other_names}
+        <SingleSelect
+          listOptions={genotypes}
+          className={styles.formField}
+          name="genotype"
+          label="Select Your blood genotype"
+          labelId="genotype"
           onChange={handleDataChange}
-          variant="outlined"
-          error={(formSubmitErr && formSubmitErr.other_names) ? !isEmptyString(formSubmitErr.other_names) : false}
-          helperText={(formSubmitErr && formSubmitErr.other_names) && formSubmitErr.other_names}
-        />
-      </FormControl>
-      <FormControl component="fieldset" className={styles.formField} variant='outlined'>
-        <FormLabel component="legend">Gender</FormLabel>
-        <RadioGroup aria-label="gender" name="gender" value={regData.gender} onChange={handleDataChange}>
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
-        </RadioGroup>
-      </FormControl>
-      <SingleSelect
-        listOptions={classes}
-        className={styles.formField}
-        name="reg_class"
-        label="Select enrolment class"
-        labelId="classes"
-        onChange={handleDataChange}
-        value={regData.reg_class}
-        required
-        error={(formSubmitErr && formSubmitErr.reg_class) ? true : false}
-        helperText={(formSubmitErr && formSubmitErr.reg_class) && formSubmitErr.reg_class}
-      />
-      <FormControl className={styles.formField} fullWidth>
-        <TextField
-          name="date_of_birth"
-          label="Date Of Birth"
-          value={regData.date_of_birth}
-          type="date"
-          variant="outlined"
-          onChange={handleDataChange}
-          InputLabelProps={{
-            shrink: true,
-          }}
+          value={regData.genotype}
           required
-        error={(formSubmitErr && formSubmitErr.date_of_birth) ? true : false}
-        helperText={(formSubmitErr && formSubmitErr.date_of_birth) && formSubmitErr.date_of_birth}
+          error={(formSubmitErr && formSubmitErr.genotype) ? true : false}
+          helperText={(formSubmitErr && formSubmitErr.genotype) && formSubmitErr.genotype}
         />
-      </FormControl>
-      <SingleSelect
-        listOptions={bloodGroups}
-        className={styles.formField}
-        name="blood_group"
-        label="Select Your blood group"
-        labelId="bloodgroup"
-        onChange={handleDataChange}
-        value={regData.blood_group}
-        required
-        error={(formSubmitErr && formSubmitErr.blood_group) ? true : false}
-        helperText={(formSubmitErr && formSubmitErr.blood_group) && formSubmitErr.blood_group}
-      />
-      <SingleSelect
-        listOptions={genotypes}
-        className={styles.formField}
-        name="genotype"
-        label="Select Your blood genotype"
-        labelId="genotype"
-        onChange={handleDataChange}
-        value={regData.genotype}
-        required
-        error={(formSubmitErr && formSubmitErr.genotype) ? true : false}
-        helperText={(formSubmitErr && formSubmitErr.genotype) && formSubmitErr.genotype}
-      />
-      <FormControl fullWidth className={styles.formField}>
-        <TextField name="last_sch_attend"
-          label="Last School Attend"
-          value={regData.last_sch_attend}
-          onChange={handleDataChange}
-          variant="outlined"
-          error={(formSubmitErr && formSubmitErr.last_sch_attend) ? !isEmptyString(formSubmitErr.last_sch_attend) : false}
-          helperText={(formSubmitErr && formSubmitErr.last_sch_attend) && formSubmitErr.last_sch_attend}
-        />
-      </FormControl>
-      <fieldset>
-        <legend>Parents/Guardian Data</legend>
-        <ParentsData 
-        handleDataChange={handleDataChange} 
-        styles={styles} 
-        parentData={regData}
-        inputErrMsg={formSubmitErr}
-         />
-      </fieldset>
-      <Button variant="contained"
-        color="primary" type="submit"
-        endIcon={<SendIcon />}
-      >
-        Send
-      </Button>
-    </form>
+        <FormControl fullWidth className={styles.formField}>
+          <TextField name="last_sch_attend"
+            label="Last School Attend"
+            value={regData.last_sch_attend}
+            onChange={handleDataChange}
+            variant="outlined"
+            error={(formSubmitErr && formSubmitErr.last_sch_attend) ? !isEmptyString(formSubmitErr.last_sch_attend) : false}
+            helperText={(formSubmitErr && formSubmitErr.last_sch_attend) && formSubmitErr.last_sch_attend}
+          />
+        </FormControl>
+        <fieldset>
+          <legend>Parents/Guardian Data</legend>
+          <ParentsData
+            handleDataChange={handleDataChange}
+            styles={styles}
+            parentData={regData}
+            inputErrMsg={formSubmitErr}
+          />
+        </fieldset>
+        <Button variant="contained"
+          color="primary" type="submit"
+          endIcon={<SendIcon />}
+        >
+          Send
+        </Button>
+      </form>
     </>
   )
 }

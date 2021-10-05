@@ -16,10 +16,13 @@ import StudentProfile from '../pages/students/StudentProfile';
 import AdminAuthRoute from '../auth-components/AdminAuthRoute';
 import ResetPassword from '../pages/staffs/ResetPassword';
 import ConfirmEmail from '../pages/staffs/ConfirmEmail';
-import StudentSelectTable from '../pages/students/StudentSelectTable';
-// import TestApp from '../test-components/TestApp';
+import StudentSelectTable from '../grade-book/StudentSelectTable';
+import TestApp from '../test-components/TestApp';
 import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
+import StudentsInClass from '../grade-book/StudentsInClass';
+import GradeScoreForm from '../grade-book/GradeScoreForm';
+import CreateGradeBook from '../grade-book/CreateGradeBook';
 
 export default function Routers() {
     return (
@@ -70,9 +73,18 @@ export default function Routers() {
                 <AdminAuthRoute exact path="/admin/students/student/profile/:id">
                     <StudentProfile />
                 </AdminAuthRoute>
-                {/* <Route exact path="/test/components">
+                <AuthRoute exact path="/staff/dashboard/grade-book">
+                    <StudentsInClass />
+                </AuthRoute>
+                <AuthRoute exact path="/staff/dashboard/grade-book/student/:id">
+                    <GradeScoreForm />
+                </AuthRoute>
+                <AuthRoute exact path="/staff/dashboard/add/grade-book/">
+                    <CreateGradeBook />
+                </AuthRoute>
+                <Route exact path="/test/components">
                     <TestApp />
-                </Route> */}
+                </Route>
                 <Route path="*">
                     <Page404 />
                 </Route>

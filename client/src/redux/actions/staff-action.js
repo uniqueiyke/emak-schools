@@ -17,6 +17,8 @@ import {
     PASSWORD_RESET_SUCCESSFUL,
     PASSWORD_RESET_FAILED,
     IS_CONFIRMING_STAFF_EMAIL,
+    STUDENTS_IN_CLASS_FAILED,
+    STUDENTS_IN_CLASS_SUCCEEDED,
 } from './action-types';
 
 import axios from 'axios';
@@ -65,6 +67,16 @@ const staffFetchFailed = err => ({
 
 const isFetchingStaff = () => ({
     type: IS_FETCHING_STAFF
+})
+
+const studentsInClassSucceeded = data =>({
+    type: STUDENTS_IN_CLASS_SUCCEEDED,
+    payload: data,
+})
+
+const studentsInClassFailed = err =>({
+    type: STUDENTS_IN_CLASS_FAILED,
+    payload: err,
 })
 
 export const logoutStaff = () => ({
@@ -226,5 +238,19 @@ export const resetPassword = email => async dispatch => {
     } catch (errors) {
         dispatch(passwordResetFailed(errorParser(errors.response)));
         return false;
+    }
+}
+
+export const fecthStudentsInClass = params => async dispatch => {
+    try {
+        const responds = await axios({
+            url: '/admin/fetch/students/class',
+            method: 'GET',
+            params,
+        headers: tokenConfig('application/json'),
+        });
+        dispatch(studentsInClassSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(studentsInClassFailed(errorParser(errors.response)))
     }
 }

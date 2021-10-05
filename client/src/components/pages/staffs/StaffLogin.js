@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -23,7 +23,7 @@ import FormFieldsValidator from '../../../libs/form-fields-validator';
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router';
 import { loginStaff } from '../../../redux/actions/staff-action';
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
 
 const useStyle = makeStyles((theme) => ({
   formField: {
@@ -65,11 +65,20 @@ const StaffLogin = () => {
   };
 
   const { staff } = useSelector(state => state.staff);
-
+  const { error } = staff;
   const [loginData, setRegData] = useState(initialDataState);
   const [showPassword, setShowPassword] = useState(false);
 
   const [formSubmitErr, setFormSubmitErr] = useState(null);
+
+  const [loginError, setLoginError] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+      setLoginError(error)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error])
 
   const handleDataChange = (e) => {
     setRegData({
@@ -101,11 +110,11 @@ const StaffLogin = () => {
   return (
     <Container component="main" maxWidth="xs">
       <div className={styles.paper}>
-      {staff.error && <MessageAlert error={staff.error} >
+      {(loginError && loginError.isError && loginError.errorType === 'login-failed') && <AlertMessage severity='error' open={loginError.isError} onClose={() => setLoginError(null)} >
         {
-          staff.error.message ? staff.error.message : ''
+          loginError.errorMsg.message && loginError.errorMsg.message
         }
-      </MessageAlert>
+      </AlertMessage>
       }
       {staff.data && <Redirect to='/staff/data/dashboard' />}
       <Avatar className={styles.avatar}>

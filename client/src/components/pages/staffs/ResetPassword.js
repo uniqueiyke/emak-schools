@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
@@ -23,7 +23,8 @@ import { validateFormFields } from '../../../libs/form-fields-validator';
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router';
 import { resetPassword } from '../../../redux/actions/staff-action';
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
+import { Typography } from '@material-ui/core';
 
 const useStyle = makeStyles((theme) => ({
   formField: {
@@ -62,15 +63,24 @@ const ResetPassword = () => {
   const initialDataState = {
     password: '',
     reset_code: '',
-    password_match:''
+    password_match: ''
   };
 
   const { staff } = useSelector(state => state.staff);
-
+  const { error } = staff;
   const [resetPW, setResetPW] = useState(initialDataState);
   const [showPassword, setShowPassword] = useState(false);
 
   const [formSubmitErr, setFormSubmitErr] = useState(null);
+
+  const [passwordResetError, setPasswordResetError] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+      setPasswordResetError(error)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error])
 
   const handleDataChange = (e) => {
     setResetPW({
@@ -91,15 +101,14 @@ const ResetPassword = () => {
       password_match: 'password_match',
       reset_code: '',
     });
-
+    
     if (isEmptyArrayOrObject(errors)) {
       dispatch(resetPassword(resetPW))
 
-      setFormSubmitErr(null);
       setResetPW(initialDataState);
+      setFormSubmitErr(null);
     } else {
       setFormSubmitErr(errors);
-      setResetPW(initialDataState);
     }
   }
 
@@ -107,114 +116,119 @@ const ResetPassword = () => {
     <Container component="main" maxWidth="xs">
       {/* <CssBaseline /> */}
       <div className={styles.paper}>
-      {staff.error && <MessageAlert error >
-        {
-          staff.error.message ? staff.error.message : ''
+        {(passwordResetError && passwordResetError.isError && passwordResetError.errorType === 'password-reset-failed') &&
+          <AlertMessage severity='error'
+            open={passwordResetError.isError}
+            onClose={() => setPasswordResetError(null)}
+          >
+            {
+              passwordResetError.errorMsg.message && passwordResetError.errorMsg.message
+            }
+          </AlertMessage>
         }
-      </MessageAlert>
-      }
-      {(staff.data && staff.data._id) && <Redirect to='/staff/data/dashboard' />}
-      <Avatar className={styles.avatar}>
+        <Typography align='center'>An email has been to your emial box. Use the provide code to reset your password</Typography>
+        {(staff.data && staff.data._id) && <Redirect to='/staff/data/dashboard' />}
+        <Avatar className={styles.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-      <form onSubmit={handleSubmit} noValidate>
-        <FormControl fullWidth className={styles.formField}>
-          <TextField
-            name="reset_code"
-            label="Rest Code"
-            value={resetPassword.reset_code}
-            onChange={handleDataChange}
+        <form onSubmit={handleSubmit} noValidate>
+          <FormControl fullWidth className={styles.formField}>
+            <TextField
+              name="reset_code"
+              label="Rest Code"
+              value={resetPW.reset_code}
+              onChange={handleDataChange}
+              variant="outlined"
+              required
+              type="number"
+              autoFocus
+              InputProps={{
+                startAdornment: <InputAdornment position="start"><PersonIcon className={styles.iconColor} /></InputAdornment>
+              }}
+              error={(formSubmitErr && formSubmitErr.reset_code) ? !isEmptyString(formSubmitErr.reset_code) : false}
+              helperText={(formSubmitErr && formSubmitErr.reset_code) && formSubmitErr.reset_code}
+            />
+          </FormControl>
+          <FormControl
+            className={styles.formField}
             variant="outlined"
             required
-            type="number"
-            autoFocus
-            InputProps={{
-              startAdornment: <InputAdornment position="start"><PersonIcon className={styles.iconColor} /></InputAdornment>
-            }}
-            error={(formSubmitErr && formSubmitErr.reset_code) ? !isEmptyString(formSubmitErr.reset_code) : false}
-            helperText={(formSubmitErr && formSubmitErr.reset_code) && formSubmitErr.reset_code}
-          />
-        </FormControl>
-        <FormControl
-          className={styles.formField}
-          variant="outlined"
-          required
-          error={(formSubmitErr && formSubmitErr.password) ? !isEmptyString(formSubmitErr.password) : false}
-          fullWidth>
-          <InputLabel htmlFor="password">Password</InputLabel>
-          <OutlinedInput
-            id="password"
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            value={resetPassword.password}
-            onChange={handleDataChange}
-            required
             error={(formSubmitErr && formSubmitErr.password) ? !isEmptyString(formSubmitErr.password) : false}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                  className={styles.iconColor}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            labelWidth={78}
-          />
-          <FormHelperText error >{(formSubmitErr && formSubmitErr.password) && formSubmitErr.password}</FormHelperText>
-        </FormControl>
-        <FormControl
-          className={styles.formField}
-          variant="outlined"
-          required
-          error={(formSubmitErr && formSubmitErr.password_match) ? !isEmptyString(formSubmitErr.password_match) : false}
-          fullWidth>
-          <InputLabel htmlFor="password_match">Password Match</InputLabel>
-          <OutlinedInput
-            id="password_match"
-            name="password_match"
-            type={showPassword ? 'text' : 'password'}
-            value={resetPassword.password_match}
-            onChange={handleDataChange}
+            fullWidth>
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <OutlinedInput
+              id="password"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              value={resetPW.password}
+              onChange={handleDataChange}
+              required
+              error={(formSubmitErr && formSubmitErr.password) ? !isEmptyString(formSubmitErr.password) : false}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                    className={styles.iconColor}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={78}
+            />
+            <FormHelperText error >{(formSubmitErr && formSubmitErr.password) && formSubmitErr.password}</FormHelperText>
+          </FormControl>
+          <FormControl
+            className={styles.formField}
+            variant="outlined"
             required
             error={(formSubmitErr && formSubmitErr.password_match) ? !isEmptyString(formSubmitErr.password_match) : false}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                  className={styles.iconColor}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            labelWidth={135}
-          />
-          <FormHelperText error >{(formSubmitErr && formSubmitErr.password_match) && formSubmitErr.password_match}</FormHelperText>
-        </FormControl>
-        <Button variant="contained"
-          color="primary" type="submit"
-          endIcon={<SendIcon />}
-          className={styles.submit}
-          fullWidth
-        >
-          Send
-        </Button>
-        <Grid container>
+            fullWidth>
+            <InputLabel htmlFor="password_match">Password Match</InputLabel>
+            <OutlinedInput
+              id="password_match"
+              name="password_match"
+              type={showPassword ? 'text' : 'password'}
+              value={resetPW.password_match}
+              onChange={handleDataChange}
+              required
+              error={(formSubmitErr && formSubmitErr.password_match) ? !isEmptyString(formSubmitErr.password_match) : false}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                    className={styles.iconColor}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={135}
+            />
+            <FormHelperText error >{(formSubmitErr && formSubmitErr.password_match) && formSubmitErr.password_match}</FormHelperText>
+          </FormControl>
+          <Button variant="contained"
+            color="primary" type="submit"
+            endIcon={<SendIcon />}
+            className={styles.submit}
+            fullWidth
+          >
+            Send
+          </Button>
+          <Grid container>
             <Grid item xs>
               <Link component={RouteLink} to='/staffs/login' variant="body2">
                 login
               </Link>
             </Grid>
           </Grid>
-      </form>
+        </form>
       </div>
     </Container>
   )

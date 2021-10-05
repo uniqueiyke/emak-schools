@@ -54,6 +54,14 @@ const SortTableHead = ({
                     active={active}
                     onClick={onClick}
                     direction={direction}
+                >Other Names</SortableTableCell>
+                <SortableTableCell
+                    order={order}
+                    orderBy={orderBy}
+                    orderID={orderID}
+                    active={active}
+                    onClick={onClick}
+                    direction={direction}
                 >Current Class</SortableTableCell>
                 <SortableTableCell
                     order={order}

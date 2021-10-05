@@ -18,7 +18,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 staffRegPassport: {
-                    data: action.payload,
+                    data: {...action.payload, is_successful: true},
                     error: null
                 }
             }
@@ -28,7 +28,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 ...state,
                 staffRegPassport: {
                     data: null,
-                    error: action.payload
+                    error: {is_error: true, error_msg: action.payload}
                 }
             }
         case ALL_STUDENTS_FETCH_SUCCEEDED:
@@ -67,7 +67,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 resultManager: {
-                    data: action.payload,
+                    data: {...action.payload, is_successful: true},
                     error: null,
                 }
             }
@@ -77,7 +77,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 ...state,
                 resultManager: {
                     data: null,
-                    error: action.payload,
+                    error: {is_error: true, error_msg: action.payload},
                 }
             }
         default:

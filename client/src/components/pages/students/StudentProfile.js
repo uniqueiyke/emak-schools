@@ -41,7 +41,7 @@ const StudentProfile = () => {
         return (
             <>
                 <StudentProfileData profileData={student} />
-                <IconButton onClick={() => history.push('/admin/students/list')} className={classes.backBtn}> <ArrowBackIosIcon /> </IconButton>
+                <IconButton onClick={() => history.push('/admin/current-students/list')} className={classes.backBtn}> <ArrowBackIosIcon /> </IconButton>
             </>
         )
     }

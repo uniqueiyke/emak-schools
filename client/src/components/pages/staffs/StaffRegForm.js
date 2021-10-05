@@ -22,7 +22,7 @@ import checkStaffRegToken from '../../auth-components/CheckStaffRegToken';
 import Errors from '../../other-components/Errors';
 import { registerStaff } from '../../../redux/actions/staff-action';
 import { Redirect } from 'react-router-dom';
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
 
 
 
@@ -43,6 +43,7 @@ const StaffRegForm = ({ data, error, token }) => {
 
   setPageTitle('Staff Registration')
   const { staff } = useSelector(state => state.staff);
+  const staffErr = staff.error;
   const styles = useStyle();
   const dispatch = useDispatch()
   const initialDataState = {
@@ -59,6 +60,14 @@ const StaffRegForm = ({ data, error, token }) => {
   const [showPasswordMatch, setShowPasswordMatch] = useState(false);
 
   const [formSubmitErr, setFormSubmitErr] = useState(null);
+  const [regError, setRegError] = useState(null);
+
+  useEffect(() => {
+    if (staffErr) {
+      setRegError(staffErr)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staffErr])
 
   useEffect(() => {
     if (data) {
@@ -110,13 +119,13 @@ const StaffRegForm = ({ data, error, token }) => {
     <>
       {!data || isEmptyArrayOrObject(data) ? <Errors errors={error} /> :
         <>
-          {staff.error && <MessageAlert error={staff.error} >
+          {(regError && regError.isError && regError.errorType === 'registration-failed') && <AlertMessage severity='error' open={regError.isError} onClose={setRegError(null)} >
             {
-              `${staff.error.message.email ? staff.error.message.email : ''} 
-        ${staff.error.message.phone_number ? staff.error.message.phone_number : ''} 
-        ${staff.error.message.username ? staff.error.message.username : ''}`
+              `${regError.errorMsg.message.email ? regError.errorMsg.message.email : ''} 
+        ${regError.errorMsg.message.phone_number ? regError.errorMsg.message.phone_number : ''} 
+        ${regError.errorMsg.message.username ? regError.errorMsg.message.username : ''}`
             }
-          </MessageAlert>
+          </AlertMessage>
           }
           {staff.data && <Redirect to='/staff/data/profile' />}
           <form onSubmit={handleSubmit} noValidate>

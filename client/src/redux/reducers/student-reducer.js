@@ -13,6 +13,15 @@ import initialState from './initial-state';
 const studentReducer = (state = initialState({ student: true }), action) => {
     switch (action.type) {
         case NEW_STUDENT_REGISTRATION_SUCCEEDED:
+            return {
+                ...state,
+                student: {
+                    data: {...action.payload, new_registration: true},
+                    error: null,
+                    isFetchingAStudent: false,
+                }
+            }
+
         case FETCHING_A_STUDENT_SUCCEEDED:
         case UPDATE_STUDENT_DATA_SUCCEEDED:
             return {

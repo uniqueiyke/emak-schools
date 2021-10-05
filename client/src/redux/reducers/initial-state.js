@@ -31,6 +31,10 @@ const initialState = (options = defaulOptions) => {
                 data: null,
                 error: null,
             },
+            students: {
+                data: null,
+                error: null,
+            },
         }
     }
 

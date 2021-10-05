@@ -41,8 +41,8 @@ const StudentsTableBodyData = ({studentData, onDoubleClick, index, onClick}) => 
             <TableCell className={classes.tableCell} align="right">{studentData.name.last_name}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.first_name}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.other_names}</TableCell>
-            <TableCell className={classes.tableCell} align="right">{studentData.gender}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.current_class}</TableCell>
+            <TableCell className={classes.tableCell} align="right">{studentData.gender}</TableCell>
         </TableRow>
     )
 }

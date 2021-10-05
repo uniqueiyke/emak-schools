@@ -3,8 +3,8 @@ import Typography from '@material-ui/core/Typography';
 import checkAuth from '../../auth-components/CheckAuth';
 // import  Button from '@material-ui/core/ Button';
 // import { useHistory } from 'react-router-dom';
-// import Link from '@material-ui/core/Link';
-// import { Link as RouteLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
+import { Link as RouteLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import GoToButton from '../../other-components/GoToButton';
 import useWaitForDataReady from '../../../hooks/useWaitForDataReady';
@@ -23,7 +23,8 @@ function StaffDashboard() {
             <>
                 {(data && (data.roles.includes('admin') || data.roles.includes('super-admin'))) && <GoToButton to='/admin/admin-panel'>AdminPanel</GoToButton>}
                 <Typography variant='h3'>Staff Dashboard</Typography>
-                {/* <Link component={RouteLink} to='/test/components' >Add score</Link> */}
+                {/* <div><Link component={RouteLink} to='/staff/dashboard/grade-book' >Add score</Link></div> */}
+                <div><Link component={RouteLink} to='/staff/dashboard/add/grade-book' >Add GradeBook</Link></div>
             </>
         )
     }

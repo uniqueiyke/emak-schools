@@ -17,9 +17,22 @@ import {
     PASSWORD_RESET_SUCCESSFUL,
     PASSWORD_RESET_FAILED,
     IS_CONFIRMING_STAFF_EMAIL,
+    STUDENTS_IN_CLASS_FAILED,
+    STUDENTS_IN_CLASS_SUCCEEDED,
 } from '../actions/action-types'
 import initialState from './initial-state';
 
+const resFailedState = (state, action, errorType='') => ({
+    ...state,
+    isAuthenticated: false,
+    isFetchingStaff: false,
+    isUpdatingStaffData: 0,
+    isConfirmingEmail: false,
+    staff: {
+        data: null,
+        error: {errorType, isError: true, errorMsg: action.payload}
+    }
+});
 
 const staffReducer = (state = initialState({ staff: true }), action) => {
     switch (action.type) {
@@ -85,23 +98,20 @@ const staffReducer = (state = initialState({ staff: true }), action) => {
             }
 
         case CONFIRM_STAFF_EMAIL_FAILED:
+            localStorage.removeItem('token');
+            return resFailedState(state, action, 'confirm-email-failed');
         case STAFF_REGISTRATION_FAILED:
+            localStorage.removeItem('token');
+            return resFailedState(state, action, 'registration-failed');
         case STAFF_LOGIN_FAILED:
+            localStorage.removeItem('token');
+            return resFailedState(state, action, 'login-failed');
         case STAFF_FETCH_FAILED:
+            localStorage.removeItem('token');
+            return resFailedState(state, action, 'fetch-failed');
         case PASSWORD_RESET_FAILED:
             localStorage.removeItem('token');
-            return {
-                ...state,
-                isAuthenticated: false,
-                isFetchingStaff: false,
-                isUpdatingStaffData: 0,
-                isConfirmingEmail: false,
-                staff: {
-                    data: null,
-                    error: action.payload
-                }
-            }
-
+            return resFailedState(state, action, 'password-reset-failed');
         case STAFF_DATA_UPDATE_FAILED:
             return {
                 ...state,
@@ -149,7 +159,24 @@ const staffReducer = (state = initialState({ staff: true }), action) => {
                 ...state,
                 isConfirmingEmail: true,
             }
+
+            case STUDENTS_IN_CLASS_SUCCEEDED:
+                return {
+                    ...state,
+                    students: {
+                        data: action.payload,
+                        error: null,
+                    }
+                }
             
+                case STUDENTS_IN_CLASS_FAILED:
+                return {
+                    ...state,
+                    students: {
+                        data: null,
+                        error: action.payload,
+                    }
+                }
         default:
             return state
     }

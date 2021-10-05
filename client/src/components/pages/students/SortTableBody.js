@@ -54,6 +54,7 @@ const SortTableBody = ({studentData,
             <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.reg_number}</TableCell>
             <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.name.last_name}</TableCell>
             <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.name.first_name}</TableCell>
+            <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.name.other_names}</TableCell>
             <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.current_class}</TableCell>
             <TableCell size='small' padding='none' className={classes.tableCell} align="right">{studentData.gender}</TableCell>
         </TableRow>

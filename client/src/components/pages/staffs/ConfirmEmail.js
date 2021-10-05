@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, TextField, InputAdornment, Button } from '@material-ui/core';
 import EmailIcon from '@material-ui/icons/Email';
 import SendIcon from '@material-ui/icons/Send';
@@ -9,7 +9,7 @@ import FormFieldsValidator from '../../../libs/form-fields-validator';
 import { confirmEmail } from '../../../redux/actions/staff-action';
 import DataFetchingProgress from '../../other-components/DataFetchingProgress'
 import { Redirect } from 'react-router-dom'
-import MessageAlert from '../../other-components/MessageAlert';
+import AlertMessage from '../../other-components/AlertMessage';
 const useStyle = makeStyles(theme => ({
   formField: {
     marginTop: 10,
@@ -32,7 +32,17 @@ const ConfirmEmail = () => {
   const dispatch = useDispatch();
   const [formSubmitErr, setFormSubmitErr] = useState(null);
   const { isConfirmingEmail, staff } = useSelector(state => state.staff);
+  const { error, data } = staff;
   
+  const [emailError, setEmailError] = useState(null);
+
+  useEffect(() => {
+    if (error) {
+        setEmailError(error)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [error])
+
   const handleDataChange = (e) => { setEmail(e.target.value); }
   
   const handleSubmit = e => {
@@ -53,8 +63,8 @@ const ConfirmEmail = () => {
     return (
       <>
       {isConfirmingEmail && <DataFetchingProgress />}
-      {staff.error && <MessageAlert error >{staff.error.message ? staff.error.message : 'error occured'}</MessageAlert>}
-      {staff.data && <Redirect to='/staffs/password/reset'/>}
+      {(emailError && emailError.isError && emailError.errorType === 'confirm-email-failed') && <AlertMessage severity='error' open={emailError.isError} onClose={() => setEmailError(null)} >{emailError.errorMsg.message ? emailError.errorMsg.message : 'error occured'}</AlertMessage>}
+      {data && <Redirect to='/staffs/password/reset'/>}
       <form noValidate onSubmit={handleSubmit}>
         <FormControl fullWidth className={styles.formField}>
           <TextField name="email"

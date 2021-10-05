@@ -6,20 +6,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import SortTableHead from './SortTableHead';
-import SortTableBody from './SortTableBody';
-import listOfStudents from './ListOfStudents';
-import FilterTableToolBar from './FilterTableToolBar';
-import { isEmptyArrayOrObject, alertMessageParser } from '../../../libs/utility-functions';
+import SortTableHead from '../pages/students/SortTableHead';
+import SortTableBody from '../pages/students/SortTableBody';
+import listOfStudents from '../pages/students/ListOfStudents';
+import FilterTableToolBar from '../pages/students/FilterTableToolBar';
+import { isEmptyArrayOrObject, alertMessageParser } from '../../libs/utility-functions';
 import Popper from '@material-ui/core/Popper';
-import { fetchCurrentStudents } from '../../../redux/actions/admin-action';
-import { sortKeysMap, getComparator, stableSort } from '../../../libs/sort-n-filter';
-import ResultManager from '../../grade-book/ResultManager';
-import FormFieldsValidator from '../../../libs/form-fields-validator';
-import { createResultManager } from '../../../redux/actions/admin-action'
-import MessageAlert from '../../other-components/MessageAlert';
-import { currentAcademicYear, currentTerm } from '../../../libs/session-array';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import { fetchCurrentStudents } from '../../redux/actions/admin-action';
+import { sortKeysMap, getComparator, stableSort } from '../../libs/sort-n-filter';
+import ResultManager from './ResultManager';
+import FormFieldsValidator from '../../libs/form-fields-validator';
+import { createResultManager } from '../../redux/actions/admin-action'
+import AlertMessage from '../other-components/AlertMessage';
+import { currentAcademicYear, currentTerm } from '../../libs/session-array';
 
 
 const useStyles = makeStyles(theme => ({
@@ -37,6 +39,15 @@ const useStyles = makeStyles(theme => ({
         display: 'grid',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    btnDiv: {
+        margin: '10px 10px',
+        display: 'grid',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gridTemplateColumns: 'auto auto',
+        gap: 0,
+        color: 'forestgreen',
     },
 }));
 
@@ -58,7 +69,10 @@ const StudentSelectTable = ({ studentsData }) => {
     // eslint-disable-next-line no-unused-vars
     const [anchorEl, setAnchorEl] = useState(null);
     const [filter, toggleFilter] = useState(false);
-    const [clientSubmitError, setClientSubmitError] = useState(null)
+
+    const initErrorState = {isError: false, errorMsg: null}
+    const [pageError, setPageError] = useState(initErrorState)
+    const [isSuccessful, setIsSuccessful] = useState(false)
 
     const initialSubmitValueState = {
         session: currentAcademicYear(),
@@ -66,9 +80,10 @@ const StudentSelectTable = ({ studentsData }) => {
         class_name: 'jss1',
         class_stream: 'A',
     }
+
     const [submitValueState, setSubmitValueState] = useState(initialSubmitValueState);
     const dispatch = useDispatch();
-    const {resultManager} = useSelector(state => state.admin)
+    const { data, error } = useSelector(state => state.admin.resultManager)
 
     useEffect(() => {
         setFilterCompleted(false)
@@ -78,6 +93,15 @@ const StudentSelectTable = ({ studentsData }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterText, filterField]);
 
+    useEffect(() => {
+        if(error){
+            setPageError({isError: error.is_error, errorMsg: error.error_msg})
+        }
+        if(data){
+            setIsSuccessful(data.is_successful)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, error])
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
@@ -140,7 +164,7 @@ const StudentSelectTable = ({ studentsData }) => {
 
     function filterFunc() {
         const filterValue = studentsData.filter(studentData => {
-            if (filterField === 'Surname' || filterField === 'First Name') {
+            if (filterField === 'Surname' || filterField === 'First Name' || filterField === 'Other Names') {
                 return (filterText.toLowerCase() === studentData.name[sortKeysMap[filterField]].toLowerCase());
             }
             else {
@@ -180,7 +204,7 @@ const StudentSelectTable = ({ studentsData }) => {
     const handleSubmit = e => {
         e.preventDefault();
         
-        setClientSubmitError(null);
+        setPageError(null);
         const formValidator = new FormFieldsValidator({ ...submitValueState, students_list: selected })
         formValidator.field('session').isEmpty().withMessage('please choose the academic session');
         formValidator.field('class_name').isEmpty().withMessage('please choose students class');
@@ -189,7 +213,7 @@ const StudentSelectTable = ({ studentsData }) => {
         const err = formValidator.errorMessage();
 
         if (!isEmptyArrayOrObject(err)) {
-            setClientSubmitError(err)
+            setPageError({isError: true, errorMsg: err})
             return;
         }
         
@@ -218,9 +242,8 @@ const StudentSelectTable = ({ studentsData }) => {
 
     return (
         <>
-        {clientSubmitError &&  <MessageAlert error>{alertMessageParser(clientSubmitError)}</MessageAlert>}
-        {resultManager.error &&  <MessageAlert error>{alertMessageParser(resultManager.error)}</MessageAlert>}
-        {(resultManager.data && resultManager.data.message) &&  <MessageAlert data>{alertMessageParser(resultManager.data.message)}</MessageAlert>}
+        {pageError &&  <AlertMessage severity='error' open={pageError.isError} onClose={() => setPageError(initErrorState)}>{alertMessageParser(pageError.errorMsg)}</AlertMessage>}
+        {(data && data.is_successful) &&  <AlertMessage severity='success' open={isSuccessful} onClose={() => setIsSuccessful(false)}>{alertMessageParser(data.message)}</AlertMessage>}
             <Typography variant='h5' align='center'>Add Students to Term Result Manager</Typography>
             <div className={classes.divStyle}>
                 <ResultManager
@@ -231,6 +254,11 @@ const StudentSelectTable = ({ studentsData }) => {
                     vClass={submitValueState.class_name}
                     vStream={submitValueState.class_stream}
                 />
+            </div>
+            <div className={classes.btnDiv}>
+                <Button size='small' onClick={handleSubmit} variant='outlined' type='submit' style={{ color: 'forestgreen', borderColor: 'forestgreen' }} startIcon={<AddBoxIcon style={{ color: 'forestgreen' }} />} >
+                    add
+                </Button>
             </div>
             <div ref={anchorElRef}>
                     <FilterTableToolBar

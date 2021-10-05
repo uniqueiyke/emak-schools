@@ -1,43 +1,36 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import SingleSelect from '../other-components/SingleSelect';
 import { terms, subjects } from '../../libs/subjects';
 import { sessions, classStream } from '../../libs/session-array';
 import { classes } from '../../libs/students-data';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+
 
 const useStyles = makeStyles({
     flexBox: {
         display: 'flex',
         justifyContent: 'space-around',
+        flexDirection: props => props.itemAlign || 'row',
+        textAlign: 'center'
     },
     flexItem: {
         margin: '0px 10px',
         color: 'blue',
     },
-    btnDiv: {
-        margin: '0px 10px',
-        display: 'grid',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gridTemplateColumns: 'auto auto',
-        gap: 0,
-        color: 'forestgreen',
-    },
     flexContainer: {
         display: 'flex',
         flexDirection: 'column',
+        margin: '15px 0px',
     },
 })
 const sessionsList = sessions();
 const classStreams = classStream();
-const ResultManager = ({ vSession, onSubmit, vTerm, vClass, onValueChange, vStream, vSubject, withSubject }) => {
-    const styles = useStyles();
+const ResultManager = ({ vSession, vTerm, vClass, onValueChange, vStream, vSubject, withSubject, ...props }) => {
+    const styles = useStyles(props);
 
     return (
-        <form className={styles.flexContainer} onSubmit={onSubmit} >
+        <div className={styles.flexContainer} >
             <div className={styles.flexBox}>
                 <div className={styles.flexItem}>
                     <SingleSelect
@@ -110,12 +103,7 @@ const ResultManager = ({ vSession, onSubmit, vTerm, vClass, onValueChange, vStre
                 }
                 
             </div>
-            <div className={styles.btnDiv}>
-                <Button size='small' variant='outlined' type='submit' style={{ color: 'forestgreen', borderColor: 'forestgreen' }} startIcon={<AddBoxIcon style={{ color: 'forestgreen' }} />} >
-                    add
-                </Button>
-            </div>
-        </form>
+        </div>
     )
 }
 
@@ -125,7 +113,6 @@ ResultManager.prototype = {
     vTerm: PropTypes.string.isRequired,
     vClass: PropTypes.string.isRequired,
     onValueChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
     vStream: PropTypes.string.isRequired,
 }
 

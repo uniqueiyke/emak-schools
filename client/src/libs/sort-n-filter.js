@@ -2,9 +2,9 @@ export const sortKeysMap = {
     'Reg. Number': 'reg_number',
     'Surname': 'last_name',
     'First Name': 'first_name',
+    'Other Names': 'other_names',
     'Current Class': 'current_class',
     'Gender': 'gender',
-    'Other Names': 'other_names',
 }
 export function descendingComparator(a, b, orderBy) {
 
