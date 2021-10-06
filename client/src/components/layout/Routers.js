@@ -82,9 +82,9 @@ export default function Routers() {
                 <AuthRoute exact path="/staff/dashboard/add/grade-book/">
                     <CreateGradeBook />
                 </AuthRoute>
-                <Route exact path="/test/components">
+                {/* <Route exact path="/test/components">
                     <TestApp />
-                </Route>
+                </Route> */}
                 <Route path="*">
                     <Page404 />
                 </Route>
