@@ -120,3 +120,11 @@ export const studentStatus = [
         value: 'indeterminant'
     }
 ]
+
+export const graduationLevel = [
+    {value: 'junior', label: 'Junior'}, 
+    {value: 'senior', label: 'Senior'}, 
+    {value: 'both', label: 'Both'}, 
+    {value: 'still-student', label: 'Still a Student'}, 
+    {value: 'none', label: 'None'}
+]

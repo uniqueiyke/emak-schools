@@ -10,6 +10,7 @@ const StudentRegSchema = new Schema({
     gender: {type: String, enum: ["male", "female"], default: "male"},
     date_of_birth: {type: Date, default: null},
     status: {type: String, enum: ['graduate', 'left school', 'student', 'indeterminant'], default: 'student'},
+    graduated_at: {type: String, enum: ['junior', 'senior', 'both', 'still-student', 'none'], default: 'still-student'},
     reg_class: {type: String, enum: classEnum, default: "jss1"},
     current_class: {type: String, enum: classEnum , default: "none"},
     classes_been: {type: [String], enum: classEnum, default: () => ([])},

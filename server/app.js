@@ -10,22 +10,22 @@ const mongoose = require('mongoose');
 const cors = require('./middlewares/cors');
 
 // import and create the mongoDB connection to mongoDB atlas
-mongoose.connect(process.env.mongodbURL, {  
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true 
-})
-.then(()=> console.log('mongo conneted'))
-.catch(error => console.log('mongo connection error', error));
+// mongoose.connect(process.env.mongodbURL, {  
+//     useNewUrlParser: true, 
+//     useUnifiedTopology: true,
+//     useCreateIndex: true 
+// })
+// .then(()=> console.log('mongo conneted'))
+// .catch(error => console.log('mongo connection error', error));
 
 // import and create the mongoDB connection to local mongoDB
-// mongoose.connect(process.env.localMongoDB1, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-// })
-//     .then(() => console.log('mongo conneted'))
-//     .catch(error => console.log('mongo connection error', error));
+mongoose.connect(process.env.localMongoDB1, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+})
+    .then(() => console.log('mongo conneted'))
+    .catch(error => console.log('mongo connection error', error));
 
 const app = express();
 

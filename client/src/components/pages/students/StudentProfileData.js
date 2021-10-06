@@ -11,7 +11,7 @@ import {
     genotypes, 
     bloodGroups, 
     classes as studentClass, 
-    gender, studentStatus,
+    gender, studentStatus, graduationLevel,
 } from '../../../libs/students-data'
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +83,17 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='status'
+                />
+                <ProfileContent
+                    profileData={profileData}
+                    select
+                    listOptions={graduationLevel}
+                    fieldLabel='Graduate Level'
+                    fieldName='graduated_at'
+                    title='Graduate Level'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    labelId='graduate level'
                 />
                 {(profileData && profileData.data && profileData.data.status === 'student') &&
                     <ProfileContent
