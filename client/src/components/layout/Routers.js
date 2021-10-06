@@ -17,7 +17,7 @@ import AdminAuthRoute from '../auth-components/AdminAuthRoute';
 import ResetPassword from '../pages/staffs/ResetPassword';
 import ConfirmEmail from '../pages/staffs/ConfirmEmail';
 import StudentSelectTable from '../grade-book/StudentSelectTable';
-import TestApp from '../test-components/TestApp';
+// import TestApp from '../test-components/TestApp';
 import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 import StudentsInClass from '../grade-book/StudentsInClass';
