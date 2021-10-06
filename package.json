@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=14.17.4",
+    "npm": ">=6.14.14"
+  },
   "scripts": {
     "start": "npm start --prefix server",
     "server": "npm run start-debug --prefix server",
