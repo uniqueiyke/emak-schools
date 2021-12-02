@@ -23,6 +23,7 @@ const initialState = (options = defaulOptions) => {
             isUpdatingStaffData: 0,
             isAuthenticated,
             isConfirmingEmail: false,
+            isUpdatingScores: false,
             staff: {
                 data: null,
                 error: null
@@ -32,6 +33,10 @@ const initialState = (options = defaulOptions) => {
                 error: null,
             },
             students: {
+                data: null,
+                error: null,
+            },
+            scores: {
                 data: null,
                 error: null,
             },
@@ -54,6 +59,12 @@ const initialState = (options = defaulOptions) => {
                 isFetchingStudents: false,
             },
             resultManager: {
+                data: null,
+                error: null,
+            },
+            results: {
+                isComputingResults: false,
+                isFetchingResultSheet: false,
                 data: null,
                 error: null,
             }

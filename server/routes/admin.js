@@ -12,6 +12,5 @@ router.post('/send/staff/reg-token',  send_staff_register_token);
 router.get('/fetch/all/students', auth('admin'), fetch_all_students);
 router.get('/fetch/current/students', auth('admin'), fetch_current_students);
 router.post('/create/result-manager', auth('admin'),  create_result_manager);
-router.get('/fetch/students/class', fetch_students_calss);
 
 module.exports = router;

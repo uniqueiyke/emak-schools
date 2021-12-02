@@ -24,7 +24,7 @@ function StaffDashboard() {
                 {(data && (data.roles.includes('admin') || data.roles.includes('super-admin'))) && <GoToButton to='/admin/admin-panel'>AdminPanel</GoToButton>}
                 <Typography variant='h3'>Staff Dashboard</Typography>
                 {/* <div><Link component={RouteLink} to='/staff/dashboard/grade-book' >Add score</Link></div> */}
-                <div><Link component={RouteLink} to='/staff/dashboard/add/grade-book' >Add GradeBook</Link></div>
+                <div><Link component={RouteLink} to='/staff/dashboard/add/grade-book' >GradeBook</Link></div>
             </>
         )
     }

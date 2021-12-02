@@ -38,6 +38,7 @@ app.use(cors({ origin: process.env.origin }));
 app.use('/admin', require('./routes/admin'));
 app.use('/staffs', require('./routes/staffs'));
 app.use('/students', require('./routes/students'));
+app.use('/gradebooks', require('./routes/grade-books'));
 
 //serve static file if in production 
 if (process.env.NODE_ENV === 'production') {

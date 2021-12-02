@@ -20,9 +20,11 @@ import StudentSelectTable from '../grade-book/StudentSelectTable';
 // import TestApp from '../test-components/TestApp';
 import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
-import StudentsInClass from '../grade-book/StudentsInClass';
+import GradeBook from '../grade-book/GradeBook';
 import GradeScoreForm from '../grade-book/GradeScoreForm';
 import CreateGradeBook from '../grade-book/CreateGradeBook';
+import ResultSheet from '../grade-book/ResultSheet';
+import ResultSlip from '../grade-book/ResultSlip';
 
 export default function Routers() {
     return (
@@ -73,8 +75,14 @@ export default function Routers() {
                 <AdminAuthRoute exact path="/admin/students/student/profile/:id">
                     <StudentProfile />
                 </AdminAuthRoute>
-                <AuthRoute exact path="/staff/dashboard/grade-book">
-                    <StudentsInClass />
+                <AdminAuthRoute exact path="/admin/students/result-sheet">
+                    <ResultSheet />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact path="/admin/students/result-slip">
+                    <ResultSlip />
+                </AdminAuthRoute>
+                <AuthRoute exact path="/staff/dashboard/grade-book/:subject">
+                    <GradeBook />
                 </AuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/student/:id">
                     <GradeScoreForm />

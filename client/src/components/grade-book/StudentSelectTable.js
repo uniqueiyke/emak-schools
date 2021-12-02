@@ -219,7 +219,7 @@ const StudentSelectTable = ({ studentsData }) => {
         
         const val = {
             session: submitValueState.session.replace('/', '_'),
-            term: submitValueState.term.replace(' ', '_'),
+            term: submitValueState.term,
             class_name: `${submitValueState.class_name}_${submitValueState.class_stream.toLowerCase()}`,
             students_list: selected,
         }

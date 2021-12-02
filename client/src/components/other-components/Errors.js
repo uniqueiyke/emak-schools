@@ -15,9 +15,9 @@ const useStyles = makeStyles({
     }
 })
 
-export default function Errors({ errors }) {
+export default function Errors({ errors, goBack }) {
     const history = useHistory();
-        const classes = useStyles();
+    const classes = useStyles();
     if (errors) {
         const { message, status, statusText } = errors;
         return (
@@ -25,22 +25,31 @@ export default function Errors({ errors }) {
                 <Typography variant='h3' color='error' >Error {status}: {statusText}</Typography>
                 <Typography variant='h4' color='error' >{message}</Typography>
 
-                <Button
-                    onClick={() => history.push('/')}
-                    startIcon={<HomeIcon />}
-                    variant='outlined'
-                    className={classes.btn}
-                >
-                    Go To Home Page
-                </Button>
+                {goBack ?
+                    <Button
+                        onClick={() => history.goBack()}
+                        variant='outlined'
+                        className={classes.btn}
+                    >
+                        Back
+                    </Button>
+                    : <Button
+                        onClick={() => history.push('/')}
+                        startIcon={<HomeIcon />}
+                        variant='outlined'
+                        className={classes.btn}
+                    >
+                        Go To Home Page
+                    </Button>}
             </div>
         )
-    }else{
+    } else {
         return <></>
     }
 
 }
 
 Errors.propTypes = {
-    errors: PropTypes.object
+    errors: PropTypes.object.isRequired,
+    goBack: PropTypes.bool,
 }

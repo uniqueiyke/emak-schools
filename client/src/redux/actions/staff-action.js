@@ -17,8 +17,11 @@ import {
     PASSWORD_RESET_SUCCESSFUL,
     PASSWORD_RESET_FAILED,
     IS_CONFIRMING_STAFF_EMAIL,
-    STUDENTS_IN_CLASS_FAILED,
-    STUDENTS_IN_CLASS_SUCCEEDED,
+    GRADEBOOK_FAILED,
+    GRADEBOOK_SUCCEEDED,
+    GRADEBOOK_SCORE_UPDATE_SUCCEEDED,
+    GRADEBOOK_SCORE_UPDATE_FAILED,
+    IS_UPDATING_GRADEBOOK_SCORE,
 } from './action-types';
 
 import axios from 'axios';
@@ -69,13 +72,13 @@ const isFetchingStaff = () => ({
     type: IS_FETCHING_STAFF
 })
 
-const studentsInClassSucceeded = data =>({
-    type: STUDENTS_IN_CLASS_SUCCEEDED,
+const gradeBookSucceeded = data =>({
+    type: GRADEBOOK_SUCCEEDED,
     payload: data,
 })
 
-const studentsInClassFailed = err =>({
-    type: STUDENTS_IN_CLASS_FAILED,
+const gradeBookFailed = err =>({
+    type: GRADEBOOK_FAILED,
     payload: err,
 })
 
@@ -120,6 +123,21 @@ const passwordResetFailed = data => ({
 const isConfirmingEmail =  () =>({
     type: IS_CONFIRMING_STAFF_EMAIL,
 })
+
+const updateGradeBookScoreSucceeded = data => ({
+    type: GRADEBOOK_SCORE_UPDATE_SUCCEEDED,
+    payload: data,
+})
+
+const updateGradeBookScoreFailed = err => ({
+    type: GRADEBOOK_SCORE_UPDATE_FAILED,
+    payload: err,
+})
+
+const isUpdatingGradeBookScore = err => ({
+    type: IS_UPDATING_GRADEBOOK_SCORE,
+})
+
 
 export const confirmStaffRegToken = token => async dispatch => {
     try {
@@ -241,16 +259,32 @@ export const resetPassword = email => async dispatch => {
     }
 }
 
-export const fecthStudentsInClass = params => async dispatch => {
+export const gradeBook = params => async dispatch => {
     try {
         const responds = await axios({
-            url: '/admin/fetch/students/class',
+            url: '/gradebooks',
             method: 'GET',
             params,
-        headers: tokenConfig('application/json'),
+            headers: tokenConfig('application/json'),
         });
-        dispatch(studentsInClassSucceeded(responds.data));
+        dispatch(gradeBookSucceeded(responds.data));
     }catch(errors) {
-        dispatch(studentsInClassFailed(errorParser(errors.response)))
+        dispatch(gradeBookFailed(errorParser(errors.response)))
+    }
+}
+
+export const updateGradeBookScore = (data, params) => async dispatch => {
+    try {
+        dispatch(isUpdatingGradeBookScore())
+        const responds = await axios({
+            url: '/gradebooks/update/scores',
+            method: 'POST',
+            params,
+            data,
+            headers: tokenConfig('application/json'),
+        });
+        dispatch(updateGradeBookScoreSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(updateGradeBookScoreFailed(errorParser(errors.response)))
     }
 }

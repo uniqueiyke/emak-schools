@@ -17,12 +17,15 @@ import {
     PASSWORD_RESET_SUCCESSFUL,
     PASSWORD_RESET_FAILED,
     IS_CONFIRMING_STAFF_EMAIL,
-    STUDENTS_IN_CLASS_FAILED,
-    STUDENTS_IN_CLASS_SUCCEEDED,
+    GRADEBOOK_FAILED,
+    GRADEBOOK_SUCCEEDED,
+    GRADEBOOK_SCORE_UPDATE_SUCCEEDED,
+    GRADEBOOK_SCORE_UPDATE_FAILED,
+    IS_UPDATING_GRADEBOOK_SCORE,
 } from '../actions/action-types'
 import initialState from './initial-state';
 
-const resFailedState = (state, action, errorType='') => ({
+const resFailedState = (state, action, errorType = '') => ({
     ...state,
     isAuthenticated: false,
     isFetchingStaff: false,
@@ -30,7 +33,7 @@ const resFailedState = (state, action, errorType='') => ({
     isConfirmingEmail: false,
     staff: {
         data: null,
-        error: {errorType, isError: true, errorMsg: action.payload}
+        error: { errorType, isError: true, errorMsg: action.payload }
     }
 });
 
@@ -160,22 +163,47 @@ const staffReducer = (state = initialState({ staff: true }), action) => {
                 isConfirmingEmail: true,
             }
 
-            case STUDENTS_IN_CLASS_SUCCEEDED:
-                return {
-                    ...state,
-                    students: {
-                        data: action.payload,
-                        error: null,
-                    }
+        case GRADEBOOK_SUCCEEDED:
+            return {
+                ...state,
+                students: {
+                    data: action.payload,
+                    error: null,
                 }
-            
-                case STUDENTS_IN_CLASS_FAILED:
+            }
+
+        case GRADEBOOK_FAILED:
+            return {
+                ...state,
+                students: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+
+        case GRADEBOOK_SCORE_UPDATE_SUCCEEDED:
+            return {
+                ...state,
+                isUpdatingScores: false,
+                scores: {
+                    data: action.payload,
+                    error: null,
+                }
+            }
+
+        case GRADEBOOK_SCORE_UPDATE_FAILED:
+            return {
+                ...state,
+                isUpdatingScores: false,
+                scores: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+            case IS_UPDATING_GRADEBOOK_SCORE:
                 return {
                     ...state,
-                    students: {
-                        data: null,
-                        error: action.payload,
-                    }
+                    isUpdatingScores: true,
                 }
         default:
             return state

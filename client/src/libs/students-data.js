@@ -128,3 +128,12 @@ export const graduationLevel = [
     {value: 'still-student', label: 'Still a Student'}, 
     {value: 'none', label: 'None'}
 ]
+
+export const getSchoolFromClass = cls => {
+    const senior = ['ss1', 'ss2', 'ss3'];
+    // const junior = ['jss1', 'jss2', 'jss3'];
+    if(senior.includes(cls.toLowerCase())){
+        return 'Senior Secondary School';
+    }
+    return 'Junior Secondary School';
+}

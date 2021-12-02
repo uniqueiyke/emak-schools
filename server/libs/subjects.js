@@ -1,5 +1,5 @@
-export const subjects = [
-    {
+exports.subjects = {
+    eng_lang: {
         serial_code: 1,
         subject_code: "001",
         label: "English Language",
@@ -7,7 +7,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "ENG"
     },
-    {
+    maths: {
         serial_code: 2,
         subject_code: "002",
         label: "Mathematics",
@@ -15,7 +15,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "MTH"
     },
-    {
+    igbo_lang: {
         serial_code: 3,
         subject_code: "003",
         label: "Igbo Language",
@@ -23,7 +23,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "IGO"
     },
-    {
+    civic_edu: {
         serial_code: 4,
         subject_code: "004",
         label: "Civic Education",
@@ -31,7 +31,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "CIV"
     },
-    {
+    biology: {
         serial_code: 5,
         subject_code: "005",
         label: "Biology",
@@ -39,7 +39,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "BIO"
     },
-    {
+    physics: {
         serial_code: 6,
         subject_code: "006",
         label: "Physics",
@@ -47,7 +47,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "PHY"
     },
-    {
+    chemistry: {
         serial_code: 7,
         subject_code: "007",
         label: "Chemistry",
@@ -55,7 +55,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "CHEM"
     },
-    {
+    animal_hus: {
         serial_code: 8,
         subject_code: "008",
         label: "Animal Husbandary",
@@ -63,7 +63,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "AHB"
     },
-    {
+    com_sci: {
         serial_code: 9,
         subject_code: "009",
         label: "Computer Science",
@@ -71,7 +71,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "COM"
     },
-    {
+    agric_sci: {
         serial_code: 10,
         subject_code: "010",
         label: "Agricultural Science",
@@ -79,7 +79,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "AGS"
     },
-    {
+    economics: {
         serial_code: 11,
         subject_code: "011",
         label: "Economics",
@@ -87,7 +87,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "ECO"
     },
-    {
+    crs: {
         serial_code: 12,
         subject_code: "012",
         label: "Christian Religious Studies",
@@ -95,7 +95,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "CRS"
     },
-    {
+    government: {
         serial_code: 13,
         subject_code: "013",
         label: "Government",
@@ -103,7 +103,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "GOV"
     },
-    {
+    eng_lit: {
         serial_code: 14,
         subject_code: "014",
         label: "English Literature",
@@ -111,7 +111,7 @@ export const subjects = [
         offer_by: "all",
         short_title: "ENL"
     },
-    {
+    geography: {
         serial_code: 15,
         subject_code: "015",
         label: "Geography",
@@ -119,7 +119,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "GEO"
     },
-    {
+    accounting: {
         serial_code: 16,
         subject_code: "016",
         label: "Accounting",
@@ -127,7 +127,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "ACO"
     },
-    {
+    marketing: {
         serial_code: 17,
         subject_code: "017",
         label: "Marketing",
@@ -135,7 +135,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "MAK"
     },
-    {
+    comerce: {
         serial_code: 18,
         subject_code: "018",
         label: "Comerce",
@@ -143,7 +143,7 @@ export const subjects = [
         offer_by: "senior",
         short_title: "CME"
     },
-    {
+    basic_sci: {
         serial_code: 19,
         subject_code: "019",
         label: "Basic Science",
@@ -151,7 +151,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "BCI"
     },
-    {
+    basic_tech: {
         serial_code: 20,
         subject_code: "020",
         label: "Basic Technology",
@@ -159,7 +159,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "BTEC"
     },
-    {
+    social_stud: {
         serial_code: 21,
         subject_code: "021",
         label: "Social Studies",
@@ -167,7 +167,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "SOS"
     },
-    {
+    cca: {
         serial_code: 22,
         subject_code: "022",
         label: "Cultural and Creative Art",
@@ -175,7 +175,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "CCA"
     },
-    {
+    bus_stud: {
         serial_code: 23,
         subject_code: "023",
         label: "Business Studies",
@@ -183,7 +183,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "BUS"
     },
-    {
+    music: {
         serial_code: 24,
         subject_code: "024",
         label: "Music",
@@ -191,7 +191,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "MUS"
     },
-    {
+    phe: {
         serial_code: 25,
         subject_code: "025",
         label: "Physical and Health Education",
@@ -199,7 +199,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "PHE"
     },
-    {
+    home_econs: {
         serial_code: 26,
         subject_code: "026",
         label: "Home Economics",
@@ -207,7 +207,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "HOM"
     },
-    {
+    french: {
         serial_code: 27,
         subject_code: "027",
         label: "French",
@@ -215,7 +215,7 @@ export const subjects = [
         offer_by: "junior",
         short_title: "FRE"
     },
-    {
+    cur_aff: {
         serial_code: 28,
         subject_code: "028",
         label: "Current Affiers",
@@ -223,42 +223,23 @@ export const subjects = [
         offer_by: "all",
         short_title: "CAF"
     },
-]
-
-
-export const terms = [
-    {
-        code: 1,
-        value: "First Term",
-        label: "First Term"
-    },
-    {
-        code: 2,
-        value: "Second Term",
-        label: "Second Term"
-    },
-    {
-        code: 3,
-        value: "Third Term",
-        label: "Third Term"
-    },
-]
-
-export const subjectTitle = (subject) => {
-    const subj = subjects.find(elem => elem.value === subject)
-    return subj.label || subject;
 }
 
 
-export const filterSubjectsByClass = (cls) => {
-    const c = cls.toLowerCase()
-    if (c === 'jss1' || c === 'jss2' || c === 'jss3') {
-        return subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'junior')
-    }
-
-    if (c === 'ss1' || c === 'ss2' || c === 'ss3') {
-        return subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'senior')
-    }
-
-    return subjects;
+exports.terms = {
+    "First Term": {
+        code: 1,
+        value: "First Term",
+        short_title: "1st"
+    },
+    "Second Term": {
+        code: 2,
+        value: "Second Term",
+        short_title: "2nd"
+    },
+    "Third Term": {
+        code: 3,
+        value: "Third Term",
+        short_title: "3rd"
+    },
 }

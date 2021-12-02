@@ -48,14 +48,14 @@ const CreateGradeBook = () => {
         formValidator.field('session').isEmpty().withMessage('please choose the academic session');
         formValidator.field('class_name').isEmpty().withMessage('please choose students class');
         formValidator.field('term').isEmpty().withMessage('please choose the term');
-        formValidator.field('subject').arrayValues().withMessage('Select at least a subject.');
+        formValidator.field('subject').isEmpty().withMessage('Select a subject.');
         const err = formValidator.errorMessage();
 
         if (!isEmptyArrayOrObject(err)) {
             setErrState({isError: true, errorMsg: err});
             return;
         }
-        history.push('/staff/dashboard/grade-book', state)
+        history.push(`/staff/dashboard/grade-book/${state.subject}`, state)
         setState(initialState);
     }
 
@@ -64,7 +64,7 @@ const CreateGradeBook = () => {
         {
             errState && <AlertMessage severity='error' open={errState.isError} onClose={() => setErrState(initErrorState)} >{alertMessageParser(errState.errorMsg)}</AlertMessage>
         }
-        <Typography variant='h6' align='center' >Please select the academic year, term, class and the subject to create the GradeBook</Typography>
+        <Typography variant='h6' align='center' >Please select the academic year, term, class and the subject for the GradeBook</Typography>
             <ResultManager
                 withSubject
                 vSubject={state.subject}
@@ -77,7 +77,7 @@ const CreateGradeBook = () => {
             />
             <div className={classes.btnDiv}>
                 <Button size='small' onClick={handleSubmit} variant='outlined' type='submit' style={{ color: 'forestgreen', borderColor: 'forestgreen' }} startIcon={<AddBoxIcon style={{ color: 'forestgreen' }} />} >
-                    add
+                    continue
                 </Button>
             </div>
         </>

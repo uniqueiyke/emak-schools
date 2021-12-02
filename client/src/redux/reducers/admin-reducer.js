@@ -8,7 +8,14 @@ import {
     CREATE_RESULT_MANAGER_FAILED,
     ALL_CURRENT_STUDENTS_FETCH_SUCCEEDED,
     ALL_CURRENT_STUDENTS_FETCH_FAILED,
+    IS_COMPUTING_RESULTS,
+    COMPUTE_RESULTS_FAILED,
+    COMPUTE_RESULTS_SUCCEEDED,
+    FETCH_RESULTSHEET_SUCCEEDED,
+    FETCH_RESULTSHEET_FAILED,
+    IS_FETCHING_RESULTSHEET,
 } from '../actions/action-types'
+
 import initialState from './initial-state'
 
 
@@ -18,7 +25,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 staffRegPassport: {
-                    data: {...action.payload, is_successful: true},
+                    data: { ...action.payload, is_successful: true },
                     error: null
                 }
             }
@@ -28,7 +35,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 ...state,
                 staffRegPassport: {
                     data: null,
-                    error: {is_error: true, error_msg: action.payload}
+                    error: { is_error: true, error_msg: action.payload }
                 }
             }
         case ALL_STUDENTS_FETCH_SUCCEEDED:
@@ -67,7 +74,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 resultManager: {
-                    data: {...action.payload, is_successful: true},
+                    data: { ...action.payload, is_successful: true },
                     error: null,
                 }
             }
@@ -77,7 +84,51 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 ...state,
                 resultManager: {
                     data: null,
-                    error: {is_error: true, error_msg: action.payload},
+                    error: { is_error: true, error_msg: action.payload },
+                }
+            }
+
+        case IS_COMPUTING_RESULTS:
+            return {
+                ...state,
+                results: {
+                    isComputingResults: true,
+                    data: null,
+                    error: null,
+                }
+            }
+
+            case IS_FETCHING_RESULTSHEET:
+            return {
+                ...state,
+                results: {
+                    isFetchingResultSheet: true,
+                    data: null,
+                    error: null,
+                }
+            }
+
+        case FETCH_RESULTSHEET_SUCCEEDED:
+        case COMPUTE_RESULTS_SUCCEEDED:
+            console.log(action.payload);
+            return {
+                ...state,
+                results: {
+                    isComputingResults: false,
+                    isFetchingResultSheet: false,
+                    data: action.payload,
+                    error: null,
+                }
+            }
+        case FETCH_RESULTSHEET_FAILED:
+        case COMPUTE_RESULTS_FAILED:
+            return {
+                ...state,
+                results: {
+                    isComputingResults: false,
+                    isFetchingResultSheet: false,
+                    data: null,
+                    error: action.payload,
                 }
             }
         default:

@@ -9,6 +9,12 @@ import {
     IS_FETCHING_STUDENTS,
     ALL_CURRENT_STUDENTS_FETCH_SUCCEEDED,
     ALL_CURRENT_STUDENTS_FETCH_FAILED,
+    IS_COMPUTING_RESULTS,
+    COMPUTE_RESULTS_FAILED,
+    COMPUTE_RESULTS_SUCCEEDED,
+    FETCH_RESULTSHEET_SUCCEEDED,
+    FETCH_RESULTSHEET_FAILED,
+    IS_FETCHING_RESULTSHEET,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -59,6 +65,34 @@ const createResultManagerSucceeded = data => ({
 const createResultManagerFailed = err => ({
     type: CREATE_RESULT_MANAGER_FAILED,
     payload: err,
+})
+
+const isComputingResults = () => ({
+    type: IS_COMPUTING_RESULTS,
+})
+
+const computeResultsFailed = err => ({
+    type: COMPUTE_RESULTS_FAILED,
+    payload: err,
+})
+
+const computeResultsSucceeded = data => ({
+    type: COMPUTE_RESULTS_SUCCEEDED,
+    payload: data,
+})
+
+const fetchResultsFailed = err => ({
+    type: FETCH_RESULTSHEET_FAILED,
+    payload: err,
+})
+
+const fetchResultsSucceeded = data => ({
+    type: FETCH_RESULTSHEET_SUCCEEDED,
+    payload: data,
+})
+
+const isFetchingResultSheet = () => ({
+    type: IS_FETCHING_RESULTSHEET,
 })
 
 export const sendStaffRegistrationToken =  data => async dispatch => {
@@ -119,5 +153,35 @@ export const createResultManager = data => async dispatch => {
         dispatch(createResultManagerSucceeded(responds.data));
     }catch(errors) {
         dispatch(createResultManagerFailed(errorParser(errors.response)));
+    }
+}
+
+export const computeResults = params => async dispatch => {
+    try {
+        dispatch(isComputingResults());
+        const responds = await axios({
+            url: '/gradebooks/comput/results',
+            method: 'GET',
+            params,
+            headers: tokenConfig('application/json'),
+        });
+        dispatch(computeResultsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(computeResultsFailed(errorParser(errors.response)))
+    }
+}
+
+export const fetchResults = params => async dispatch => {
+    try {
+        dispatch(isFetchingResultSheet());
+        const responds = await axios({
+            url: '/gradebooks/fetch/results-sheet',
+            method: 'GET',
+            params,
+            headers: tokenConfig('application/json'),
+        });
+        dispatch(fetchResultsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(fetchResultsFailed(errorParser(errors.response)))
     }
 }

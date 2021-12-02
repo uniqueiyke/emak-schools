@@ -12,6 +12,7 @@ const sendEmail = require('../libs/send-email');
 const StaffPasswordReset = require('../models/staff-password-reset');
 const passwordResetEamil = require('../libs/password-reset-email');
 const successfulPasswordReset = require('../libs/successful-password-reset');
+
 const signInToken = (userData) => {
     return jwt.sign(
         { user: { id: userData._id, roles: userData.roles } },
@@ -160,7 +161,7 @@ exports.confirm_staff_reg_token = async (req, res) => {
             res.status(401).json({ message: 'Wrong or expired access token' });
             return;
         }
- 
+
         data = data[0];
 
         if (data.join_link.used === true) {
