@@ -32,8 +32,9 @@ const useStyles = makeStyles({
   regNumTCell: {
     position: 'sticky',
     textDecoration: 'underline',
-    color: 'pink',
+    color: '#b14456',
     cursor: 'pointer',
+    fontWeight: 'bold',
   },
   tRow: {
     position: 'relative',
