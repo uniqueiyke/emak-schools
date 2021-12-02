@@ -33,6 +33,7 @@ const useStyles = makeStyles({
     position: 'sticky',
     textDecoration: 'underline',
     color: 'pink',
+    cursor: 'pointer',
   },
   tRow: {
     position: 'relative',
