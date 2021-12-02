@@ -31,6 +31,8 @@ const useStyles = makeStyles({
   },
   regNumTCell: {
     position: 'sticky',
+    textDecoration: 'underline',
+    color: 'pink',
   },
   tRow: {
     position: 'relative',
@@ -72,7 +74,7 @@ const GradeBook = () => {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.tRow}>S/N</TableCell>
-                <TableCell align="left" className={classes.regNumTCell}>Reg Number</TableCell>
+                <TableCell align="left" >Reg Number</TableCell>
                 <TableCell align="left">Last Name</TableCell>
                 <TableCell align="left">First Name</TableCell>
                 <TableCell align="left">Fisrt Quiz</TableCell>
@@ -90,7 +92,7 @@ const GradeBook = () => {
                   data.map((stu, i) => (
                     <TableRow className={classes.tRow} key={stu._id} onDoubleClick={() => history.push(`/staff/dashboard/grade-book/student/${stu._id}`, { ...stu, state })}>
                       <TableCell >{i + 1}</TableCell>
-                      <TableCell align="left" className={classes.regNumTCell}>{stu.reg_number}</TableCell>
+                      <TableCell align="left" className={classes.regNumTCell} onClick={() => history.push(`/staff/dashboard/grade-book/student/${stu._id}`, { ...stu, state })} >{stu.reg_number}</TableCell>
                       <TableCell align="left">{stu.name.last_name}</TableCell>
                       <TableCell align="left">{stu.name.first_name} </TableCell>
                       <TableCell align="center" component='td' >{stu.scores.first_quiz}</TableCell>
