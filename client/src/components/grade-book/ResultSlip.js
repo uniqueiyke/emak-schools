@@ -288,7 +288,7 @@ const ResultSlip = () => {
                             <p className={styles.mottoDiv}>Encourage and build you child up in the he should go</p>
                             <div className={styles.printBtnDiv}>
                                 <button className={styles.printBtn1} onClick={() => printResultSlip(resultDetails, state)}>Print</button>
-                                <button className={styles.printBtn2} onClick={() => window.print()}>mobile device Print</button>
+                                <button className={styles.printBtn2} onClick={() => window.print()}>Mobile Device Print</button>
                             </div>
                         </div>
                     )
