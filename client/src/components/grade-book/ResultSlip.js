@@ -8,7 +8,7 @@ import tokenConfig from '../../redux/actions/token-config';
 import schLogo from '../../images/sch-logo-250x180.png';
 import { getSchoolFromClass } from '../../libs/students-data'
 // import placeHoderImg from '../../images/placeholder1.png';
-// import printResultSlip from '../../libs/print-result-slip';
+import printResultSlip from '../../libs/print-result-slip';
 const useStyles = makeStyles({
     container: {
         // padding: 0,
@@ -118,7 +118,26 @@ const useStyles = makeStyles({
         color: '#ffc0cbd2',
         fontSize: '1.1rem'
 
-    }
+    },
+    printBtnDiv: {
+        display: 'grid',
+        gridTemplateColumns: '100px 150px',
+        justifyContent: 'space-between',
+    },
+    printBtn1: {
+        justifySelf: 'left',
+        backgroundColor: '#8a1325',
+        color: 'white',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+    },
+    printBtn2: {
+        justifySelf: 'right',
+        backgroundColor: '#23285e',
+        color: 'white',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+    },
 })
 
 const ResultSlip = () => {
@@ -267,8 +286,10 @@ const ResultSlip = () => {
                             </p>
                             <p className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</p>
                             <p className={styles.mottoDiv}>Encourage and build you child up in the he should go</p>
-                            <button onClick={() => window.print()}>Print</button>
-                            {/* <button onClick={() => printResultSlip(resultDetails, state)}>Print</button> */}
+                            <div className={styles.printBtnDiv}>
+                                <button className={styles.printBtn1} onClick={() => printResultSlip(resultDetails, state)}>Print</button>
+                                <button className={styles.printBtn2} onClick={() => window.print()}>mobile device Print</button>
+                            </div>
                         </div>
                     )
                 }
