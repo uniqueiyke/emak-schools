@@ -16,7 +16,7 @@ const parseRows = (subjects) => {
     return rows;
 }
 
-export const resultHtml = (resultDetails, state, schLogo) => {
+export const resultHtml = (resultDetails, state) => {
     return (`
     <!DOCTYPE html>
 <html lang="en">

@@ -8,7 +8,7 @@ import tokenConfig from '../../redux/actions/token-config';
 import schLogo from '../../images/sch-logo-250x180.png';
 import { getSchoolFromClass } from '../../libs/students-data'
 // import placeHoderImg from '../../images/placeholder1.png';
-import printResultSlip from '../../libs/print-result-slip';
+// import printResultSlip from '../../libs/print-result-slip';
 const useStyles = makeStyles({
     container: {
         // padding: 0,
@@ -267,7 +267,8 @@ const ResultSlip = () => {
                             </p>
                             <p className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</p>
                             <p className={styles.mottoDiv}>Encourage and build you child up in the he should go</p>
-                            <button onClick={() => printResultSlip(resultDetails, state, '../../images/sch-logo-250x180.png')}>Print</button>
+                            <button onClick={() => window.print()}>Print</button>
+                            {/* <button onClick={() => printResultSlip(resultDetails, state)}>Print</button> */}
                         </div>
                     )
                 }

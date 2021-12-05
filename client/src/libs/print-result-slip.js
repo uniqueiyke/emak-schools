@@ -1,9 +1,9 @@
 import { resultHtml } from "./result-html";
 
-const printResultSlip = (resultDetails, state, schLogo) => {
+const printResultSlip = (resultDetails, state) => {
     const mywindow = window.open('', 'print student result', 'height=100,width=100');
     const document = mywindow.document.open();
-    document.write(resultHtml(resultDetails, state, schLogo));
+    document.write(resultHtml(resultDetails, state));
     document.close();
     mywindow.moveTo(0, 0);
     mywindow.resizeTo(mywindow.screen.width, mywindow.screen.height);
