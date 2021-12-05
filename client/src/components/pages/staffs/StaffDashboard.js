@@ -10,6 +10,7 @@ import GoToButton from '../../other-components/GoToButton';
 import useWaitForDataReady from '../../../hooks/useWaitForDataReady';
 import DataFetchingProgress from '../../other-components/DataFetchingProgress';
 import { isEmptyArray } from '../../../libs/utility-functions';
+import { isAdmin } from '../../../libs/client-page-auth';
 
 
 const useStyles = makeStyles({
@@ -35,20 +36,20 @@ function StaffDashboard() {
             <>
                 {(data && (data.roles.includes('admin') || data.roles.includes('super-admin'))) && <GoToButton to='/admin/admin-panel'>AdminPanel</GoToButton>}
                 <Typography variant='h3'>Staff Dashboard</Typography>
-                {(data && data.last_name === '') &&
+                {(data && !isAdmin(true) && data.last_name === '') &&
                     <Typography className={styles.errMsg}>
                         Please add your name to continue.
                         <Link className={styles.toLink} component={RouteLink} to='/staff/profile' > Profile</Link>
                     </Typography>
                 }
-                {(data && isEmptyArray(data.subjects)) &&
+                {(data && !isAdmin(true) && isEmptyArray(data.subjects)) &&
                     <Typography className={styles.errMsg}>
                         You have not been asigned any subject. Please contact the exam admistrator to do so. Thanks
                         <Link className={styles.toLink} component={RouteLink} to='/staff/data/profile' > Profile</Link>
                     </Typography>
                 }
                 {
-                    (!isEmptyArray(data.subjects) && data.last_name !== '') &&
+                    ((!isEmptyArray(data.subjects) && data.last_name !== '') || isAdmin(true)) &&
                     <Link component={RouteLink} to={{
                         pathname: '/staff/dashboard/add/grade-book',
                         state: { subjects: data.subjects }
