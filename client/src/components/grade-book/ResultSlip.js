@@ -150,7 +150,6 @@ const ResultSlip = () => {
         }
     }
 
-    console.log(resultDetails);
     useEffect(() => {
         getResultSlip().then(data => {
             setIsResultFetching(false);
