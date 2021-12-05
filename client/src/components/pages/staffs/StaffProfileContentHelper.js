@@ -17,10 +17,15 @@ import { updateStaffData } from '../../../redux/actions/staff-action';
 import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject, formatPhoneNumber } from '../../../libs/utility-functions';
+import SingleSelect from '../../other-components/SingleSelect';
+import MultipleSelect from '../../other-components/MultipleSelect';
+import { subjectTitle } from '../../../libs/subjects'
+
 const StaffProfileContentHelper = ({
     staff, rootStyle, titleStyle,
     title, fieldType, fieldName,
-    fieldLabel, error,
+    fieldLabel, error, singleSelect, multipleSelect,
+    listOptions, labelId
 }) => {
 
     const { data, isUpdatingStaffData } = staff;
@@ -92,25 +97,60 @@ const StaffProfileContentHelper = ({
                     </Typography>
                     {editMode ?
                         <>
-                            <FormControl fullWidth >
-                                <TextField
-                                    name={fieldName}
-                                    label={fieldLabel}
-                                    variant="outlined"
-                                    required
+                            {singleSelect ?
+                                <SingleSelect
+                                    listOptions={listOptions}
+                                    labelId={labelId}
                                     helperText={(valueError && valueError[fieldName]) && valueError[fieldName]}
-                                    value={value}
+                                    label={fieldLabel}
                                     onChange={handleValueChange}
+                                    value={value}
+                                    name={fieldName}
+                                    required
                                     error={valueError ? true : false}
-                                    disabled={isUpdating}
-                                    type={fieldType ? fieldType : 'text'}
                                 />
-                            </FormControl>
+                                : multipleSelect
+                                    ?
+                                    <MultipleSelect
+                                        listOptions={listOptions}
+                                        labelId={labelId}
+                                        helperText={(valueError && valueError[fieldName]) && valueError[fieldName]}
+                                        label={fieldLabel}
+                                        onChange={handleValueChange}
+                                        value={value}
+                                        name={fieldName}
+                                        required
+                                        error={valueError ? true : false}
+                                    /> :
+
+                                    <FormControl fullWidth >
+                                        <TextField
+                                            name={fieldName}
+                                            label={fieldLabel}
+                                            variant="outlined"
+                                            required
+                                            helperText={(valueError && valueError[fieldName]) && valueError[fieldName]}
+                                            value={value}
+                                            onChange={handleValueChange}
+                                            error={valueError ? true : false}
+                                            disabled={isUpdating}
+                                            type={fieldType ? fieldType : 'text'}
+                                        />
+                                    </FormControl>
+                            }
                         </>
                         :
                         <Typography component='div' align='center'>
                             <Typography color="textSecondary" component='span'>
-                                {data[fieldName]}
+                                {
+                                    multipleSelect ? data[fieldName].map(
+                                        (s, index) => {
+                                            if (index < data[fieldName].length - 1)
+                                                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
+                                            else
+                                                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
+                                        }) : data[fieldName]
+                                }
                             </Typography>
                             <IconButton
                                 color='primary'

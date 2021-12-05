@@ -14,6 +14,13 @@ import {
     FETCH_RESULTSHEET_SUCCEEDED,
     FETCH_RESULTSHEET_FAILED,
     IS_FETCHING_RESULTSHEET,
+    IS_FETCHING_ALL_STAFFS,
+    ALL_STAFFS_FETCH_FAILED,
+    ALL_STAFFS_FETCH_SUCCEEDED,
+    UPDATE_STAFF_ROLES_SUCCEEDED,
+    UPDATE_STAFF_ROLES_FAILED,
+    UPDATE_STAFF_SUBJECTS_SUCCEEDED,
+    UPDATE_STAFF_SUBJECTS_FAILED
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -70,6 +77,41 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 }
             }
 
+        case IS_FETCHING_ALL_STAFFS:
+            return {
+                ...state,
+                staffs: {
+                    data: null,
+                    error: null,
+                    isFetchingAllStaffs: true,
+                }
+            }
+
+        case UPDATE_STAFF_SUBJECTS_SUCCEEDED:
+        case UPDATE_STAFF_ROLES_SUCCEEDED:
+        case ALL_STAFFS_FETCH_SUCCEEDED:
+            return {
+                ...state,
+                staffs: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingStudents: false,
+                }
+            }
+
+        case UPDATE_STAFF_SUBJECTS_FAILED:
+        case UPDATE_STAFF_ROLES_FAILED:
+        case ALL_STAFFS_FETCH_FAILED:
+            return {
+                ...state,
+                staffs: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingStudents: false,
+                }
+            }
+
+
         case CREATE_RESULT_MANAGER_SUCCEEDED:
             return {
                 ...state,
@@ -98,7 +140,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 }
             }
 
-            case IS_FETCHING_RESULTSHEET:
+        case IS_FETCHING_RESULTSHEET:
             return {
                 ...state,
                 results: {
@@ -110,7 +152,6 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
 
         case FETCH_RESULTSHEET_SUCCEEDED:
         case COMPUTE_RESULTS_SUCCEEDED:
-            console.log(action.payload);
             return {
                 ...state,
                 results: {

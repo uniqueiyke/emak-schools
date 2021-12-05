@@ -196,6 +196,8 @@ exports.update_staff_data = async (req, res) => {
             }
             else if (field === 'username') {
                 err = validateFormFields({ [field]: req.body[field] }, { [field]: 'min_length' }, { minLength: 8 });
+            }else if (field === 'subjects') {
+                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'array' });
             } else {
                 err = validateFormFields({ [field]: req.body[field] }, {
                     [field]: 'min_length',

@@ -22,6 +22,7 @@ import FormFieldsValidator from '../../libs/form-fields-validator';
 import { createResultManager } from '../../redux/actions/admin-action'
 import AlertMessage from '../other-components/AlertMessage';
 import { currentAcademicYear, currentTerm } from '../../libs/session-array';
+import WrongInclusionDailog from './WrongInclusionDailog';
 
 
 const useStyles = makeStyles(theme => ({
@@ -70,7 +71,7 @@ const StudentSelectTable = ({ studentsData }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [filter, toggleFilter] = useState(false);
 
-    const initErrorState = {isError: false, errorMsg: null}
+    const initErrorState = { isError: false, errorMsg: null }
     const [pageError, setPageError] = useState(initErrorState)
     const [isSuccessful, setIsSuccessful] = useState(false)
 
@@ -84,6 +85,8 @@ const StudentSelectTable = ({ studentsData }) => {
     const [submitValueState, setSubmitValueState] = useState(initialSubmitValueState);
     const dispatch = useDispatch();
     const { data, error } = useSelector(state => state.admin.resultManager)
+    const [dialogOpen, setDailogOpen] = useState(false);
+    const [notClassMembers, setNotClassMembers] = useState([]);
 
     useEffect(() => {
         setFilterCompleted(false)
@@ -94,14 +97,15 @@ const StudentSelectTable = ({ studentsData }) => {
     }, [filterText, filterField]);
 
     useEffect(() => {
-        if(error){
-            setPageError({isError: error.is_error, errorMsg: error.error_msg})
+        if (error) {
+            setPageError({ isError: error.is_error, errorMsg: error.error_msg })
         }
-        if(data){
+        if (data) {
             setIsSuccessful(data.is_successful)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, error])
+
     const handleClick = (event, name) => {
         const selectedIndex = selected.indexOf(name);
         let newSelected = [];
@@ -203,7 +207,7 @@ const StudentSelectTable = ({ studentsData }) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        
+
         setPageError(null);
         const formValidator = new FormFieldsValidator({ ...submitValueState, students_list: selected })
         formValidator.field('session').isEmpty().withMessage('please choose the academic session');
@@ -213,10 +217,22 @@ const StudentSelectTable = ({ studentsData }) => {
         const err = formValidator.errorMessage();
 
         if (!isEmptyArrayOrObject(err)) {
-            setPageError({isError: true, errorMsg: err})
+            setPageError({ isError: true, errorMsg: err })
             return;
         }
-        
+
+        let classMembers = [];
+        const wrongMembers = []
+        for (const s of studentsData) {
+            classMembers = classMembers.length > 0 ? classMembers : selected;
+            if (selected.includes(s._id) && s.current_class.toLowerCase() !== submitValueState.class_name.toLowerCase()) {
+                wrongMembers.push(s.reg_number)
+                classMembers  = classMembers.filter(id => id !== s._id);
+            }
+
+            setSelected(classMembers);
+        }
+
         const val = {
             session: submitValueState.session.replace('/', '_'),
             term: submitValueState.term,
@@ -224,13 +240,38 @@ const StudentSelectTable = ({ studentsData }) => {
             students_list: selected,
         }
 
-        // console.log(val);
+
+        if (wrongMembers.length > 0) {
+            setNotClassMembers(wrongMembers);
+            setDailogOpen(true);
+        } else {
+            dispatch(createResultManager(val));
+            setSubmitValueState(initialSubmitValueState);
+            setSelected([]);
+            setFilterField('');
+            setFilterText('');
+            setStudentList(studentsData);
+            setNotClassMembers([]);
+        }
+
+    }
+
+    const handleDailogSubmit = () => {
+        const val = {
+            session: submitValueState.session.replace('/', '_'),
+            term: submitValueState.term,
+            class_name: `${submitValueState.class_name}_${submitValueState.class_stream.toLowerCase()}`,
+            students_list: selected,
+        }
+
         dispatch(createResultManager(val));
         setSubmitValueState(initialSubmitValueState);
         setSelected([]);
         setFilterField('');
         setFilterText('');
         setStudentList(studentsData);
+        setDailogOpen(false);
+        setNotClassMembers([]);
     }
 
     const handleFiterToggle = () => {
@@ -242,8 +283,9 @@ const StudentSelectTable = ({ studentsData }) => {
 
     return (
         <>
-        {pageError &&  <AlertMessage severity='error' open={pageError.isError} onClose={() => setPageError(initErrorState)}>{alertMessageParser(pageError.errorMsg)}</AlertMessage>}
-        {(data && data.is_successful) &&  <AlertMessage severity='success' open={isSuccessful} onClose={() => setIsSuccessful(false)}>{alertMessageParser(data.message)}</AlertMessage>}
+            {pageError && <AlertMessage severity='error' open={pageError.isError} onClose={() => setPageError(initErrorState)}>{alertMessageParser(pageError.errorMsg)}</AlertMessage>}
+            {(data && data.is_successful) && <AlertMessage severity='success' open={isSuccessful} onClose={() => setIsSuccessful(false)}>{alertMessageParser(data.message)}</AlertMessage>}
+            <WrongInclusionDailog open={dialogOpen} onClose={() => setDailogOpen(false)} onSend={handleDailogSubmit} wrongInclusion={notClassMembers} classname={submitValueState.class_name} />
             <Typography variant='h5' align='center'>Add Students to Term Result Manager</Typography>
             <div className={classes.divStyle}>
                 <ResultManager
@@ -261,24 +303,24 @@ const StudentSelectTable = ({ studentsData }) => {
                 </Button>
             </div>
             <div ref={anchorElRef}>
-                    <FilterTableToolBar
-                        numSelected={selected.length}
-                        filterFields={Object.keys(sortKeysMap)}
-                        value={filterText}
-                        onChange={e => setFilterText(e.target.value)}
-                        onKeyUp={filterFunc}
-                        filterField={filterField}
-                        onFilterChange={e => setFilterField(e.target.value)}
-                        filter={filter}
-                        toggleFilter={handleFiterToggle}
-                    />
-                    <Popper
-                        open={filterCompleted}
-                        anchorEl={anchorEl}
-                    >
-                        <Paper className={classes.paper}>{filterMessage()}</Paper>
-                    </Popper>
-                </div>
+                <FilterTableToolBar
+                    numSelected={selected.length}
+                    filterFields={Object.keys(sortKeysMap)}
+                    value={filterText}
+                    onChange={e => setFilterText(e.target.value)}
+                    onKeyUp={filterFunc}
+                    filterField={filterField}
+                    onFilterChange={e => setFilterField(e.target.value)}
+                    filter={filter}
+                    toggleFilter={handleFiterToggle}
+                />
+                <Popper
+                    open={filterCompleted}
+                    anchorEl={anchorEl}
+                >
+                    <Paper className={classes.paper}>{filterMessage()}</Paper>
+                </Popper>
+            </div>
             <TableContainer component={Paper}>
                 <Table size='small' padding='none' className={classes.table} aria-label="subjects table">
                     <SortTableHead

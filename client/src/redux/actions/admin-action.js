@@ -15,6 +15,13 @@ import {
     FETCH_RESULTSHEET_SUCCEEDED,
     FETCH_RESULTSHEET_FAILED,
     IS_FETCHING_RESULTSHEET,
+    ALL_STAFFS_FETCH_SUCCEEDED,
+    ALL_STAFFS_FETCH_FAILED,
+    IS_FETCHING_ALL_STAFFS,
+    UPDATE_STAFF_ROLES_FAILED,
+    UPDATE_STAFF_ROLES_SUCCEEDED,
+    UPDATE_STAFF_SUBJECTS_SUCCEEDED,
+    UPDATE_STAFF_SUBJECTS_FAILED
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -95,6 +102,40 @@ const isFetchingResultSheet = () => ({
     type: IS_FETCHING_RESULTSHEET,
 })
 
+const allStaffsFetchSucceeded = data => ({
+    type: ALL_STAFFS_FETCH_SUCCEEDED,
+    payload: data,
+})
+
+const allStaffsFetchFailed = err => ({
+    type: ALL_STAFFS_FETCH_FAILED,
+    payload: err,
+})
+
+const isFetchingAllStaffs = () => ({
+    type: IS_FETCHING_ALL_STAFFS
+})
+
+const updateStaffRolesSucceeded = data => ({
+    type: UPDATE_STAFF_ROLES_SUCCEEDED,
+    payload: data,
+})
+
+const updateStaffRolesFailed = err => ({
+    type: UPDATE_STAFF_ROLES_FAILED,
+    payload: err,
+})
+
+const updateStaffSubjectsSucceeded = data => ({
+    type: UPDATE_STAFF_SUBJECTS_SUCCEEDED,
+    payload: data,
+})
+
+const updateStaffSubjectsFailed = err => ({
+    type: UPDATE_STAFF_SUBJECTS_FAILED,
+    payload: err,
+})
+
 export const sendStaffRegistrationToken =  data => async dispatch => {
     try {
         const responds = await axios({
@@ -122,6 +163,21 @@ export const fetchAllStudents = () => async dispatch => {
         dispatch(allStudentFetchSucceeded(responds.data));
     }catch(errors) {
         dispatch(allStudentFetchFailed(errorParser(errors.response)));
+    }
+}
+
+export const fetchAllStaffs = () => async dispatch => {
+    dispatch(isFetchingAllStaffs());
+    try {
+        const responds = await axios({
+            url: '/admin/fetch/all/staffs',
+            method: 'GET',
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(allStaffsFetchSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(allStaffsFetchFailed(errorParser(errors.response)));
     }
 }
 
@@ -185,3 +241,39 @@ export const fetchResults = params => async dispatch => {
         dispatch(fetchResultsFailed(errorParser(errors.response)))
     }
 }
+
+export const updateStaffRoles = data => async dispatch => {
+    try {
+        const responds = await axios({
+            url: '/admin/update/staff/roles',
+            method: 'POST',
+            data: data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(updateStaffRolesSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(updateStaffRolesFailed(errorParser(errors.response)));
+    
+    
+    }
+}
+
+
+export const updateStaffSubjects = data => async dispatch => {
+    try {
+        const responds = await axios({
+            url: '/admin/update/staff/subjects',
+            method: 'POST',
+            data: data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(updateStaffSubjectsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(updateStaffSubjectsFailed(errorParser(errors.response)));
+    
+    
+    }
+}
+

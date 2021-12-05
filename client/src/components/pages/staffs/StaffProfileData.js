@@ -20,7 +20,8 @@ import { updateStaffData } from '../../../redux/actions/staff-action';
 import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
-
+import { subjectTitle } from '../../../libs/subjects';
+// import {subjects} from '../../../libs/subjects';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -124,6 +125,17 @@ export default function StaffProfileData({ staff }) {
                             return <Typography key={role} component='em' variant='subtitle1' color='primary' > {`${role}, `} </Typography>
                         else
                             return <Typography key={role} component='em' variant='subtitle1' color='primary' > {`${role} `} </Typography>
+                    })}
+
+            </Typography>
+            <Typography component='h5' variant='subtitle1' align='right'>
+                Subjects:
+                {data.subjects.map(
+                    (s, index) => {
+                        if (index < data.subjects.length - 1)
+                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
+                        else
+                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
                     })}
 
             </Typography>
@@ -282,6 +294,18 @@ export default function StaffProfileData({ staff }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                 />
+                {/* <StaffProfileContentHelper
+                    staff={staff}
+                    fieldLabel='Mobile Phone Numder'
+                    // fieldType='tel'
+                    fieldName='subjects'
+                    title='Subjects'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    multipleSelect
+                    labelId='st-subjets'
+                    listOptions={subjects}
+                /> */}
             </Grid>
         </Container>
     )

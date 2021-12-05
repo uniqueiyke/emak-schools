@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import { themeColor } from "../../../libs/css-constants";
+import { isAdmin } from '../../../libs/client-page-auth';
 
 const useStyles = makeStyles(theme => ({
     divider: {
@@ -50,37 +51,41 @@ export default function AdminSideNav(props) {
     }
     return (
         <Fragment>
-            <List dense >
-                <ListItem
-                    button
-                    key={'Admin-Teachers'}
-                    onClick={() => handleMobileLinkClick('#')}
-                    className={classes.listItems}
-                    disableGutters
-                >
-                    <ListItemIcon> <TeachersIcon className={classes.listItemIcon} /> </ListItemIcon>
-                    <ListItemText
-                        disableTypography
-                        className={classes.listItemText}
-                        primary={'Teachers'}
-                    />
-                </ListItem>
-                <ListItem
-                    button
-                    key={'Admin-Add-Teacher'}
-                    onClick={() => handleMobileLinkClick('#')}
-                    className={classes.listItems}
-                    disableGutters
-                >
-                    <ListItemIcon> <AddTeachersIcon className={classes.listItemIcon} /> </ListItemIcon>
-                    <ListItemText
-                        primary={'Add Teacher'}
-                        className={classes.listItemText}
-                        disableTypography
-                    />
-                </ListItem>
-            </List>
-            <Divider className={classes.divider} />
+            {isAdmin(true) &&
+                <>
+                    <List dense >
+                        <ListItem
+                            button
+                            key={'Admin-Staff'}
+                            onClick={() => handleMobileLinkClick('/admin/all-staff')}
+                            className={classes.listItems}
+                            disableGutters
+                        >
+                            <ListItemIcon> <TeachersIcon className={classes.listItemIcon} /> </ListItemIcon>
+                            <ListItemText
+                                disableTypography
+                                className={classes.listItemText}
+                                primary={'Staff'}
+                            />
+                        </ListItem>
+                        <ListItem
+                            button
+                            key={'Admin-Add-Staff'}
+                            onClick={() => handleMobileLinkClick('#')}
+                            className={classes.listItems}
+                            disableGutters
+                        >
+                            <ListItemIcon> <AddTeachersIcon className={classes.listItemIcon} /> </ListItemIcon>
+                            <ListItemText
+                                primary={'Add Staff'}
+                                className={classes.listItemText}
+                                disableTypography
+                            />
+                        </ListItem>
+                    </List>
+                    <Divider className={classes.divider} />
+                </>
+            }
             <List dense>
                 <ListItem
                     button
@@ -110,20 +115,22 @@ export default function AdminSideNav(props) {
                         disableTypography
                     />
                 </ListItem>
-                <ListItem
-                    disableGutters
-                    button
-                    key={'Grade-Book'}
-                    onClick={() => handleMobileLinkClick('/admin/students/select-students')}
-                    className={classes.listItems}
-                >
-                    <ListItemIcon> <AddBoxIcon className={classes.listItemIcon} /> </ListItemIcon>
-                    <ListItemText
-                        primary={'Create GradeBook'}
-                        className={classes.listItemText}
-                        disableTypography
-                    />
-                </ListItem>
+                {
+                    isAdmin(true) && <ListItem
+                        disableGutters
+                        button
+                        key={'Grade-Book'}
+                        onClick={() => handleMobileLinkClick('/admin/students/select-students')}
+                        className={classes.listItems}
+                    >
+                        <ListItemIcon> <AddBoxIcon className={classes.listItemIcon} /> </ListItemIcon>
+                        <ListItemText
+                            primary={'Create GradeBook'}
+                            className={classes.listItemText}
+                            disableTypography
+                        />
+                    </ListItem>
+                }
             </List>
             <Divider className={classes.divider} />
             <List dense>

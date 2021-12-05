@@ -67,6 +67,11 @@ const initialState = (options = defaulOptions) => {
                 isFetchingResultSheet: false,
                 data: null,
                 error: null,
+            },
+            staffs: {
+                data: null,
+                error: null,
+                isFetchingAllStaffs: false,
             }
         }
     }

@@ -25,6 +25,7 @@ import GradeScoreForm from '../grade-book/GradeScoreForm';
 import CreateGradeBook from '../grade-book/CreateGradeBook';
 import ResultSheet from '../grade-book/ResultSheet';
 import ResultSlip from '../grade-book/ResultSlip';
+import AllStaff from '../pages/staffs/AllStaff';
 
 export default function Routers() {
     return (
@@ -80,6 +81,9 @@ export default function Routers() {
                 </AdminAuthRoute>
                 <AdminAuthRoute exact path="/admin/students/result-slip">
                     <ResultSlip />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact path="/admin/all-staff">
+                    <AllStaff />
                 </AdminAuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/:subject">
                     <GradeBook />

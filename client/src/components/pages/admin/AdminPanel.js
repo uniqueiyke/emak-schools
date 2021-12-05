@@ -4,6 +4,8 @@ import Grid from '@material-ui/core/Grid';
 
 import SendStaffRegToken from './SendStaffRegToken';
 import ComputeResult from '../../grade-book/ComputeResult';
+import {isAdmin} from '../../../libs/client-page-auth';
+// import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,7 +39,10 @@ export default function AdminPanel() {
                     <SendStaffRegToken />
                 </Grid>
                 <Grid item xs={12} md={6} xl={4}>
-                    <ComputeResult />
+                    {isAdmin(true) && <ComputeResult />}
+                </Grid>
+                <Grid item xs={12} md={6} xl={4}>
+                    {/* <Button>List of Terchers</Button> */}
                 </Grid>
             </Grid>
         </div>

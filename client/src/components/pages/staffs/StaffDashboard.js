@@ -2,15 +2,27 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import checkAuth from '../../auth-components/CheckAuth';
 // import  Button from '@material-ui/core/ Button';
-// import { useHistory } from 'react-router-dom';
+import { makeStyles } from '@material-ui/styles';
 import Link from '@material-ui/core/Link';
 import { Link as RouteLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import GoToButton from '../../other-components/GoToButton';
 import useWaitForDataReady from '../../../hooks/useWaitForDataReady';
 import DataFetchingProgress from '../../other-components/DataFetchingProgress';
+import { isEmptyArray } from '../../../libs/utility-functions';
 
+
+const useStyles = makeStyles({
+    errMsg: {
+        color: '#ff2222',
+        fontWeight: 'bold',
+    },
+    toLink: {
+        color: 'blue',
+    },
+})
 function StaffDashboard() {
+    const styles = useStyles()
     const { staff } = useSelector(state => state.staff);
     const { data } = staff;
     const isDataReady = useWaitForDataReady(data);
@@ -23,8 +35,25 @@ function StaffDashboard() {
             <>
                 {(data && (data.roles.includes('admin') || data.roles.includes('super-admin'))) && <GoToButton to='/admin/admin-panel'>AdminPanel</GoToButton>}
                 <Typography variant='h3'>Staff Dashboard</Typography>
-                {/* <div><Link component={RouteLink} to='/staff/dashboard/grade-book' >Add score</Link></div> */}
-                <div><Link component={RouteLink} to='/staff/dashboard/add/grade-book' >GradeBook</Link></div>
+                {(data && data.last_name === '') &&
+                    <Typography className={styles.errMsg}>
+                        Please add your name to continue.
+                        <Link className={styles.toLink} component={RouteLink} to='/staff/profile' > Profile</Link>
+                    </Typography>
+                }
+                {(data && isEmptyArray(data.subjects)) &&
+                    <Typography className={styles.errMsg}>
+                        You have not been asigned any subject. Please contact the exam admistrator to do so. Thanks
+                        <Link className={styles.toLink} component={RouteLink} to='/staff/data/profile' > Profile</Link>
+                    </Typography>
+                }
+                {
+                    (!isEmptyArray(data.subjects) && data.last_name !== '') &&
+                    <Link component={RouteLink} to={{
+                        pathname: '/staff/dashboard/add/grade-book',
+                        state: { subjects: data.subjects }
+                      }} >GradeBook</Link>
+                }
             </>
         )
     }

@@ -129,7 +129,6 @@ const NavDrawer = ({ children, open,
                 <List dense className={style.appBarLink}>
                     <ConditionalNavLink onClick={handleMobileLinkClick} color='#527175' onClose={onClose} />
                 </List>
-
             </Drawer>
         </>
     )
