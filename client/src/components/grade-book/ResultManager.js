@@ -26,7 +26,10 @@ const useStyles = makeStyles({
 })
 const sessionsList = sessions();
 const classStreams = classStream();
-const ResultManager = ({ vSession, vTerm, vClass, onValueChange, vStream, vSubject, withSubject, ...props }) => {
+const ResultManager = ({ 
+    vSession, vTerm, vClass, onValueChange, 
+    vStream, vSubject, withSubject, subjPerTeacher, ...props 
+}) => {
     const styles = useStyles(props);
 
     return (
@@ -90,7 +93,7 @@ const ResultManager = ({ vSession, vTerm, vClass, onValueChange, vStream, vSubje
                     withSubject &&
                     (<div className={styles.flexItem}>
                         <SingleSelect
-                            listOptions={filterSubjectsByClass(vClass)}
+                            listOptions={filterSubjectsByClass(vClass, subjPerTeacher)}
                             label="Subject"
                             labelId="subject"
                             name="subject"
@@ -114,6 +117,8 @@ ResultManager.prototype = {
     vClass: PropTypes.string.isRequired,
     onValueChange: PropTypes.func.isRequired,
     vStream: PropTypes.string.isRequired,
+    vSubject: PropTypes.string,
+    subjPerTeacher: PropTypes.array
 }
 
 export default ResultManager

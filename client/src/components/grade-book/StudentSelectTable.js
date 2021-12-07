@@ -221,25 +221,23 @@ const StudentSelectTable = ({ studentsData }) => {
             return;
         }
 
-        let classMembers = [];
+        let classMembers = [...selected];
         const wrongMembers = []
         for (const s of studentsData) {
-            classMembers = classMembers.length > 0 ? classMembers : selected;
             if (selected.includes(s._id) && s.current_class.toLowerCase() !== submitValueState.class_name.toLowerCase()) {
                 wrongMembers.push(s.reg_number)
-                classMembers  = classMembers.filter(id => id !== s._id);
+                classMembers  = classMembers.filter(id => id.toString() !== s._id.toString());
             }
 
             setSelected(classMembers);
         }
-
+        
         const val = {
             session: submitValueState.session.replace('/', '_'),
             term: submitValueState.term,
             class_name: `${submitValueState.class_name}_${submitValueState.class_stream.toLowerCase()}`,
             students_list: selected,
         }
-
 
         if (wrongMembers.length > 0) {
             setNotClassMembers(wrongMembers);

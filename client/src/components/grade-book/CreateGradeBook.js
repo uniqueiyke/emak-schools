@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Button, Typography } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import ResultManager from '../grade-book/ResultManager';
 import { currentAcademicYear, currentTerm } from '../../libs/session-array';
 import FormFieldsValidator from '../../libs/form-fields-validator';
@@ -25,6 +25,7 @@ const CreateGradeBook = () => {
 
     const classes = useStyles();
     const history = useHistory();
+    const location = useLocation();
     const initialState = {
         session: currentAcademicYear(),
         term: currentTerm(),
@@ -74,6 +75,7 @@ const CreateGradeBook = () => {
                 vStream={state.class_stream}
                 onValueChange={handleValueChange}
                 itemAlign='column'
+                subjPerTeacher={location.state.subjects}
             />
             <div className={classes.btnDiv}>
                 <Button size='small' onClick={handleSubmit} variant='outlined' type='submit' style={{ color: 'forestgreen', borderColor: 'forestgreen' }} startIcon={<AddBoxIcon style={{ color: 'forestgreen' }} />} >

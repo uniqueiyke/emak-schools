@@ -1,3 +1,6 @@
+import { isAdmin } from './client-page-auth';
+import { isEmptyArrayOrObject } from './utility-functions';
+
 export const subjects = [
     {
         serial_code: 1,
@@ -250,15 +253,19 @@ export const subjectTitle = (subject) => {
 }
 
 
-export const filterSubjectsByClass = (cls) => {
+export const filterSubjectsByClass = (cls, subPerTeacher = []) => {
     const c = cls.toLowerCase()
+    let fiteredSubj = [];
     if (c === 'jss1' || c === 'jss2' || c === 'jss3') {
-        return subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'junior')
+        fiteredSubj = subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'junior')
+    } else if (c === 'ss1' || c === 'ss2' || c === 'ss3') {
+        fiteredSubj = subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'senior')
     }
 
-    if (c === 'ss1' || c === 'ss2' || c === 'ss3') {
-        return subjects.filter(subject => subject.offer_by === 'all' || subject.offer_by === 'senior')
+    if (isAdmin(true)){
+        return fiteredSubj;
+    }else{
+        const teachersSubj = !isEmptyArrayOrObject(subPerTeacher) ? subPerTeacher : []
+        return fiteredSubj.filter(s => teachersSubj.includes(s.value))
     }
-
-    return subjects;
 }

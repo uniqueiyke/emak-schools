@@ -20,7 +20,12 @@ import {
     UPDATE_STAFF_ROLES_SUCCEEDED,
     UPDATE_STAFF_ROLES_FAILED,
     UPDATE_STAFF_SUBJECTS_SUCCEEDED,
-    UPDATE_STAFF_SUBJECTS_FAILED
+    UPDATE_STAFF_SUBJECTS_FAILED,
+    STUDENTS_IN_CLASS_PER_TERM_SUCCEEDED,
+    STUDENTS_IN_CLASS_PER_TERM_FAILED,
+    IS_FETCHING_STUDENTS_CLASS,
+    DELETE_STUDENT_FROM_CLASS_SUCCEEDED,
+    DELETE_STUDENT_FROM_CLASS_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -170,6 +175,35 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingResultSheet: false,
                     data: null,
                     error: action.payload,
+                }
+            }
+            case IS_FETCHING_STUDENTS_CLASS:
+            return {
+                ...state,
+                studentsClass: {
+                    data: null,
+                    error: null,
+                    isFetchingStudentsClass: true,
+                }
+            }
+            case DELETE_STUDENT_FROM_CLASS_SUCCEEDED:
+            case STUDENTS_IN_CLASS_PER_TERM_SUCCEEDED:
+            return {
+                ...state,
+                studentsClass: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingStudentsClass: false,
+                }
+            }
+            case DELETE_STUDENT_FROM_CLASS_FAILED:
+            case STUDENTS_IN_CLASS_PER_TERM_FAILED:
+            return {
+                ...state,
+                studentsClass: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingStudentsClass: false,
                 }
             }
         default:

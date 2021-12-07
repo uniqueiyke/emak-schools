@@ -44,6 +44,7 @@ const ComputResult = () => {
     const [errState, setErrState] = useState(initErrorState);
     const dispatch = useDispatch();
     const history = useHistory();
+    
     const handleValueChange = e => {
         setState({ ...state, [e.target.name]: e.target.value });
     }

@@ -268,3 +268,46 @@ exports.get_results_slip = async (req, res) => {
         res.status(401).json(err.message)
     }
 }
+
+exports.fetch_students_class_term = async (req, res) => {
+    const { session, term, class_name } = req.query;
+
+    try {
+        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
+        let gradeBookManager = await GradeBookManager.findOne({ class_name })
+            .populate('students_list', 'reg_number name gender date_of_birth');
+        if (!gradeBookManager) {
+            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        }
+
+        return res.json(gradeBookManager.students_list);
+    }
+    catch (err) {
+        console.log(err.message)
+        res.status(401).json(err.message);
+    }
+}
+
+exports.delete_student_from_class = async (req, res) => {
+    const { session, term, class_name } = req.query;
+
+    try {
+        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
+        let gradeBookManager = await GradeBookManager.findOne({ class_name });
+        if (!gradeBookManager) {
+            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        }
+
+        const newList = gradeBookManager.students_list.filter(id => id.toString() !== req.body.id.toString());
+        gradeBookManager.students_list = newList;
+        await gradeBookManager.save()
+
+        gradeBookManager = await GradeBookManager.findOne({ class_name })
+            .populate('students_list', 'reg_number name gender date_of_birth');
+        return res.json(gradeBookManager.students_list);
+    }
+    catch (err) {
+        console.log(err.message)
+        res.status(401).json(err.message);
+    }
+}

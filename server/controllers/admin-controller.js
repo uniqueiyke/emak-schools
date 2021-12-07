@@ -102,7 +102,7 @@ exports.create_result_manager = async (req, res) => {
         res.json({ message: `Result Manager Created. ${message}` });
 
     } catch (error) {
-        console.log(error.message)
+        // console.log(error.message)
         if (error.code) {
             if (error.code === 11000) {
                 res.status(401).json({ message: 'You are trying to add a student in two different classes. This is not allowed.' })
@@ -139,7 +139,6 @@ exports.update_staff_roles = async (req, res) => {
 
 exports.update_staff_sujects = async (req, res) => {
     try {
-        console.log(req.body.subjects)
         const staff = await Staff.findOne({ _id: req.body.id });
         staff.subjects = req.body.subjects;
         await staff.save();

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-
 import SendStaffRegToken from './SendStaffRegToken';
 import ComputeResult from '../../grade-book/ComputeResult';
-import {isAdmin} from '../../../libs/client-page-auth';
-// import Button from '@material-ui/core/Button';
+import { isAdmin } from '../../../libs/client-page-auth';
+import Button from '@material-ui/core/Button';
+import StudentsClassTermModal from '../../grade-book/StudentsClassTermModal';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AdminPanel() {
     const classes = useStyles();
+    const [studentClassModalOpen, setStudentClassModalOpen] = useState(false);
     return (
         <div className={classes.root}>
             <Grid container spacing={1}>
@@ -42,7 +43,12 @@ export default function AdminPanel() {
                     {isAdmin(true) && <ComputeResult />}
                 </Grid>
                 <Grid item xs={12} md={6} xl={4}>
-                    {/* <Button>List of Terchers</Button> */}
+                    {isAdmin(true) &&
+                        <>
+                            <Button onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
+                            <StudentsClassTermModal open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)} />
+                        </>
+                    }
                 </Grid>
             </Grid>
         </div>

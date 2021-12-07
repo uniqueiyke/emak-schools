@@ -72,7 +72,12 @@ const initialState = (options = defaulOptions) => {
                 data: null,
                 error: null,
                 isFetchingAllStaffs: false,
-            }
+            },
+            studentsClass: {
+                data: null,
+                error: null,
+                isFetchingStudentsClass: false,
+            },
         }
     }
 

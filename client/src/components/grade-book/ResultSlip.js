@@ -180,6 +180,7 @@ const ResultSlip = () => {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    
     if (isResultFetching) {
         return <DataFetchingProgress />
     } else if (resultError) {
