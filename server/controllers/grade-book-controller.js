@@ -181,13 +181,14 @@ exports.compute_results = async (req, res) => {
             const student = students_list[i];
             const result = new ComputeResult({
                 student,
-            })
-
+            });
+            let numOfSubjects = 0;
             for (let j = 0; j < subjects_list.length; j++) {
                 const subject = subjects_list[j];
                 const GradeBookScore = gradeBookScore(`${subject}_${class_name}_${terms[term].short_title}_${session}`);
                 const scores = await GradeBookScore.findOne({ stu_id: student });
                 if (scores) {
+                    numOfSubjects++;
                     result.subjects.push({
                         title: subjects[subject].label,
                         c_a: scores.scores.first_quiz + scores.scores.second_quiz + scores.scores.third_quiz + scores.scores.c_a ,
@@ -196,8 +197,6 @@ exports.compute_results = async (req, res) => {
                         position: scores.scores.position,
                     })
                     result.total += scores.scores.total;
-                    const avg = result.total / (j+1)
-                    result.average = parseFloat(avg.toFixed(2))
                 }else {
                     result.subjects.push({
                         title: subjects[subject].label,
@@ -208,6 +207,8 @@ exports.compute_results = async (req, res) => {
                     })
                 }
             }
+            const avg = result.total / numOfSubjects;
+            result.average = parseFloat(avg.toFixed(2))
             await result.save();
         }
 

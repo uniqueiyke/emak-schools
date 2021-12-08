@@ -28,6 +28,17 @@ const useStyle = makeStyles({
         borderStyle: 'solid',
         marginRight: 10,
     },
+    nameCl: {
+        color: '#04558b',
+        fontSize: 'medium',
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+    },
+    regCl: {
+        color: '#5a390d',
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+    },
 })
 
 const GradeScoreForm = () => {
@@ -132,8 +143,8 @@ const GradeScoreForm = () => {
     return (
         <div>
             <Typography align='center' variant='h4' >{subjectTitle(state.subject)}</Typography>
-            <Typography align='center'>{`${name.last_name}, ${name.first_name} ${name.other_names}`}</Typography>
-            <Typography align='center'>{`Reg. Number ${reg_number}`}</Typography>
+            <Typography className={classes.nameCl} align='center'>{`${name.last_name}, ${name.first_name} ${name.other_names}`}</Typography>
+            <Typography align='center'>Reg. Number: <span className={classes.regCl}>{reg_number}</span> </Typography>
             <form onSubmit={handleSubmit}>
                 <FormControl fullWidth className={classes.formField}>
                     <TextField name="first_quiz"

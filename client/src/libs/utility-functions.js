@@ -96,3 +96,19 @@ export const alertMessageParser = (msg) => {
       return m;
   }
 }
+
+export const teachersRemake = score => {
+  if(score >= 70) {
+    return 'Excellent';
+  }
+  if(score >= 60 && score < 70) {
+    return 'Very Good';
+  }
+  if(score >= 50 && score < 60) {
+    return 'Good';
+  }
+  if(score >= 40 && score < 50) {
+    return 'Fair';
+  }
+    return 'Poor';
+}

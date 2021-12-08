@@ -6,9 +6,11 @@ import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import Errors from '../other-components/Errors';
 import tokenConfig from '../../redux/actions/token-config';
 import schLogo from '../../images/sch-logo-250x180.png';
-import { getSchoolFromClass } from '../../libs/students-data'
-// import placeHoderImg from '../../images/placeholder1.png';
+import { getSchoolFromClass } from '../../libs/students-data';
+
 import printResultSlip from '../../libs/print-result-slip';
+import { teachersRemake } from '../../libs/utility-functions';
+
 const useStyles = makeStyles({
     container: {
         // padding: 0,
@@ -255,7 +257,7 @@ const ResultSlip = () => {
                                                 <td className={styles.td}>{subject.exam}</td>
                                                 <td className={styles.td}>{subject.total}</td>
                                                 <td className={styles.td}>{subject.position}</td>
-                                                <td className={styles.td}></td>
+                                                <td className={styles.td}>{teachersRemake(subject.total)}</td>
                                             </tr>
                                         )
                                     }

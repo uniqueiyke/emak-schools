@@ -1,4 +1,5 @@
 import { getSchoolFromClass } from './students-data';
+import { teachersRemake } from './utility-functions';
 
 
 const parseRows = (subjects) => {
@@ -10,7 +11,7 @@ const parseRows = (subjects) => {
         <td class="td">${subject.exam}</td>
         <td class="td">${subject.total}</td>
         <td class="td">${subject.position}</td>
-        <td class="td"></td>
+        <td class="td">${teachersRemake(subject.total)}</td>
     </tr>`
     }
     return rows;
