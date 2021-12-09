@@ -196,7 +196,11 @@ exports.compute_results = async (req, res) => {
                         total: scores.scores.total,
                         position: scores.scores.position,
                     })
-                    result.total += scores.scores.total;
+                    if(j === 0){
+                        result.total = scores.scores.total;
+                    }else {
+                        result.total += scores.scores.total;
+                    }
                 }else {
                     result.subjects.push({
                         title: subjects[subject].label,
@@ -207,8 +211,12 @@ exports.compute_results = async (req, res) => {
                     })
                 }
             }
-            const avg = result.total / numOfSubjects;
-            result.average = parseFloat(avg.toFixed(2))
+            
+            if(result.total && numOfSubjects > 0){
+                const avg = result.total / numOfSubjects;
+                result.average = parseFloat(avg.toFixed(2))
+            }
+            
             await result.save();
         }
 

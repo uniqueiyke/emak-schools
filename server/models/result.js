@@ -10,8 +10,8 @@ const computeResults = (session, term, level) => {
     const ResultSchema = new Schema({
         student: { type: Schema.Types.ObjectId, ref: 'Student', unique: true },
         subjects: [{ type: ResultSubjectSchema, default: () => ({}) }],
-        total: { type: Number, default: 0 },
-        average: { type: Number, default: 0 },
+        total: { type: Number },
+        average: { type: Number },
         position: String,
         number_of_students: 0,
     })
