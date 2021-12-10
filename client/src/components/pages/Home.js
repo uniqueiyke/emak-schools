@@ -4,6 +4,7 @@ import { setPageTitle } from '../../libs/utility-functions';
 import schoolLogo from '../../images/sch-logo-250x180.png';
 import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
+import SliderContainer from '../slider/SliderContainer';
 
 
 const useStyles = makeStyles(theme => ({
@@ -34,6 +35,7 @@ export default function Home() {
                 Welcome to Emak God's own schools.
                 Home of academic excellent.
             </Typography>
+            <SliderContainer />
         </Fragment>
     )
 }

@@ -196,10 +196,15 @@ exports.compute_results = async (req, res) => {
                         total: scores.scores.total,
                         position: scores.scores.position,
                     })
-                    if(j === 0){
+                    
+                    if(scores.scores.total){
+                        if(!result.total){
+                            result.total = scores.scores.total;
+                        }else {
+                            result.total += scores.scores.total;
+                        }
+                    }else if(scores.scores.total === 0) {
                         result.total = scores.scores.total;
-                    }else {
-                        result.total += scores.scores.total;
                     }
                 }else {
                     result.subjects.push({
