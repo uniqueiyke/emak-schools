@@ -3,22 +3,26 @@ import SliderButton from './SliderButton';
 import useStyles from './sliderStyle';
 import clsx from 'clsx';
 import Slider from './Slider';
-import img1 from './sch/calistenics1.png';
-import img2 from './sch/com_typing.png';
-import img3 from './sch/cul_dan1.png';
-import img4 from './sch/gra1.png';
-import img6 from './sch/jur_gra.png';
-import img5 from './sch/gra2.png';
-import img7 from './sch/tea.png';
+import img1 from './img/calis1.png';
+import img3 from './img/cul_dan.png';
+import img4 from './img/jur_grad.png';
+import img6 from './img/pri_grad.png';
+import img5 from './img/pri_grad1.png';
+import img7 from './img/teachers.png';
+import schLogo from './img/sch_logo_278x200.png';
 
 const dataItems = [
+    {
+        item: schLogo,
+        text: 'School Logo'
+    },
     {
         item: img7,
         text: 'Teachers'
     },
     {
         item: img4,
-        text: 'Graduants'
+        text: 'Teachers with Graduants'
     },
     {
         item: img1,
@@ -30,15 +34,11 @@ const dataItems = [
     },
     {
         item: img5,
-        text: 'Graduants'
+        text: 'Teachers with Graduants'
     },
     {
         item: img6,
         text: 'Graduants'
-    },
-    {
-        item: img2,
-        text: 'Working with computer'
     },
 ]
 
@@ -67,7 +67,7 @@ const SliderContainer = () => {
     }
 
     const sliderInterval = () => {
-        timerRef.current = setInterval(nextSlide, 2000)
+        timerRef.current = setInterval(nextSlide, 3000)
     }
 
     useEffect(() => {

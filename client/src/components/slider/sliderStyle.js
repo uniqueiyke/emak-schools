@@ -3,16 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   containerSlider: {
     maxWidth: 400,
-    height: 200,
+    height: 245,
     margin: '10px auto',
     position: 'relative',
     overflow: 'hidden',
     boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#cecececc',
   },
   slide: {
     width: '100%',
     height: '100%',
     position: 'absolute',
+    margin: 'auto auto',
+    textAlign: 'center',
+    color: '#3499aa',
     opacity: 0,
     transition: 'opacity ease-in-out 0.4s',
   },
@@ -61,8 +65,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   dot: {
-    width: 20,
-    height: 20,
+    width: 12,
+    height: 12,
     borderRadius: '50%',
     border: '3px solid #f1f1f1',
     margin: '0 5px',
