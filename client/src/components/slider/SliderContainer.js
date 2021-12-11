@@ -22,11 +22,11 @@ const dataItems = [
     },
     {
         item: img4,
-        text: 'Teachers with Graduants'
+        text: 'Teachers with Graduands'
     },
     {
         item: img1,
-        text: 'Students dancing calistenics'
+        text: 'Students dancing calisthenics'
     },
     {
         item: img3,
@@ -34,11 +34,11 @@ const dataItems = [
     },
     {
         item: img5,
-        text: 'Teachers with Graduants'
+        text: 'Teachers with Graduands'
     },
     {
         item: img6,
-        text: 'Graduants'
+        text: 'Graduands'
     },
 ]
 
