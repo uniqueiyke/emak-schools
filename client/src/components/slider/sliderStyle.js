@@ -22,8 +22,11 @@ const useStyles = makeStyles(theme => ({
   },
   slideImg: {
     width: '100%',
-    height: '100%',
-    objectFit: 'cover',
+    height: 200,
+    objectFit: 'fill',
+    display: 'grid',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   activeAnim: {
     opacity: 1,

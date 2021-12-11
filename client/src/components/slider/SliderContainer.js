@@ -9,7 +9,7 @@ import img4 from './img/jur_grad.png';
 import img6 from './img/pri_grad.png';
 import img5 from './img/pri_grad1.png';
 import img7 from './img/teachers.png';
-import schLogo from './img/sch_logo_278x200.png';
+import schLogo from '../../images/sch-logo-250x180.png'
 
 const dataItems = [
     {
