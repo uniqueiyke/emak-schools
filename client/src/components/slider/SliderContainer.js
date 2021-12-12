@@ -46,7 +46,9 @@ const SliderContainer = () => {
     const styles = useStyles();
 
     const [slideIndex, setSlideIndex] = useState(1);
+    const [transistSlide, setTransistSlide] = useState(true);
     const timerRef = useRef();
+    // const containerRef = useRef(null);
 
     const nextSlide = () => {
         if (slideIndex !== dataItems.length) {
@@ -59,15 +61,17 @@ const SliderContainer = () => {
 
     const prevSlide = () => {
         if (slideIndex !== 1) {
-            setSlideIndex(slideIndex - 1)
+            setSlideIndex(slideIndex - 1);
+            setTransistSlide(true);
         }
         else if (slideIndex === 1) {
-            setSlideIndex(dataItems.length)
+            setSlideIndex(dataItems.length);
+            setTransistSlide(true);
         }
     }
 
     const sliderInterval = () => {
-        timerRef.current = setInterval(nextSlide, 3000)
+        timerRef.current = setInterval(nextSlide, 5000)
     }
 
     useEffect(() => {
@@ -81,14 +85,17 @@ const SliderContainer = () => {
 
     const moveDot = index => {
         setSlideIndex(index)
+        setTransistSlide(true);
     }
 
     return (
         <div className={styles.containerSlider}>
             
             {
-                dataItems.map((item, index) => <Slider
-                key={index}
+                dataItems.map((item, index) => 
+                    <Slider
+                    key={index}
+                    slideIn={transistSlide}
                     slideIndex={slideIndex}
                     index={index}
                     src={item.item}

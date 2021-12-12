@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
     fontSize: '15.5px',
     opacity: 0,
-    transition: 'opacity ease-in-out 0.4s',
+    transition: 'opacity ease-out 3.5s',
   },
   slideImg: {
     width: '100%',
@@ -46,6 +46,20 @@ const useStyles = makeStyles(theme => ({
     width: 25,
     height: 25,
     pointerEvents: 'none',
+  },
+  imgAnimationIn: {
+    animationName: '$slideIn',
+    animationDuration: '5s',
+    animationDelay: '-1s'
+
+  },
+  '@keyframes slideIn': {
+    '0%': {
+      marginLeft: '100%',
+    },
+    '100%': {
+      marginLeft: '0%',
+    },
   },
   prev: {
     top: '50%',

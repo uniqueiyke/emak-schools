@@ -21,6 +21,7 @@ import SliderContainer from '../slider/SliderContainer';
 export default function Home() {
 
     // const classes = useStyles();
+    console.log('From home')
     setPageTitle('Home');
     return (
         <Fragment>
@@ -29,14 +30,6 @@ export default function Home() {
                 Home of academic excellent.
             </Typography>
             <SliderContainer />
-            {/* <Paper className={classes.img}>
-                <img
-                    src={schoolLogo}
-                    alt="Emak School Logo"
-                    loading="lazy"
-                />
-            </Paper> */}
-
         </Fragment>
     )
 }
