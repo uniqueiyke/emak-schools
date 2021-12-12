@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import { isEmptyArrayOrObject } from '../../libs/utility-functions'
+import { subjectVal } from '../../libs/subjects';
 
 const useStyles = makeStyles({
   table: {
@@ -30,6 +31,10 @@ const useStyles = makeStyles({
   },
   regNumTCell: {
     position: 'sticky',
+    textDecoration: 'underline',
+    color: '#b14456',
+    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   tRow: {
     position: 'relative',
@@ -38,6 +43,11 @@ const useStyles = makeStyles({
     color: '#003333',
     borderColor: '#003333',
     borderStyle: 'solid',
+  },
+  subjectTitle: {
+    color: '#ee5522',
+    textDecoration: 'underline',
+    cursor: 'pointer',
   },
 });
 
@@ -62,12 +72,12 @@ const ResultSheet = () => {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.tRow}>S/N</TableCell>
-                <TableCell align="left" className={classes.regNumTCell}>Reg Number</TableCell>
+                <TableCell align="left">Reg Number</TableCell>
                 <TableCell align="left">Last Name</TableCell>
                 <TableCell align="left">First Name</TableCell>
                 {
                   data[0].subjects.map((subj, i) =>
-                    <TableCell key={subj._id} align="left">{subj.title}</TableCell>)
+                    <TableCell key={subj._id} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subjectVal(subj.title)}`, {...location.state, subject: subjectVal(subj.title)})} className={classes.subjectTitle}>{subj.title}</TableCell>)
                 }
                 <TableCell align="left">Total</TableCell>
                 <TableCell align="left">Average</TableCell>
@@ -80,7 +90,7 @@ const ResultSheet = () => {
                   data.map((stu, i) => (
                     <TableRow className={classes.tRow} key={stu.student._id} onDoubleClick={() => history.push('/admin/students/result-slip', {id: stu.student._id, ...location.state})}>
                       <TableCell >{i + 1}</TableCell>
-                      <TableCell align="left" className={classes.regNumTCell}>{stu.student.reg_number}</TableCell>
+                      <TableCell align="left" className={classes.regNumTCell} onClick={() => history.push('/admin/students/result-slip', {id: stu.student._id, ...location.state})} >{stu.student.reg_number}</TableCell>
                       <TableCell align="left">{stu.student.name.last_name}</TableCell>
                       <TableCell align="left">{stu.student.name.first_name} </TableCell>
                       {

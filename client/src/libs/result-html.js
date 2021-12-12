@@ -45,6 +45,7 @@ export const resultHtml = (resultDetails, state) => {
             letter-spacing: 1;
             font-family: sans-serif;
             font-size: .8rem;
+            margin: '0px auto';
         }
         .th {
             border: 1px solid rgb(190, 190, 190);
