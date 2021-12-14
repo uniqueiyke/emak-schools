@@ -103,6 +103,14 @@
     font-size: 1.1rem
 
 }
+.stamp {
+    border-radius: '100px';
+}
+.stampContainer {
+    display: 'grid';
+    justify-content: 'center';
+    align-items: 'center';
+}
 
 @media print and (max-width: 767px) { 
     .thead {
@@ -209,5 +217,13 @@
         color: #ffc0cbd2;
         font-size: 1.1rem
     
+    }
+    .stamp {
+        border-radius: '100px';
+    }
+    .stampContainer {
+        display: 'grid';
+        justify-content: 'center';
+        align-items: 'center';
     }
  }

@@ -144,10 +144,6 @@ const useStyles = makeStyles({
     },
     stamp: {
         borderRadius: '100px',
-        // borderStartStartRadius: '115px',
-        // borderStartEndRadius: '115px',
-        // borderEndStartRadius: '100px',
-        // borderEndEndRadius: '100px',
         margin: 'auto auto',
     },
     stampContainer: {

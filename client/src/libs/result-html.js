@@ -134,21 +134,31 @@ export const resultHtml = (resultDetails, state) => {
             font-size: 1.1rem
         
         }
+        .stamp {
+            border-radius: 100px;
+            margin: auto auto;
+        }
+        .stampContainer {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
      }
+     
         .thead {
             background-color: #3f87a6;
             color: #fff;
         }
-
+    
         .tbody {
             background-color: #e4f0f5;
         }
-
+    
         .caption {
             padding: 10;
             caption-side: bottom;
         }
-
+    
         .table {
             border-collapse: collapse;
             border: 2px solid rgb(200, 200, 200);
@@ -156,29 +166,29 @@ export const resultHtml = (resultDetails, state) => {
             font-family: sans-serif;
             font-size: .8rem;
         }
-
+    
         .th {
             border: 1px solid rgb(190, 190, 190);
             padding: 5px 10px;
         }
-
+    
         .thr {
             border: 1px solid rgb(190, 190, 190);
             padding: 5px 10px;
             text-align: left;
         }
-
+    
         .td {
             text-align: center;
             border: 1px solid rgb(190, 190, 190);
             padding: 5px 10px;
         }
-
+    
         .titleDiv {
             display: flex;
             justify-content: space-between;
         }
-
+    
         .titleP {
             text-align: center;
             font-family: Algerian, Arial, Helvetica, sans-serif;
@@ -186,25 +196,25 @@ export const resultHtml = (resultDetails, state) => {
             padding-top: 10;
             text-transform: uppercase;
         }
-
+    
         .stuImgDiv {
             border: solid 1px;
             height: 100;
             text-align: center;
             max-height: 100;
         }
-
+    
         .cap {
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bolder;
             text-transform: uppercase;
         }
-
+    
         .lowerCap {
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
         }
-
+    
         .subTitle {
             font-weight: bolder;
             color: goldenrod;
@@ -213,45 +223,45 @@ export const resultHtml = (resultDetails, state) => {
             align-items: center;
             text-transform: uppercase;
         }
-
+    
         .nameSpan {
             color: #1d5a1d;
             font-family: "Verdana; Geneva; Tahoma; sans-serif";
             text-transform: uppercase;
             font-weight: bold;
         }
-
+    
         .regSpan {
             color: #076374;
             font-weight: bold;
         }
-
+    
         .otherSpan {
             text-transform: uppercase;
         }
-
+    
         .outerGroup {
             display: grid;
             grid-template-columns: auto auto;
         }
-
+    
         .outerGroup1 {
             display: grid;
             grid-template-columns: auto auto auto;
         }
-
+    
         .innerGroup {
             justify-self: end;
         }
-
+    
         .centerGroup {
             justify-self: center;
         }
-
+    
         .signSpan {
             font-weight: bolder;
         }
-
+    
         .mottoDiv {
             display: grid;
             justify-content: center;
@@ -259,6 +269,15 @@ export const resultHtml = (resultDetails, state) => {
             text-transform: uppercase;
             color: #ffc0cbd2;
             font-size: 1.1rem
+        }
+        .stamp {
+            border-radius: 100px;
+            margin: auto auto;
+        }
+        .stampContainer {
+            display: grid;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
@@ -347,7 +366,10 @@ export const resultHtml = (resultDetails, state) => {
                 </span>
             </span>
         </p>
-        <p class="signSpan">Approved and Signed by the Proprietress, Deaconess Mercy Kalu</p>
+        <div class="stampContainer">
+            <span class="signSpan">Approved and Signed by the Proprietress, Deaconess Mercy Kalu</span>
+            <img src="/static/media/stamp-141x100.fb5b0bf0.png" alt='school stamp' height="70" class="stamp" />
+        </div>
         <p class="mottoDiv">Encourage and build you child up in the he should go</p>
     </div>
 </body>
