@@ -6,6 +6,7 @@ import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import Errors from '../other-components/Errors';
 import tokenConfig from '../../redux/actions/token-config';
 import schLogo from '../../images/sch-logo-250x180.png';
+import stamp from '../../images/stamp-141x100.png';
 import { getSchoolFromClass } from '../../libs/students-data';
 
 import printResultSlip from '../../libs/print-result-slip';
@@ -141,6 +142,19 @@ const useStyles = makeStyles({
         cursor: 'pointer',
         fontWeight: 'bold',
     },
+    stamp: {
+        borderRadius: '100px',
+        // borderStartStartRadius: '115px',
+        // borderStartEndRadius: '115px',
+        // borderEndStartRadius: '100px',
+        // borderEndEndRadius: '100px',
+        margin: 'auto auto',
+    },
+    stampContainer: {
+        display: 'grid',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 const ResultSlip = () => {
@@ -183,7 +197,7 @@ const ResultSlip = () => {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    
+
     if (isResultFetching) {
         return <DataFetchingProgress />
     } else if (resultError) {
@@ -288,7 +302,11 @@ const ResultSlip = () => {
                                     </span>
                                 </span>
                             </p>
-                            <p className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</p>
+                            
+                            <div className={styles.stampContainer}>
+                            <span className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</span>
+                                <img src={stamp} alt='school stamp' height={70} className={styles.stamp} />
+                            </div>
                             <p className={styles.mottoDiv}>Encourage and build you child up in the he should go</p>
                             <div className={styles.printBtnDiv}>
                                 <button className={styles.printBtn1} onClick={() => printResultSlip(resultDetails, state)}>Print</button>
