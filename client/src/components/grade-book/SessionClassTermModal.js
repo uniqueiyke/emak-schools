@@ -14,7 +14,7 @@ import { useHistory } from 'react-router';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-const StudentsClassTermModal = ({ open, onClose, value, }) => {
+const SessionClassTermModal = ({ open, onClose, path, ...props}) => {
     const initialClassState = {
         session: currentAcademicYear(),
         term: currentTerm(),
@@ -29,7 +29,7 @@ const StudentsClassTermModal = ({ open, onClose, value, }) => {
     }
 
     const onSubmit = () => {
-        history.push("/admin/students/class-termly", classState);
+        history.push(path, classState);
         onClose();
     }
 
@@ -43,7 +43,7 @@ const StudentsClassTermModal = ({ open, onClose, value, }) => {
                 aria-labelledby="alert-dialog-slide-title"
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle id="alert-dialog-slide-title"><Typography align='center'>Get list of students in the selected class, term and session</Typography></DialogTitle>
+                <DialogTitle id="alert-dialog-slide-title"><Typography align='center'>{props.children}</Typography></DialogTitle>
                 <DialogContent>
                     <ResultManager
                         vTerm={classState.term}
@@ -67,4 +67,4 @@ const StudentsClassTermModal = ({ open, onClose, value, }) => {
     )
 }
 
-export default StudentsClassTermModal
+export default SessionClassTermModal

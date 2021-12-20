@@ -15,7 +15,8 @@ import { useHistory, useLocation } from 'react-router';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import { isEmptyArrayOrObject, isNotEmptyObject } from '../../libs/utility-functions'
-import { fetchStudentsTermly, deleteStudentFromClass } from '../../redux/actions/admin-action';
+import { fetchTermlySubjects, deleteSubjectFromClass } from '../../redux/actions/admin-action';
+import { subjectTitle } from '../../libs/subjects';
 import MessageModalDailog from '../other-components/MessageModalDailog';
 
 const useStyles = makeStyles({
@@ -31,9 +32,6 @@ const useStyles = makeStyles({
         gap: 0,
         color: 'forestgreen',
     },
-    regNumTCell: {
-        position: 'sticky',
-    },
     tRow: {
         position: 'relative',
     },
@@ -47,21 +45,25 @@ const useStyles = makeStyles({
         cursor: 'pointer',
         textDecoration: 'underline',
     },
+    subjectTitle: {
+        color: '#ee5522',
+        textDecoration: 'underline',
+        cursor: 'pointer',
+    },
 });
 
-const StudentsInClassPerTerm = () => {
+const SubjectsListPerTerm = () => {
     const classes = useStyles();
     const history = useHistory()
     const location = useLocation();
     const dispatch = useDispatch()
-
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const [studentToDelete, setStudentToDelete] = useState(null);
+    const [subjectToDelete, setSubjectToDelete] = useState('');
 
     useEffect(() => {
 
         if (isNotEmptyObject(location.state)) {
-            dispatch(fetchStudentsTermly({
+            dispatch(fetchTermlySubjects({
                 session: location.state.session.replace('/', '_'),
                 term: location.state.term,
                 class_name: `${location.state.class_name}_${location.state.class_stream.toLowerCase()}`,
@@ -70,69 +72,51 @@ const StudentsInClassPerTerm = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const handleDelete = id => {
-        dispatch(deleteStudentFromClass({
+    const handleDelete = subject => {
+        dispatch(deleteSubjectFromClass({
             session: location.state.session.replace('/', '_'),
             term: location.state.term,
             class_name: `${location.state.class_name}_${location.state.class_stream.toLowerCase()}`,
-        }, { id }));
+        }, { subject }));
         setConfirmDelete(false);
-        setStudentToDelete(null);
     }
 
-    const shouldDelete = obj => {
-        setStudentToDelete(obj);
+    const shouldDelete = subject => {
+        setSubjectToDelete(subject);
         setConfirmDelete(true);
     }
 
     const cancelDelete = () => {
-        setStudentToDelete(null);
+        setSubjectToDelete(null);
         setConfirmDelete(false);
     }
 
-    const students = useSelector(state => state.admin.studentsClass);
-    const { data, error, isFetchingStudentsClass } = students;
+    const subjects = useSelector(state => state.admin.classSubjects);
+    const { data, error, isFetchingStudentsSubjects } = subjects;
 
-    const parseAge = dob => {
-        const dobMs = new Date(dob);
-        const currDateMs = new Date();
-        const deltaDate = currDateMs - dobMs
-        return Math.floor(deltaDate / 31104000000) //(1000 * 60 * 60 * 24 * 30 * 12)
-    }
-
-    if (isFetchingStudentsClass) {
+    if (isFetchingStudentsSubjects) {
         return <DataFetchingProgress />
     } else
         return (
             <>
                 {error && <Errors errors={error} goBack />}
                 {!isEmptyArrayOrObject(data) && (<>
-                    <Typography align='center' variant='h5' >{location.state.class_name.toUpperCase()} {location.state.class_stream} Students, {location.state.term.toUpperCase()} {location.state.session}</Typography>
+                    <Typography align='center' variant='h5' >Subjects offered by {location.state.class_name.toUpperCase()} {location.state.class_stream} Students, {location.state.term.toUpperCase()} {location.state.session}</Typography>
                     <TableContainer component={Paper}>
                         <Table className={classes.table} aria-label="subjects table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell className={classes.tRow}>S/N</TableCell>
-                                    <TableCell align="left" className={classes.regNumTCell}>Reg Number</TableCell>
-                                    <TableCell align="left">Last Name</TableCell>
-                                    <TableCell align="left">First Name</TableCell>
-                                    <TableCell align="left">Other Names</TableCell>
-                                    <TableCell align="left">Gender</TableCell>
-                                    <TableCell align="left">Age (Yrs)</TableCell>
+                                    <TableCell align="left">Subject</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {
                                     data && (
-                                        data.map((stu, i) => (
-                                            <TableRow className={classes.tRow} key={stu._id} onDoubleClick={() => history.push('/admin/students/result-slip', { id: stu._id, ...location.state })}>
-                                                <TableCell >{i + 1}<DeleteIcon onClick={() => shouldDelete({ id: stu._id, reg_number: stu.reg_number })} className={classes.deleteBtnIcon} /></TableCell>
-                                                <TableCell align="left" className={classes.regNumTCell}>{stu.reg_number}</TableCell>
-                                                <TableCell align="left">{stu.name.last_name}</TableCell>
-                                                <TableCell align="left">{stu.name.first_name} </TableCell>
-                                                <TableCell align="left" >{stu.name.other_names}</TableCell>
-                                                <TableCell align="left" >{stu.gender}</TableCell>
-                                                <TableCell align="left" >{parseAge(stu.date_of_birth)}</TableCell>
+                                        data.map((subj, i) => (
+                                            <TableRow className={classes.tRow} key={i} >
+                                                <TableCell >{i + 1}<DeleteIcon onClick={() => shouldDelete(subj)} className={classes.deleteBtnIcon} /></TableCell>
+                                                <TableCell align="left" ><span className={classes.subjectTitle} onClick={() => history.push(`/staff/dashboard/grade-book/${subj}`, { ...location.state, subject: subj })}>{subjectTitle(subj)}</span></TableCell>
                                             </TableRow>
                                         ))
                                     )
@@ -142,12 +126,12 @@ const StudentsInClassPerTerm = () => {
                     </TableContainer >
                     <MessageModalDailog
                         open={confirmDelete}
-                        onClose={cancelDelete}
-                        acceptAction={() => handleDelete(studentToDelete.id)}
-                        rejectAction={cancelDelete}
+                        onClose={() => cancelDelete()}
+                        acceptAction={() => handleDelete(subjectToDelete)}
+                        rejectAction={() => cancelDelete()}
                         variant='warning'
                     >
-                        Are you sure you want to delete the student's record with Reg. Number {(studentToDelete && studentToDelete.reg_number) ? studentToDelete.reg_number : ''}?<br />
+                        Are you sure you want to delete {subjectTitle(subjectToDelete)}?<br />
                         Know that this action cannot be undo. Once deleted, all the data will be lost and cannot be retrived back.
                     </MessageModalDailog>
                 </>)}
@@ -162,4 +146,4 @@ const StudentsInClassPerTerm = () => {
         );
 }
 
-export default StudentsInClassPerTerm
+export default SubjectsListPerTerm

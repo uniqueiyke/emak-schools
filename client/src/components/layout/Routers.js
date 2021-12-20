@@ -27,6 +27,7 @@ import ResultSheet from '../grade-book/ResultSheet';
 import ResultSlip from '../grade-book/ResultSlip';
 import AllStaff from '../pages/staffs/AllStaff';
 import StudentsInClassPerTerm from '../grade-book/StudentsInClassPerTerm';
+import SubjectsListPerTerm from '../grade-book/SubjectsListPerTerm';
 
 export default function Routers() {
     return (
@@ -80,14 +81,17 @@ export default function Routers() {
                 <AdminAuthRoute exact path="/admin/students/result-sheet">
                     <ResultSheet />
                 </AdminAuthRoute>
-                <AdminAuthRoute exact path="/admin/students/result-slip" superOnly>
+                <AdminAuthRoute exact superOnly path="/admin/students/result-slip" >
                     <ResultSlip />
                 </AdminAuthRoute>
-                <AdminAuthRoute exact path="/admin/all-staff" superOnly>
+                <AdminAuthRoute exact superOnly path="/admin/all-staff" >
                     <AllStaff />
                 </AdminAuthRoute>
-                <AdminAuthRoute exact path="/admin/students/class-termly" superOnly>
+                <AdminAuthRoute exact superOnly path="/admin/students/class-termly" >
                     <StudentsInClassPerTerm />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact superOnly path="/admin/students/class/termly/subjects" >
+                    <SubjectsListPerTerm />
                 </AdminAuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/:subject">
                     <GradeBook />

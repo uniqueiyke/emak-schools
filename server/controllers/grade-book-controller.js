@@ -325,3 +325,55 @@ exports.delete_student_from_class = async (req, res) => {
         res.status(401).json(err.message);
     }
 }
+
+
+exports.fetch_termly_subjects = async (req, res) => {
+    const { session, term, class_name } = req.query;
+
+    try {
+        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
+        let gradeBookManager = await GradeBookManager.findOne({ class_name })
+        if (!gradeBookManager) {
+            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        }
+
+        return res.json(gradeBookManager.subjects_list);
+    }
+    catch (err) {
+        console.log(err.message)
+        res.status(401).json(err.message);
+    }
+}
+
+exports.delete_subject_from_class_termly_subjects = async (req, res) => {
+    const { session, term, class_name } = req.query;
+
+    try {
+        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
+        let gradeBookManager = await GradeBookManager.findOne({ class_name });
+        if (!gradeBookManager) {
+            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        }
+        // console.log(req.body);
+
+        const collectionName = `${req.body.subject}_${class_name}_${terms[term].short_title}_${session}`;
+        const collections = await mongoose.connection.db.listCollections().toArray();
+        for(const collection of collections){
+            if(collection.name === collectionName){
+                const GradeBookScore = gradeBookScore(collectionName);
+                await GradeBookScore.collection.drop();
+                break;
+            }
+        }
+
+        const newList = gradeBookManager.subjects_list.filter(subject => subject !== req.body.subject);
+        gradeBookManager.subjects_list = newList;
+        await gradeBookManager.save()
+
+        return res.json(gradeBookManager.subjects_list);
+    }
+    catch (err) {
+        console.log(err.message)
+        res.status(401).json(err.message);
+    }
+}

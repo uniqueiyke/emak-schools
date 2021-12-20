@@ -27,6 +27,11 @@ import {
     IS_FETCHING_STUDENTS_CLASS,
     DELETE_STUDENT_FROM_CLASS_SUCCEEDED,
     DELETE_STUDENT_FROM_CLASS_FAILED,
+    DELETE_SUBJECT_FROM_CLASS_SUCCEEDED,
+    DELETE_SUBJECT_FROM_CLASS_FAILED,
+    STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED,
+    STUDENTS_SUBJECTS_PER_TERM_FAILED,
+    IS_FETCHING_STUDENTS_SUBJECTS,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -161,9 +166,34 @@ const deleteStudentFromClassFailed = err => ({
     payload: err,
 })
 
+const deleteSubjectFromClassSucceeded = data => ({
+    type: DELETE_SUBJECT_FROM_CLASS_SUCCEEDED,
+    payload: data,
+})
+
+const deleteSubjectFromClassFailed = err => ({
+    type: DELETE_SUBJECT_FROM_CLASS_FAILED,
+    payload: err,
+})
+
 const isFetchStudentsClass = () => ({
     type: IS_FETCHING_STUDENTS_CLASS,
 })
+
+const isFetchingStudentsSubjects = () => ({
+    type: IS_FETCHING_STUDENTS_SUBJECTS,
+})
+
+const studentsSubjectsPerTermSucceeded = data => ({
+    type: STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED,
+    payload: data,
+})
+
+const studentsSubjectsPerTermSFailed = err => ({
+    type: STUDENTS_SUBJECTS_PER_TERM_FAILED,
+    payload: err,
+})
+
 
 export const sendStaffRegistrationToken =  data => async dispatch => {
     try {
@@ -335,5 +365,37 @@ export const deleteStudentFromClass = (params, data) => async dispatch => {
         dispatch(deleteStudentFromClassSucceeded(responds.data));
     }catch(errors) {
         dispatch(deleteStudentFromClassFailed(errorParser(errors.response)));
+    }
+}
+
+export const fetchTermlySubjects = params => async dispatch => {
+    dispatch(isFetchingStudentsSubjects());
+    try {
+        const responds = await axios({
+            url: '/gradebooks/fetch/subjects/class/term',
+            method: 'GET',
+            params,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(studentsSubjectsPerTermSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(studentsSubjectsPerTermSFailed(errorParser(errors.response)));
+    }
+}
+
+export const deleteSubjectFromClass = (params, data) => async dispatch => {
+    try {
+        const responds = await axios({
+            url: '/gradebooks/delete/subject/from-class/termly-subjects',
+            method: 'POST',
+            params,
+            data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(deleteSubjectFromClassSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(deleteSubjectFromClassFailed(errorParser(errors.response)));
     }
 }

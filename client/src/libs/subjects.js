@@ -248,11 +248,13 @@ export const terms = [
 ]
 
 export const subjectTitle = (subject) => {
+    if(!subject) return '';
     const subj = subjects.find(elem => elem.value === subject)
     return subj.label || subject;
 }
 
 export const subjectVal = (subject) => {
+    if(!subject) return '';
     const subj = subjects.find(elem => elem.label === subject)
     return subj.value || subject;
 }

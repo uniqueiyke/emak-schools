@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #3e862e;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   font-family:Verdana, Geneva, Tahoma, sans-serif;
-  color: #ffc0cbd2;
+  color: #3aa9e9;
   position: fixed;
   text-transform: uppercase;
 }

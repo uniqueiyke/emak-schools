@@ -26,6 +26,11 @@ import {
     IS_FETCHING_STUDENTS_CLASS,
     DELETE_STUDENT_FROM_CLASS_SUCCEEDED,
     DELETE_STUDENT_FROM_CLASS_FAILED,
+    DELETE_SUBJECT_FROM_CLASS_SUCCEEDED,
+    DELETE_SUBJECT_FROM_CLASS_FAILED,
+    STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED,
+    STUDENTS_SUBJECTS_PER_TERM_FAILED,
+    IS_FETCHING_STUDENTS_SUBJECTS,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -186,6 +191,15 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsClass: true,
                 }
             }
+            case IS_FETCHING_STUDENTS_SUBJECTS:
+            return {
+                ...state,
+                classSubjects: {
+                    data: null,
+                    error: null,
+                    isFetchingStudentsSubjects: true,
+                }
+            }
             case DELETE_STUDENT_FROM_CLASS_SUCCEEDED:
             case STUDENTS_IN_CLASS_PER_TERM_SUCCEEDED:
             return {
@@ -204,6 +218,26 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     data: null,
                     error: action.payload,
                     isFetchingStudentsClass: false,
+                }
+            }
+            case DELETE_SUBJECT_FROM_CLASS_SUCCEEDED:
+            case STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED:
+            return {
+                ...state,
+                classSubjects: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingStudentsSubjects: false,
+                }
+            }
+            case DELETE_SUBJECT_FROM_CLASS_FAILED:
+            case STUDENTS_SUBJECTS_PER_TERM_FAILED:
+            return {
+                ...state,
+                classSubjects: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingStudentsSubjects: false,
                 }
             }
         default:

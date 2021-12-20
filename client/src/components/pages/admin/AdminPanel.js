@@ -5,7 +5,7 @@ import SendStaffRegToken from './SendStaffRegToken';
 import ComputeResult from '../../grade-book/ComputeResult';
 import { isAdmin } from '../../../libs/client-page-auth';
 import Button from '@material-ui/core/Button';
-import StudentsClassTermModal from '../../grade-book/StudentsClassTermModal';
+import SessionClassTermModal from '../../grade-book/SessionClassTermModal';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function AdminPanel() {
     const classes = useStyles();
     const [studentClassModalOpen, setStudentClassModalOpen] = useState(false);
+    const [subjectListModalOpen, setSubjectListModalOpen] = useState(false);
     return (
         <div className={classes.root}>
             <Grid container spacing={1}>
@@ -46,7 +47,14 @@ export default function AdminPanel() {
                     {isAdmin(true) &&
                         <>
                             <Button onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
-                            <StudentsClassTermModal open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)} />
+                            <SessionClassTermModal path="/admin/students/class-termly" open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)}>
+                                Get list of students in the selected class, term and session
+                            </SessionClassTermModal>
+
+                            <Button onClick={() => setSubjectListModalOpen(true)}>List of Subjects</Button>
+                            <SessionClassTermModal path="/admin/students/class/termly/subjects" open={subjectListModalOpen} onClose={() => setSubjectListModalOpen(false)}>
+                                Get list of subjects offered by students in the selected class, term and session
+                            </SessionClassTermModal>
                         </>
                     }
                 </Grid>
