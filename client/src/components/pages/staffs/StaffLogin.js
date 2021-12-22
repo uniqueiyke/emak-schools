@@ -18,7 +18,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { Link as RouteLink } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import { isEmptyString, isEmptyObject } from '../../../libs/utility-functions';
+import { isEmptyString, isEmptyObject, setPageTitle } from '../../../libs/utility-functions';
 import FormFieldsValidator from '../../../libs/form-fields-validator';
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router';
@@ -56,6 +56,7 @@ const useStyle = makeStyles((theme) => ({
 
 const StaffLogin = () => {
 
+  setPageTitle('Login');
   const styles = useStyle();
   const dispatch = useDispatch()
 

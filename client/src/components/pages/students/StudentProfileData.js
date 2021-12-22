@@ -13,6 +13,7 @@ import {
     classes as studentClass, 
     gender, studentStatus, graduationLevel,
 } from '../../../libs/students-data'
+import { setPageTitle } from '../../../libs/utility-functions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,8 +40,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function StaffProfileData({ profileData }) {
-
+    
     const data = profileData.data;
+    setPageTitle(`${data && data.reg_number}`)
     const classes = useStyles();
     return (
         <Container >

@@ -22,12 +22,12 @@ import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 import GradeBook from '../grade-book/GradeBook';
 import GradeScoreForm from '../grade-book/GradeScoreForm';
-import CreateGradeBook from '../grade-book/CreateGradeBook';
 import ResultSheet from '../grade-book/ResultSheet';
 import ResultSlip from '../grade-book/ResultSlip';
 import AllStaff from '../pages/staffs/AllStaff';
 import StudentsInClassPerTerm from '../grade-book/StudentsInClassPerTerm';
 import SubjectsListPerTerm from '../grade-book/SubjectsListPerTerm';
+import Cards from '../scratch-cards/Cards';
 
 export default function Routers() {
     return (
@@ -93,14 +93,14 @@ export default function Routers() {
                 <AdminAuthRoute exact superOnly path="/admin/students/class/termly/subjects" >
                     <SubjectsListPerTerm />
                 </AdminAuthRoute>
+                <AdminAuthRoute exact superOnly path="/admin/scratch-cards" >
+                    <Cards />
+                </AdminAuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/:subject">
                     <GradeBook />
                 </AuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/student/:id">
                     <GradeScoreForm />
-                </AuthRoute>
-                <AuthRoute exact path="/staff/dashboard/add/grade-book/">
-                    <CreateGradeBook />
                 </AuthRoute>
                 {/* <Route exact path="/test/components">
                     <TestApp />

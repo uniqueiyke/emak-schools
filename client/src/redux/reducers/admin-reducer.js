@@ -31,6 +31,11 @@ import {
     STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED,
     STUDENTS_SUBJECTS_PER_TERM_FAILED,
     IS_FETCHING_STUDENTS_SUBJECTS,
+    GENERATE_SCRATCH_CARDS_SUCCEEDED,
+    GENERATE_SCRATCH_CARDS_FAILED,
+    IS_FETCHING_SCRATCH_CARDS,
+    FETCH_SCRATCH_CARDS_SUCCEEDED,
+    FETCH_SCRATCH_CARDS_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -182,7 +187,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     error: action.payload,
                 }
             }
-            case IS_FETCHING_STUDENTS_CLASS:
+        case IS_FETCHING_STUDENTS_CLASS:
             return {
                 ...state,
                 studentsClass: {
@@ -191,7 +196,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsClass: true,
                 }
             }
-            case IS_FETCHING_STUDENTS_SUBJECTS:
+        case IS_FETCHING_STUDENTS_SUBJECTS:
             return {
                 ...state,
                 classSubjects: {
@@ -200,8 +205,8 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsSubjects: true,
                 }
             }
-            case DELETE_STUDENT_FROM_CLASS_SUCCEEDED:
-            case STUDENTS_IN_CLASS_PER_TERM_SUCCEEDED:
+        case DELETE_STUDENT_FROM_CLASS_SUCCEEDED:
+        case STUDENTS_IN_CLASS_PER_TERM_SUCCEEDED:
             return {
                 ...state,
                 studentsClass: {
@@ -210,8 +215,8 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsClass: false,
                 }
             }
-            case DELETE_STUDENT_FROM_CLASS_FAILED:
-            case STUDENTS_IN_CLASS_PER_TERM_FAILED:
+        case DELETE_STUDENT_FROM_CLASS_FAILED:
+        case STUDENTS_IN_CLASS_PER_TERM_FAILED:
             return {
                 ...state,
                 studentsClass: {
@@ -220,8 +225,8 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsClass: false,
                 }
             }
-            case DELETE_SUBJECT_FROM_CLASS_SUCCEEDED:
-            case STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED:
+        case DELETE_SUBJECT_FROM_CLASS_SUCCEEDED:
+        case STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED:
             return {
                 ...state,
                 classSubjects: {
@@ -230,8 +235,8 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsSubjects: false,
                 }
             }
-            case DELETE_SUBJECT_FROM_CLASS_FAILED:
-            case STUDENTS_SUBJECTS_PER_TERM_FAILED:
+        case DELETE_SUBJECT_FROM_CLASS_FAILED:
+        case STUDENTS_SUBJECTS_PER_TERM_FAILED:
             return {
                 ...state,
                 classSubjects: {
@@ -240,6 +245,36 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingStudentsSubjects: false,
                 }
             }
+        case IS_FETCHING_SCRATCH_CARDS:
+            return {
+                ...state,
+                scratchCards: {
+                    data: null,
+                    error: null,
+                    isFetchingScratchCard: true,
+                }
+            }
+        case GENERATE_SCRATCH_CARDS_SUCCEEDED:
+        case FETCH_SCRATCH_CARDS_SUCCEEDED:
+            return {
+                ...state,
+                scratchCards: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingScratchCard: false,
+                }
+            }
+        case GENERATE_SCRATCH_CARDS_FAILED:
+        case FETCH_SCRATCH_CARDS_FAILED:
+            return {
+                ...state,
+                scratchCards: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingScratchCard: false,
+                }
+            }
+
         default:
             return state
     }

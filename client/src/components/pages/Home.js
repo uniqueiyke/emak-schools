@@ -21,7 +21,6 @@ import SliderContainer from '../slider/SliderContainer';
 export default function Home() {
 
     // const classes = useStyles();
-    console.log('From home')
     setPageTitle('Home');
     return (
         <Fragment>

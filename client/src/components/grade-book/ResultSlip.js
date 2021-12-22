@@ -10,7 +10,7 @@ import stamp from '../../images/stamp-141x100.png';
 import { getSchoolFromClass } from '../../libs/students-data';
 
 import printResultSlip from '../../libs/print-result-slip';
-import { teachersRemake } from '../../libs/utility-functions';
+import { setPageTitle, teachersRemake } from '../../libs/utility-functions';
 
 const useStyles = makeStyles({
     container: {
@@ -161,6 +161,10 @@ const ResultSlip = () => {
     const [resultError, setResultError] = useState();
     const [isResultFetching, setIsResultFetching] = useState(false);
 
+    if (resultDetails) {
+        setPageTitle(`${resultDetails.student.reg_number} Result Slip`);
+    }
+
     const getResultSlip = async () => {
         setIsResultFetching(true);
         try {
@@ -298,9 +302,9 @@ const ResultSlip = () => {
                                     </span>
                                 </span>
                             </p>
-                            
+
                             <div className={styles.stampContainer}>
-                            <span className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</span>
+                                <span className={styles.signSpan}>Approved and Signed by the Proprietress, Deaconess Mercy Kalu</span>
                                 <img src={stamp} alt='school stamp' height={70} className={styles.stamp} />
                             </div>
                             <p className={styles.mottoDiv}>Encourage and build you child up in the he should go</p>

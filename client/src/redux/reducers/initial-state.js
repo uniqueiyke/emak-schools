@@ -83,6 +83,11 @@ const initialState = (options = defaulOptions) => {
                 error: null,
                 isFetchingStudentsSubjects: false,
             },
+            scratchCards: {
+                data: null,
+                error: null,
+                isFetchingScratchCard: false,
+            },
         }
     }
 

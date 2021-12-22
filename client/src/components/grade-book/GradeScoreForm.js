@@ -11,6 +11,7 @@ import { updateGradeBookScore } from '../../redux/actions/staff-action';
 import tokenConfig from '../../redux/actions/token-config';
 import axios from 'axios';
 import { subjectTitle } from '../../libs/subjects';
+import { setPageTitle } from '../../libs/utility-functions';
 
 const useStyle = makeStyles({
     formField: {
@@ -58,6 +59,9 @@ const GradeScoreForm = () => {
     const location = useLocation();
     const history = useHistory();
     const { _id, reg_number, name, state } = location.state;
+
+    setPageTitle(`${reg_number} - ${subjectTitle(state.subject)} Score Form`);
+    
     const dbScoreRef = useRef(initialScore);
 
     const getDBScore = async () => {
@@ -113,6 +117,7 @@ const GradeScoreForm = () => {
         }
         return validateNumberInput(value);
     }
+    
     const handleScoreChange = e => {
         setScores({ ...scores, [e.target.name]: validFields(e.target.name, e.target.value) });
     }

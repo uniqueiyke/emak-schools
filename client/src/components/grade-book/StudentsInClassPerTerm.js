@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
-import { isEmptyArrayOrObject, isNotEmptyObject } from '../../libs/utility-functions'
+import { isEmptyArrayOrObject, isNotEmptyObject, setPageTitle } from '../../libs/utility-functions'
 import { fetchStudentsTermly, deleteStudentFromClass } from '../../redux/actions/admin-action';
 import MessageModalDailog from '../other-components/MessageModalDailog';
 
@@ -54,6 +54,8 @@ const StudentsInClassPerTerm = () => {
     const history = useHistory()
     const location = useLocation();
     const dispatch = useDispatch()
+
+    setPageTitle(`${location.state.class_name.toUpperCase()}${location.state.class_stream} - ${location.state.term.toUpperCase()} - ${location.state.session} Students`);
 
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);

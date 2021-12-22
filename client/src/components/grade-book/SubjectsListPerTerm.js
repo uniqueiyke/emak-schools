@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
-import { isEmptyArrayOrObject, isNotEmptyObject } from '../../libs/utility-functions'
+import { isEmptyArrayOrObject, isNotEmptyObject, setPageTitle } from '../../libs/utility-functions'
 import { fetchTermlySubjects, deleteSubjectFromClass } from '../../redux/actions/admin-action';
 import { subjectTitle } from '../../libs/subjects';
 import MessageModalDailog from '../other-components/MessageModalDailog';
@@ -56,6 +56,9 @@ const SubjectsListPerTerm = () => {
     const classes = useStyles();
     const history = useHistory()
     const location = useLocation();
+
+    setPageTitle(`${location.state.class_name.toUpperCase()}${location.state.class_stream} - ${location.state.term.toUpperCase()} - ${location.state.session} Subjects`);
+
     const dispatch = useDispatch()
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [subjectToDelete, setSubjectToDelete] = useState('');

@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { gradeBook } from '../../redux/actions/staff-action';
 import { useHistory, useLocation } from 'react-router';
 import { subjectTitle } from '../../libs/subjects';
+import { setPageTitle } from '../../libs/utility-functions';
 
 const useStyles = makeStyles({
   table: {
@@ -55,6 +56,8 @@ const GradeBook = () => {
   const { data, error } = students;
   const { state } = useLocation();
   const { session, term, class_name, class_stream, subject } = state;
+
+  setPageTitle(`${class_name.toUpperCase()}${class_stream} - ${term.toUpperCase()} - ${session} ${subjectTitle(subject)}`);
 
   useEffect(() => {
     dispatch(gradeBook({

@@ -18,7 +18,7 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import { Link as RouteLink } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import { isEmptyString, isEmptyArrayOrObject } from '../../../libs/utility-functions';
+import { isEmptyString, isEmptyArrayOrObject, setPageTitle } from '../../../libs/utility-functions';
 import { validateFormFields } from '../../../libs/form-fields-validator';
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router';
@@ -57,6 +57,7 @@ const useStyle = makeStyles((theme) => ({
 
 const ResetPassword = () => {
 
+  setPageTitle('Password Reset');
   const styles = useStyle();
   const dispatch = useDispatch()
 

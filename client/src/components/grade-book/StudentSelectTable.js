@@ -12,7 +12,7 @@ import SortTableHead from '../pages/students/SortTableHead';
 import SortTableBody from '../pages/students/SortTableBody';
 import listOfStudents from '../pages/students/ListOfStudents';
 import FilterTableToolBar from '../pages/students/FilterTableToolBar';
-import { isEmptyArrayOrObject, alertMessageParser } from '../../libs/utility-functions';
+import { isEmptyArrayOrObject, alertMessageParser, setPageTitle } from '../../libs/utility-functions';
 import Popper from '@material-ui/core/Popper';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { fetchCurrentStudents } from '../../redux/actions/admin-action';
@@ -53,8 +53,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const StudentSelectTable = ({ studentsData }) => {
+    setPageTitle('Result Manager');
     const classes = useStyles();
-
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);

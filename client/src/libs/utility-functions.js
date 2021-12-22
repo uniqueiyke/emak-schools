@@ -33,7 +33,7 @@ export const isEmptyArrayOrObject = object => {
 }
 
 export const setPageTitle = title => {
-  document.title = `Emak God's Own Schools | ${title}`;
+  document.title = title ? `Emak God's Own Schools | ${title}` : "Emak God's Own Schools";
 }
 
 export const formatPhoneNumber = (phoneNumber) => {

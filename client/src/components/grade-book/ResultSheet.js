@@ -13,7 +13,7 @@ import Errors from '../other-components/Errors';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
-import { isEmptyArrayOrObject } from '../../libs/utility-functions'
+import { isEmptyArrayOrObject, setPageTitle } from '../../libs/utility-functions'
 import { subjectVal } from '../../libs/subjects';
 
 const useStyles = makeStyles({
@@ -57,6 +57,9 @@ const ResultSheet = () => {
   const history = useHistory()
   const location = useLocation();
   const results = useSelector(state => state.admin.results);
+
+  setPageTitle(`${location.state.class_name.toUpperCase()}${location.state.class_stream} - ${location.state.term.toUpperCase()} - ${location.state.session} Result Sheet`);
+  
   const { data, error, isFetchingResultSheet, isComputingResults } = results;
 
   if(isFetchingResultSheet || isComputingResults ){

@@ -5,7 +5,12 @@ import SendStaffRegToken from './SendStaffRegToken';
 import ComputeResult from '../../grade-book/ComputeResult';
 import { isAdmin } from '../../../libs/client-page-auth';
 import Button from '@material-ui/core/Button';
-import SessionClassTermModal from '../../grade-book/SessionClassTermModal';
+import { useHistory } from 'react-router-dom';
+import SessionTermClassModal from '../../grade-book/SessionTermClassModal';
+import { setPageTitle } from '../../../libs/utility-functions';
+import CardFormModal from '../../scratch-cards/CardFormModal';
+import { useDispatch } from 'react-redux';
+import { fetchScratchCards } from '../../../redux/actions/admin-action';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,36 +33,67 @@ const useStyles = makeStyles((theme) => ({
     pos: {
         marginBottom: 12,
     },
+    btnDiv: {
+        margin: '0px 10px',
+        display: 'grid',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gridTemplateColumns: 'auto auto',
+        gap: theme.spacing(3),
+        color: '#562fab',
+        border: 'solide 1',
+        borderColor: '#562fab',
+
+    },
 }));
 
 export default function AdminPanel() {
+    setPageTitle('Admin-Panel');
+
     const classes = useStyles();
     const [studentClassModalOpen, setStudentClassModalOpen] = useState(false);
     const [subjectListModalOpen, setSubjectListModalOpen] = useState(false);
+    const [cardFormModalOpen, setCardFormModalOpen] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     return (
         <div className={classes.root}>
             <Grid container spacing={1}>
                 <Grid item xs={12} md={6} xl={4}>
                     <SendStaffRegToken />
                 </Grid>
-                <Grid item xs={12} md={6} xl={4}>
-                    {isAdmin(true) && <ComputeResult />}
-                </Grid>
-                <Grid item xs={12} md={6} xl={4}>
-                    {isAdmin(true) &&
-                        <>
-                            <Button onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
-                            <SessionClassTermModal path="/admin/students/class-termly" open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)}>
-                                Get list of students in the selected class, term and session
-                            </SessionClassTermModal>
-
-                            <Button onClick={() => setSubjectListModalOpen(true)}>List of Subjects</Button>
-                            <SessionClassTermModal path="/admin/students/class/termly/subjects" open={subjectListModalOpen} onClose={() => setSubjectListModalOpen(false)}>
-                                Get list of subjects offered by students in the selected class, term and session
-                            </SessionClassTermModal>
-                        </>
-                    }
-                </Grid>
+                {isAdmin(true) && <>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <ComputeResult />
+                    </Grid>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
+                        <SessionTermClassModal path="/admin/students/class-termly" open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)}>
+                            Get list of students in the selected class, term and session
+                        </SessionTermClassModal>
+                    </Grid>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => setSubjectListModalOpen(true)}>List of Subjects</Button>
+                        <SessionTermClassModal path="/admin/students/class/termly/subjects" open={subjectListModalOpen} onClose={() => setSubjectListModalOpen(false)}>
+                            Get list of subjects offered by students in the selected class, term and session
+                        </SessionTermClassModal>
+                    </Grid>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => setCardFormModalOpen(true)}>Generate Scratch Card Details</Button>
+                        <CardFormModal
+                            open={cardFormModalOpen}
+                            onClose={() => setCardFormModalOpen(false)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => {
+                             dispatch(fetchScratchCards());
+                             history.push('/admin/scratch-cards');
+                        }}>Fetch Cards</Button>
+                    </Grid>
+                </>
+                }
             </Grid>
         </div>
     )

@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmptyString, isEmptyArrayOrObject, formatPhoneNumber } from '../../../libs/utility-functions';
+import { isEmptyString, isEmptyArrayOrObject, formatPhoneNumber, setPageTitle } from '../../../libs/utility-functions';
 import { validateFormFields } from '../../../libs/form-fields-validator';
 import { classes, bloodGroups, genotypes } from '../../../libs/students-data'
 import SingleSelect from '../../other-components/SingleSelect';
@@ -30,6 +30,7 @@ const useStyle = makeStyles({
 })
 const StudentRegForm = () => {
 
+  setPageTitle('Registration');
   const styles = useStyle();
   const dispatch = useDispatch();
   const { data, error } = useSelector(state => state.student.student);

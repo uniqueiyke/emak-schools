@@ -32,6 +32,11 @@ import {
     STUDENTS_SUBJECTS_PER_TERM_SUCCEEDED,
     STUDENTS_SUBJECTS_PER_TERM_FAILED,
     IS_FETCHING_STUDENTS_SUBJECTS,
+    GENERATE_SCRATCH_CARDS_SUCCEEDED,
+    FETCH_SCRATCH_CARDS_FAILED,
+    FETCH_SCRATCH_CARDS_SUCCEEDED,
+    GENERATE_SCRATCH_CARDS_FAILED,
+    IS_FETCHING_SCRATCH_CARDS,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -194,6 +199,29 @@ const studentsSubjectsPerTermSFailed = err => ({
     payload: err,
 })
 
+const generateScratchCardsSucceeded = data => ({
+    type: GENERATE_SCRATCH_CARDS_SUCCEEDED,
+    payload: data,
+})
+
+const generateScratchCardsFailed = err => ({
+    type: GENERATE_SCRATCH_CARDS_FAILED,
+    payload: err,
+})
+
+const fetchScratchCardsSucceeded = data => ({
+    type: FETCH_SCRATCH_CARDS_SUCCEEDED,
+    payload: data,
+})
+
+const fetchScratchCardsFailed = err => ({
+    type: FETCH_SCRATCH_CARDS_FAILED,
+    payload: err,
+})
+
+const isFatchingScratchCards = () => ({
+    type: IS_FETCHING_SCRATCH_CARDS,
+})
 
 export const sendStaffRegistrationToken =  data => async dispatch => {
     try {
@@ -397,5 +425,37 @@ export const deleteSubjectFromClass = (params, data) => async dispatch => {
         dispatch(deleteSubjectFromClassSucceeded(responds.data));
     }catch(errors) {
         dispatch(deleteSubjectFromClassFailed(errorParser(errors.response)));
+    }
+}
+
+export const generateScratchCard = data => async dispatch => {
+    dispatch(isFatchingScratchCards());
+    try {
+        const responds = await axios({
+            url: '/admin/create/scratch-cards',
+            method: 'POST',
+            data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(generateScratchCardsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(generateScratchCardsFailed(errorParser(errors.response)));
+    }
+}
+
+export const fetchScratchCards = data => async dispatch => {
+    dispatch(isFatchingScratchCards());
+    try {
+        const responds = await axios({
+            url: '/admin/fetch/scratch-cards',
+            method: 'GET',
+            data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(fetchScratchCardsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(fetchScratchCardsFailed(errorParser(errors.response)));
     }
 }
