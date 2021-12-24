@@ -11,6 +11,9 @@ import { setPageTitle } from '../../../libs/utility-functions';
 import CardFormModal from '../../scratch-cards/CardFormModal';
 import { useDispatch } from 'react-redux';
 import { fetchScratchCards } from '../../../redux/actions/admin-action';
+import DashBoardButtonImg from '../../other-components/DashBoardButtonImg';
+import subjectList1 from '../../../images/subject-list.png';
+import subjectList from '../../../images/subject-list1.png';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -74,7 +77,11 @@ export default function AdminPanel() {
                         </SessionTermClassModal>
                     </Grid>
                     <Grid item xs={12} md={6} xl={4}>
-                        <Button variant='outlined' className={classes.btnDiv} onClick={() => setSubjectListModalOpen(true)}>List of Subjects</Button>
+                        <DashBoardButtonImg
+                            onClick={() => setSubjectListModalOpen(true)}
+                            src1={subjectList}
+                            src2={subjectList1}
+                        >List of Subjects</DashBoardButtonImg>
                         <SessionTermClassModal path="/admin/students/class/termly/subjects" open={subjectListModalOpen} onClose={() => setSubjectListModalOpen(false)}>
                             Get list of subjects offered by students in the selected class, term and session
                         </SessionTermClassModal>
@@ -88,8 +95,8 @@ export default function AdminPanel() {
                     </Grid>
                     <Grid item xs={12} md={6} xl={4}>
                         <Button variant='outlined' className={classes.btnDiv} onClick={() => {
-                             dispatch(fetchScratchCards());
-                             history.push('/admin/scratch-cards');
+                            dispatch(fetchScratchCards());
+                            history.push('/admin/scratch-cards');
                         }}>Fetch Cards</Button>
                     </Grid>
                 </>

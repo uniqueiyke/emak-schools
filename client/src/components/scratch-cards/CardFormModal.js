@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import { generateScratchCard } from '../../redux/actions/admin-action';
+import { Typography } from '@material-ui/core';
 
 const useStyle = makeStyles({
     formField: {
@@ -60,7 +61,7 @@ const CardFormModal = ({ open, onClose }) => {
     const dispatch = useDispatch();
     const [cardState, setCardState] = useState(initialState)
     const history = useHistory();
-    
+
     const validateNumberInput = (value = '', min = 0, max = 10) => {
         if (typeof (parseInt(value)) === 'number') {
             if (value < min || value > max) {
@@ -113,13 +114,19 @@ const CardFormModal = ({ open, onClose }) => {
             keepMounted
             aria-describedby="card-form-dialog-description"
         >
-            <DialogTitle id="card-form-dialog-title">Subscribe</DialogTitle>
+            <DialogTitle id="card-form-dialog-title">Card Generation Form</DialogTitle>
             <DialogContent>
-                <DialogContentText id="card-form-dialog-description" >
-                    The number of digits for the serial number
-                    should be at least three (3) longer than the prefix length.<br />
-                    Example: If the serial number should total of 7 charaters long,
-                    then the prefix should be at most 4 character long.
+                <DialogContentText component={'div'} id="card-form-dialog-description" >
+                    <Typography>
+                        Enter the information in the required fields to generate 
+                        scratch card details.
+                    </Typography>
+                    <Typography>
+                        The number of digits for the serial number
+                        should be at least three (3) longer than the prefix length.<br />
+                        Example: If the serial number should total of 7 charaters long,
+                        then the prefix should be at most 4 character long.
+                    </Typography>
                 </DialogContentText>
                 <form onSubmit={onSubmit}>
                     <FormControl fullWidth className={classes.formField}>
