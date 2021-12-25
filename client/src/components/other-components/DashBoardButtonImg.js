@@ -30,10 +30,6 @@ const useStyles = makeStyles((theme) => ({
         color: '#0973b1',
         width: 'inherit',
         position: 'relative',
-        left: '15%',
-        [theme.breakpoints.down('xs')]: {
-            left: '5%',
-        },
     },
 }))
 
@@ -48,7 +44,6 @@ const DashBoardButtonImg = ({ src1, src2, alt1, alt2, ...props }) => {
                 <br />
                 <span className={styles.text}>{props.children}</span>
             </span>
-            <br />
         </div>
     )
 }
