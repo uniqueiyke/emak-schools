@@ -3,7 +3,7 @@ const {
     get_grade_book_score, grade_book, update_grade_book_score, 
     compute_results, fetch_results_sheet , get_results_slip,
     fetch_students_class_term, delete_student_from_class, fetch_termly_subjects,
-    delete_subject_from_class_termly_subjects,
+    delete_subject_from_class_termly_subjects, check_result,
 } = require('../controllers/grade-book-controller');
 const router = express.Router();
 const staffAuth = require('../middlewares/staff_auth');
@@ -18,5 +18,6 @@ router.get('/fetch/students/class/term', staffAuth('super-admin'), fetch_student
 router.post('/delete/student/from-class', staffAuth('super-admin'), delete_student_from_class);
 router.get('/fetch/subjects/class/term', staffAuth('super-admin'), fetch_termly_subjects);
 router.post('/delete/subject/from-class/termly-subjects', staffAuth('super-admin'), delete_subject_from_class_termly_subjects);
+router.post('/student/result/checker',  check_result);
 
 module.exports = router;

@@ -36,6 +36,9 @@ import {
     IS_FETCHING_SCRATCH_CARDS,
     FETCH_SCRATCH_CARDS_SUCCEEDED,
     FETCH_SCRATCH_CARDS_FAILED,
+    FETCH_RESULTSLIP_SUCCEEDED,
+    FETCH_RESULTSLIP_FAILED,
+    IS_FETCHING_RESULTSLIP,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -275,6 +278,35 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 }
             }
 
+        case IS_FETCHING_RESULTSLIP:
+            return {
+                ...state,
+                oneResult: {
+                    data: null,
+                    error: null,
+                    isFetchingResult: true,
+                },
+            }
+
+        case FETCH_RESULTSLIP_SUCCEEDED:
+            return {
+                ...state,
+                oneResult: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingResult: false,
+                },
+            }
+
+        case FETCH_RESULTSLIP_FAILED:
+            return {
+                ...state,
+                oneResult: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingResult: false,
+                },
+            }
         default:
             return state
     }

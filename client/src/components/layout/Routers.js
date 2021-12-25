@@ -23,11 +23,13 @@ import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 import GradeBook from '../grade-book/GradeBook';
 import GradeScoreForm from '../grade-book/GradeScoreForm';
 import ResultSheet from '../grade-book/ResultSheet';
-import ResultSlip from '../grade-book/ResultSlip';
+import ResultSlipByAdmin from '../grade-book/ResultSlipByAdmin';
 import AllStaff from '../pages/staffs/AllStaff';
 import StudentsInClassPerTerm from '../grade-book/StudentsInClassPerTerm';
 import SubjectsListPerTerm from '../grade-book/SubjectsListPerTerm';
 import Cards from '../scratch-cards/Cards';
+import ResultCheckerForm from '../pages/others/ResultCheckerForm';
+import ResultChecker from '../grade-book/ResultChecker';
 
 export default function Routers() {
     return (
@@ -82,7 +84,7 @@ export default function Routers() {
                     <ResultSheet />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact superOnly path="/admin/students/result-slip" >
-                    <ResultSlip />
+                    <ResultSlipByAdmin />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact superOnly path="/admin/all-staff" >
                     <AllStaff />
@@ -102,6 +104,12 @@ export default function Routers() {
                 <AuthRoute exact path="/staff/dashboard/grade-book/student/:id">
                     <GradeScoreForm />
                 </AuthRoute>
+                <Route exact path="/student/result-checker">
+                    <ResultCheckerForm />
+                </Route>
+                <Route exact path="/student/result-checker/result-slip">
+                    <ResultChecker />
+                </Route>
                 {/* <Route exact path="/test/components">
                     <TestApp />
                 </Route> */}

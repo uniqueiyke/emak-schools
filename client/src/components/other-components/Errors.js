@@ -22,8 +22,8 @@ export default function Errors({ errors, goBack }) {
         const { message, status, statusText } = errors;
         return (
             <div>
-                <Typography variant='h3' color='error' >Error {status}: {statusText}</Typography>
-                <Typography variant='h4' color='error' >{message}</Typography>
+                <Typography variant='h6' color='error' >Error {status}: {statusText}</Typography>
+                <Typography variant='body2' color='error' >{message}</Typography>
 
                 {goBack ?
                     <Button

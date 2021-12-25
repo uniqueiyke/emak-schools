@@ -112,3 +112,16 @@ export const teachersRemake = score => {
   }
     return 'Poor';
 }
+
+/**
+ * Check if a parameter is a function. Returns true if a function or false otherwise.
+ * @param {function} func 
+ * @returns 
+ */
+export const isFunction = func => {
+  return func && (Object.prototype.toString.call(func) === "[object Function]" || typeof func === "function" || func instanceof Function);
+}
+
+export const isRegExp = pattern => {
+  return pattern && (Object.prototype.toString.call( pattern ) ===  "[object RegExp]" || pattern instanceof RegExp || pattern.constructor.name === RegExp)
+}

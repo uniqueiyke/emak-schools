@@ -1,4 +1,4 @@
-import { formatPhoneNumber, isEmptyArrayOrObject } from "./utility-functions";
+import { formatPhoneNumber, isEmptyArrayOrObject, isFunction, isRegExp } from "./utility-functions";
 if (!Number.MAX_SAFE_INTEGER) {
     Number.MAX_SAFE_INTEGER = 9007199254740991; // Math.pow(2, 53) - 1;
 }
@@ -70,7 +70,7 @@ class FormFieldsValidator {
 
     isEmpty = () => {
         this.currentField.isError = false; // reset error flag
-        if (this.currentField.value.length <= 0 || this.currentField.value === '') {
+        if (this.currentField.value.trim().length <= 0 || this.currentField.value.trim() === '') {
             this.currentField.isError = true
         }
         return this;
@@ -135,6 +135,45 @@ class FormFieldsValidator {
     arrayValues = () => {
         this.currentField.isError = false; //reset error flag
         if (!Array.isArray(this.currentField.value) || this.currentField.value.length <= 0) {
+            this.currentField.isError = true;
+        }
+        return this;
+    }
+
+    /**
+     * Validate an input field value by calling a the provide function or method.
+     * The return value of the funtion should be a boolean - true if the test fail or false of the test pass.
+     * This method throw an Exception if the argument is not a callable
+     * @param {function} func 
+     */
+    exec = (func) => {
+        if(!isFunction(func)) {
+            throw TypeError('The argument to this method should be a function or callable with a return value of type boolean.');
+        }
+
+        const retValue = func();
+        if (typeof retValue !== 'boolean'){
+            throw Error('The argument to this method should be a function or callable with a return value of type boolean.');
+        }
+
+        if (retValue) {
+            this.currentField.isError = true;
+        }
+        return this;
+    }
+
+    /**
+     * Validate an input field value by testing of the value match the provided 
+     * Regular Expression pattern. This method throw an Exception if the argument fail
+     * @param {RegExp} pattern 
+     * @returns 
+     */
+    matchPattern = pattern => {
+        if(!isRegExp(pattern)){
+            throw TypeError('The argument to this method should be a Reguler Expression object');
+        }
+
+        if (!pattern.test(this.currentField.value)) {
             this.currentField.isError = true;
         }
         return this;

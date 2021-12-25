@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose');
 
 const CardDetailsSchema = new Schema({
-    student: {type: Schema.Types.ObjectId, require: true, ref: 'Student'},
+    student: {type: Schema.Types.ObjectId, ref: 'Student'},
     serial_number: {type: String, uppercase: true , unique: true, default: ""},
     pin: {type: String, unique: true, require: true, default: ""},
     used: {type: Boolean, default: false},

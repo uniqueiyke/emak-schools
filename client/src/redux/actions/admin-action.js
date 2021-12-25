@@ -37,6 +37,9 @@ import {
     FETCH_SCRATCH_CARDS_SUCCEEDED,
     GENERATE_SCRATCH_CARDS_FAILED,
     IS_FETCHING_SCRATCH_CARDS,
+    FETCH_RESULTSLIP_SUCCEEDED,
+    FETCH_RESULTSLIP_FAILED,
+    IS_FETCHING_RESULTSLIP,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -221,6 +224,20 @@ const fetchScratchCardsFailed = err => ({
 
 const isFatchingScratchCards = () => ({
     type: IS_FETCHING_SCRATCH_CARDS,
+})
+
+const fetchResultSlipSucceeded = data => ({
+    type: FETCH_RESULTSLIP_SUCCEEDED,
+    payload: data,
+})
+
+const fetchResultSlipFailed = err => ({
+    type: FETCH_RESULTSLIP_FAILED,
+    payload: err,
+})
+
+const isFetchResultSlip = () => ({
+    type: IS_FETCHING_RESULTSLIP,
 })
 
 export const sendStaffRegistrationToken =  data => async dispatch => {
@@ -457,5 +474,20 @@ export const fetchScratchCards = data => async dispatch => {
         dispatch(fetchScratchCardsSucceeded(responds.data));
     }catch(errors) {
         dispatch(fetchScratchCardsFailed(errorParser(errors.response)));
+    }
+}
+
+export const getResultSlip = params => async dispatch => {
+    dispatch(isFetchResultSlip());
+    try {
+        const responds = await axios({
+            url: '/gradebooks/result-slip',
+            method: 'GET',
+            params,
+            headers: tokenConfig('application/json'),
+        });
+        dispatch(fetchResultSlipSucceeded(responds.data))
+    } catch (errors) {
+        dispatch(fetchResultSlipFailed(errorParser(errors.response)));
     }
 }

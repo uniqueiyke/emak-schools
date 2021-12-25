@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles'
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import Errors from '../other-components/Errors';
-import tokenConfig from '../../redux/actions/token-config';
 import schLogo from '../../images/sch-logo-250x180.png';
 import stamp from '../../images/stamp-141x100.png';
 import { getSchoolFromClass } from '../../libs/students-data';
@@ -153,55 +150,19 @@ const useStyles = makeStyles({
     },
 })
 
-const ResultSlip = () => {
+const ResultSlip = ({ resultDetails, error }) => {
 
     const styles = useStyles();
     const { state } = useLocation();
-    const [resultDetails, setResultDetails] = useState();
-    const [resultError, setResultError] = useState();
-    const [isResultFetching, setIsResultFetching] = useState(false);
+
 
     if (resultDetails) {
         setPageTitle(`${resultDetails.student.reg_number} Result Slip`);
     }
 
-    const getResultSlip = async () => {
-        setIsResultFetching(true);
-        try {
-            const responds = await axios({
-                url: '/gradebooks/result-slip',
-                method: 'GET',
-                params: {
-                    session: state.session.replace('/', '_'),
-                    term: state.term,
-                    class_name: `${state.class_name}_${state.class_stream.toLowerCase()}`,
-                    subject: state.subject,
-                    stu_id: state.id,
-                },
-                headers: tokenConfig('application/json'),
-            });
-            return responds.data;
-        } catch (errors) {
-            return errors.response;
-        }
-    }
 
-    useEffect(() => {
-        getResultSlip().then(data => {
-            setIsResultFetching(false);
-            setResultDetails(data);
-        })
-            .catch(err => {
-                setIsResultFetching(false);
-                setResultError(err);
-            })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    if (isResultFetching) {
-        return <DataFetchingProgress />
-    } else if (resultError) {
-        return <Errors errors={resultError} />
+    if (error) {
+        return <Errors errors={error} goBack />
     } else {
         return (
             <>

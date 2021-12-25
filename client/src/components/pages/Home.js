@@ -1,26 +1,16 @@
 import React, { Fragment } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { setPageTitle } from '../../libs/utility-functions';
-// import schoolLogo from '../../images/sch-logo-250x180.png';
-// import { makeStyles } from '@material-ui/styles';
-// import Paper from '@material-ui/core/Paper';
 import SliderContainer from '../slider/SliderContainer';
-
-
-// const useStyles = makeStyles(theme => ({
-//     img: {
-//         marginBottom: 10,
-//         display: 'grid',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         padding: '10px 0px',
-//         backgroundColor: '#c4bdbd',
-//     },
-// }))
+import { useHistory } from 'react-router';
+import DashBoardButtonImg from '../other-components/DashBoardButtonImg';
+import resultSlip from '../../images/result-slip.png';
+import resultSlip1 from '../../images/result-slip1.png';
 
 export default function Home() {
 
     // const classes = useStyles();
+    const history = useHistory();
     setPageTitle('Home');
     return (
         <Fragment>
@@ -29,6 +19,12 @@ export default function Home() {
                 Home of academic excellent.
             </Typography>
             <SliderContainer />
+            <br />
+            <DashBoardButtonImg
+                onClick={() => history.push("/student/result-checker")}
+                src1={resultSlip}
+                src2={resultSlip1}
+            >Check Result</DashBoardButtonImg>
         </Fragment>
     )
 }

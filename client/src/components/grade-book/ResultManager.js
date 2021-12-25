@@ -24,8 +24,10 @@ const useStyles = makeStyles({
         margin: '15px 0px',
     },
 })
+
 const sessionsList = sessions();
 const classStreams = classStream();
+
 const ResultManager = ({ 
     vSession, vTerm, vClass, onValueChange, 
     vStream, vSubject, withSubject, subjPerTeacher, ...props 

@@ -9,6 +9,9 @@ import {
     IS_FETCHING_A_STUDENT,
     UPDATE_STUDENT_DATA_SUCCEEDED,
     UPDATE_STUDENT_DATA_FAILED,
+    FETCH_RESULTSLIP_SUCCEEDED,
+    FETCH_RESULTSLIP_FAILED,
+    IS_FETCHING_RESULTSLIP,
 } from './action-types';
 
 
@@ -44,6 +47,20 @@ const studentDataUpdateSucceeded = data =>({
 const studentDataUpdateFailed = err =>({
     type: UPDATE_STUDENT_DATA_FAILED,
     payload: err
+})
+
+const fetchResultSlipSucceeded = data => ({
+    type: FETCH_RESULTSLIP_SUCCEEDED,
+    payload: data,
+})
+
+const fetchResultSlipFailed = err => ({
+    type: FETCH_RESULTSLIP_FAILED,
+    payload: err,
+})
+
+const isFetchResultSlip = () => ({
+    type: IS_FETCHING_RESULTSLIP,
 })
 
 
@@ -94,5 +111,22 @@ export const updateStudentData =  (data, id) => async dispatch => {
     } catch (errors) {
         dispatch(studentDataUpdateFailed(errorParser(errors.response)));
         return false;
+    }
+}
+
+export const resultChecker = data => async dispatch => {
+    dispatch(isFetchResultSlip());
+    try {
+        const responds = await axios({
+            url: '/gradebooks/student/result/checker',
+            method: 'POST',
+            data,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        dispatch(fetchResultSlipSucceeded(responds.data))
+    } catch (errors) {
+        dispatch(fetchResultSlipFailed(errorParser(errors.response)));
     }
 }

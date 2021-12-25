@@ -68,6 +68,11 @@ const initialState = (options = defaulOptions) => {
                 data: null,
                 error: null,
             },
+            oneResult:  {
+                data: null,
+                error: null,
+                isFetchingResult: false,
+            },
             staffs: {
                 data: null,
                 error: null,
@@ -97,6 +102,11 @@ const initialState = (options = defaulOptions) => {
                 data: null,
                 error: null,
                 isFetchingAStudent: false,
+            },
+            result:  {
+                data: null,
+                error: null,
+                isFetchingResult: false,
             },
         }
     }

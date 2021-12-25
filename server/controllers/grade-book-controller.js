@@ -1,8 +1,10 @@
+const mongoose = require('mongoose');
 const createGradeBookManager = require('../models/session-term-schema');
 const { subjects, terms } = require('../libs/subjects');
 const gradeBookScore = require('../models/grade-book-score');
 const computeResults = require('../models/result');
-const mongoose = require('mongoose');
+const Student = require('../models/student');
+const CardDetails = require('../models/card-details');
 
 const toInt = val => {
     if (!val) return 0;
@@ -260,9 +262,9 @@ exports.fetch_results_sheet = async (req, res) => {
     try {
         const { session, term, class_name } = req.query;
         const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        const gradeScores = await ComputeResult.find()
+        const results = await ComputeResult.find()
             .populate('student', 'reg_number name').sort('-average');
-        res.json(gradeScores)
+        res.json(results)
     } catch (err) {
         console.log(err);
         res.status(401).json(err.message)
@@ -274,9 +276,9 @@ exports.get_results_slip = async (req, res) => {
     try {
         const { session, term, class_name, stu_id } = req.query;
         const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        const gradeScore = await ComputeResult.findOne({student: stu_id})
+        const result = await ComputeResult.findOne({student: stu_id})
             .populate('student', 'reg_number name gender');
-        res.json(gradeScore)
+        res.json(result)
     } catch (err) {
         console.log(err);
         res.status(401).json(err.message)
@@ -375,5 +377,48 @@ exports.delete_subject_from_class_termly_subjects = async (req, res) => {
     catch (err) {
         console.log(err.message)
         res.status(401).json(err.message);
+    }
+}
+
+exports.check_result = async (req, res) => {
+    try {
+        const { session, term, class_name, reg_number, pin, serial_number } = req.body;
+        
+        const student = await Student.findOne({reg_number}, 'reg_number');
+        console.log(student);
+        if(!student){
+            return res.status(404).json({message: 'Invalid credentials'});
+        }
+        
+        const card = await CardDetails.findOne({pin, serial_number});
+        if(!card){
+            return res.status(404).json({message: 'Invalid credentials'});
+        }
+
+        if(card.student && card.student.toString() !== student._id.toString()){
+            return res.status(404).json({message: 'Invalid credentials'});
+        }
+
+        if(card.used_up){
+            return res.status(401).json({message: 'You cannot use this pin because you have exceed number of usage.'});
+        }
+
+        const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
+        const result = await ComputeResult.findOne({student: student._id})
+            .populate('student', 'reg_number name gender');
+        if(!result){
+            return res.status(404).json({message: 'Is like the class you selected did not match your current class. Please crosss check your credentials and retry.'})
+        }
+
+        card.student = student._id;
+        card.used = true;
+        card.usage_count = card.usage_count + 1;
+        card.used_up = card.max_usage <= card.usage_count;
+        await card.save();
+        
+        res.json(result)
+    } catch (err) {
+        console.log(err);
+        res.status(401).json(err.message)
     }
 }

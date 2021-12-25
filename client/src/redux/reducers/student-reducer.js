@@ -5,7 +5,10 @@ import {
     FETCHING_A_STUDENT_FAILED,
     IS_FETCHING_A_STUDENT,
     UPDATE_STUDENT_DATA_FAILED,
-    UPDATE_STUDENT_DATA_SUCCEEDED
+    UPDATE_STUDENT_DATA_SUCCEEDED,
+    FETCH_RESULTSLIP_SUCCEEDED,
+    FETCH_RESULTSLIP_FAILED,
+    IS_FETCHING_RESULTSLIP,
 } from '../actions/action-types'
 import initialState from './initial-state';
 
@@ -53,6 +56,35 @@ const studentReducer = (state = initialState({ student: true }), action) => {
                     error: null,
                     isFetchingAStudent: true,
                 }
+            }
+            case IS_FETCHING_RESULTSLIP:
+            return {
+                ...state,
+                result: {
+                    data: null,
+                    error: null,
+                    isFetchingResult: true,
+                },
+            }
+
+        case FETCH_RESULTSLIP_SUCCEEDED:
+            return {
+                ...state,
+                result: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingResult: false,
+                },
+            }
+
+        case FETCH_RESULTSLIP_FAILED:
+            return {
+                ...state,
+                result: {
+                    data: null,
+                    error: action.payload,
+                    isFetchingResult: false,
+                },
             }
         default:
             return state
