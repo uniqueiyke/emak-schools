@@ -6,13 +6,13 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import FormFieldsValidator from '../../../libs/form-fields-validator';
-import { isEmptyArrayOrObject, alertMessageParser } from '../../../libs/utility-functions';
-import AlertMessage from '../../other-components/AlertMessage';
-import ResultManager from '../../grade-book/ResultManager';
-import { currentAcademicYear, currentTerm } from '../../../libs/session-array';
-import { resultChecker } from '../../../redux/actions/student-action';
-import { setPageTitle } from '../../../libs/utility-functions';
+import FormFieldsValidator from '../../libs/form-fields-validator';
+import { isEmptyArrayOrObject, alertMessageParser } from '../../libs/utility-functions';
+import AlertMessage from '../other-components/AlertMessage';
+import ResultManager from './ResultManager';
+import { currentAcademicYear, currentTerm } from '../../libs/session-array';
+import { resultChecker } from '../../redux/actions/student-action';
+import { setPageTitle } from '../../libs/utility-functions';
 
 const useStyles = makeStyles({
     flexBox: {
@@ -92,7 +92,8 @@ const ResultCheckerForm = () => {
         {
             errState && <AlertMessage severity='error' open={errState.isError} onClose={() => setErrState(initErrorState)} >{alertMessageParser(errState.errorMsg)}</AlertMessage>
         }
-        <Typography variant='h6' align='center' >Please select the academic year and term to compute results</Typography>
+        <Typography variant='subtitle1'>Please provide the correct academic year, term and class including your class stream to get your results for the term.<br />
+        Make sure your registration number is correct, and currect pin with matching serial number as it is on your card.</Typography>
         <div className={styles.flexBox}>
             <FormControl fullWidth className={styles.flexItem}>
                 <TextField

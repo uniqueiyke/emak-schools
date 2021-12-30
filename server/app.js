@@ -6,26 +6,11 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const mongoose = require('mongoose');
+const dbConnection = require('./db/db-connection');
 const cors = require('./middlewares/cors');
 
-// import and create the mongoDB connection to mongoDB atlas
-mongoose.connect(process.env.mongodbURL, {  
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useCreateIndex: true 
-})
-.then(()=> console.log('mongo conneted'))
-.catch(error => console.log('mongo connection error', error));
-
-// import and create the mongoDB connection to local mongoDB
-// mongoose.connect(process.env.localMongoDB1, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-// })
-//     .then(() => console.log('mongo conneted'))
-//     .catch(error => console.log('mongo connection error', error));
+dbConnection(process.env.NODE_ENV !== 'production' ? 'local' : 'remote');
+// dbConnection('remote');
 
 const app = express();
 

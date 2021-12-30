@@ -39,6 +39,8 @@ import {
     FETCH_RESULTSLIP_SUCCEEDED,
     FETCH_RESULTSLIP_FAILED,
     IS_FETCHING_RESULTSLIP,
+    PRINT_CARDS_FAILED,
+    PRINT_CARDS_SUCCEEDED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -259,6 +261,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             }
         case GENERATE_SCRATCH_CARDS_SUCCEEDED:
         case FETCH_SCRATCH_CARDS_SUCCEEDED:
+        case PRINT_CARDS_SUCCEEDED:
             return {
                 ...state,
                 scratchCards: {
@@ -269,6 +272,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             }
         case GENERATE_SCRATCH_CARDS_FAILED:
         case FETCH_SCRATCH_CARDS_FAILED:
+        case PRINT_CARDS_FAILED:
             return {
                 ...state,
                 scratchCards: {

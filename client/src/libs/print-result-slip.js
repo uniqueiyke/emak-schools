@@ -5,9 +5,9 @@ const printResultSlip = (resultDetails, state) => {
     const document = mywindow.document.open();
     document.write(resultHtml(resultDetails, state));
     document.close();
-    mywindow.moveTo(0, 0);
-    mywindow.resizeTo(mywindow.screen.width, mywindow.screen.height);
-
+    mywindow.moveTo(window.screenX, window.screenY);
+    mywindow.resizeTo(window.outerWidth, window.outerHeight);
+ 
     mywindow.onload = function() { // wait until all resources loaded 
         mywindow.focus(); // necessary for IE >= 10
         mywindow.print();  // change window to mywindow

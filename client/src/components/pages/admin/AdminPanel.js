@@ -9,8 +9,6 @@ import { useHistory } from 'react-router-dom';
 import SessionTermClassModal from '../../grade-book/SessionTermClassModal';
 import { setPageTitle } from '../../../libs/utility-functions';
 import CardFormModal from '../../scratch-cards/CardFormModal';
-import { useDispatch } from 'react-redux';
-import { fetchScratchCards } from '../../../redux/actions/admin-action';
 import DashBoardButtonImg from '../../other-components/DashBoardButtonImg';
 import subjectList1 from '../../../images/subject-list.png';
 import subjectList from '../../../images/subject-list1.png';
@@ -57,7 +55,6 @@ export default function AdminPanel() {
     const [studentClassModalOpen, setStudentClassModalOpen] = useState(false);
     const [subjectListModalOpen, setSubjectListModalOpen] = useState(false);
     const [cardFormModalOpen, setCardFormModalOpen] = useState(false);
-    const dispatch = useDispatch();
     const history = useHistory();
 
     return (
@@ -94,10 +91,10 @@ export default function AdminPanel() {
                         />
                     </Grid>
                     <Grid item xs={12} md={6} xl={4}>
-                        <Button variant='outlined' className={classes.btnDiv} onClick={() => {
-                            dispatch(fetchScratchCards());
-                            history.push('/admin/scratch-cards');
-                        }}>Fetch Cards</Button>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => history.push('/admin/avaliable/scratch-cards')}>Fetch Avaliable Cards</Button>
+                    </Grid>
+                    <Grid item xs={12} md={6} xl={4}>
+                        <Button variant='outlined' className={classes.btnDiv} onClick={() => history.push('/admin/all/scratch-cards')}>Fetch All Cards</Button>
                     </Grid>
                 </>
                 }

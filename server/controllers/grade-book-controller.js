@@ -395,8 +395,13 @@ exports.check_result = async (req, res) => {
             return res.status(404).json({message: 'Invalid credentials'});
         }
 
-        if(card.student && card.student.toString() !== student._id.toString()){
-            return res.status(404).json({message: 'Invalid credentials'});
+        if(card.student){
+            if(card.student.toString() !== student._id.toString()){
+                return res.status(404).json({message: 'Invalid credentials'});
+            }
+            if(card.class !== class_name || card.term !== term || card.session !== session){
+                return res.status(401).json({message: 'You cannot use one card details for two different terms. Get a new card to gain access to this resources'});
+            }
         }
 
         if(card.used_up){
@@ -414,6 +419,9 @@ exports.check_result = async (req, res) => {
         card.used = true;
         card.usage_count = card.usage_count + 1;
         card.used_up = card.max_usage <= card.usage_count;
+        card.class = class_name;
+        card.term = term;
+        card.session = session;
         await card.save();
         
         res.json(result)

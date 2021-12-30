@@ -10,6 +10,9 @@ const CardDetailsSchema = new Schema({
     used_up: {type: Boolean, default: false},
     created_date: {type: Date, default: Date.now()},
     printed: {type: Boolean, default: false},
+    class: String,
+    term: String,
+    session: String,
 })
 
 module.exports = model("CardDetails", CardDetailsSchema, "CardDetails");

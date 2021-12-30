@@ -1,23 +1,48 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import { useSelector, useDispatch } from 'react-redux';
 import { Grid } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import { isEmptyArrayOrObject, setPageTitle } from '../../libs/utility-functions';
 import Errors from '../other-components/Errors';
-import { fetchScratchCards } from '../../redux/actions/admin-action';
+import { fetchScratchCards, fetchAllScratchCards } from '../../redux/actions/admin-action';
+import Button from '@material-ui/core/Button';
 
-const Cards = () => {
+const Cards = ({ all }) => {
     setPageTitle('Cards');
-    const { data, error, isFetchingScratchCard } = useSelector(state => state.admin.scratchCards)
+    const [selected, setSelected] = useState([])
+    const { data, error, isFetchingScratchCard } = useSelector(state => state.admin.scratchCards);
     const dispatch = useDispatch();
+    const history = useHistory();
     
-    useEffect(()=> {
-        if(data === null && error === null){
+    useEffect(() => {
+        if (!all) {
             dispatch(fetchScratchCards());
+        } else {
+            dispatch(fetchAllScratchCards());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    const PrepareForPrinting = id => {
+        const cardsForPrinting = [];
+        for (const id of selected) {
+            const card = data.find(c => id.toString() === c._id.toString());
+            cardsForPrinting.push(card);
+        }
+        history.push('/admin/print-cards', { ids: selected });
+    }
+
+    const onSelected = e => {
+        if (e.target.checked) {
+            setSelected([...selected, e.target.id]);
+        } else {
+            const newSelecte = selected.filter(id => id !== e.target.id)
+            setSelected(newSelecte);
+        }
+    }
+
     if (isFetchingScratchCard) {
         return <DataFetchingProgress />
     }
@@ -25,9 +50,16 @@ const Cards = () => {
         return <Errors errors={error} />
     }
     else if (!isEmptyArrayOrObject(data)) {
-        return <Grid container spacing={1} >
-            {data.map(card => <Card key={card._id} card={card} />)}
-        </Grid>
+        return <>
+            <Grid container spacing={1} >
+                {data.map(card => <Card
+                    key={card._id}
+                    card={card}
+                    onClick={onSelected}
+                />)}
+            </Grid>
+            <Button disabled={selected.length <= 0} onClick={PrepareForPrinting}>Print Cards</Button>
+        </>
     }
     else {
         return <h4>No available cards</h4>

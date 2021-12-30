@@ -102,7 +102,7 @@ const CardFormModal = ({ open, onClose }) => {
         setCardState(initialState);
         e.preventDefault();
         onClose();
-        history.push('/admin/scratch-cards');
+        history.push('/admin/avaliable/scratch-cards');
     }
 
     return (

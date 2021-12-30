@@ -40,6 +40,8 @@ import {
     FETCH_RESULTSLIP_SUCCEEDED,
     FETCH_RESULTSLIP_FAILED,
     IS_FETCHING_RESULTSLIP,
+    PRINT_CARDS_FAILED,
+    PRINT_CARDS_SUCCEEDED,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -219,6 +221,16 @@ const fetchScratchCardsSucceeded = data => ({
 
 const fetchScratchCardsFailed = err => ({
     type: FETCH_SCRATCH_CARDS_FAILED,
+    payload: err,
+})
+
+const printCardsSucceeded = data => ({
+    type: PRINT_CARDS_SUCCEEDED,
+    payload: data,
+})
+
+const printCardsFailed = err => ({
+    type: PRINT_CARDS_FAILED,
     payload: err,
 })
 
@@ -461,6 +473,22 @@ export const generateScratchCard = data => async dispatch => {
     }
 }
 
+export const fetchAllScratchCards = data => async dispatch => {
+    dispatch(isFatchingScratchCards());
+    try {
+        const responds = await axios({
+            url: '/admin/fetch/all/scratch-cards',
+            method: 'GET',
+            data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(fetchScratchCardsSucceeded(responds.data));
+    }catch(errors) {
+        dispatch(fetchScratchCardsFailed(errorParser(errors.response)));
+    }
+}
+
 export const fetchScratchCards = data => async dispatch => {
     dispatch(isFatchingScratchCards());
     try {
@@ -489,5 +517,20 @@ export const getResultSlip = params => async dispatch => {
         dispatch(fetchResultSlipSucceeded(responds.data))
     } catch (errors) {
         dispatch(fetchResultSlipFailed(errorParser(errors.response)));
+    }
+}
+
+export const printCard = data => async dispatch => {
+    dispatch(isFatchingScratchCards());
+    try {
+        const responds = await axios({
+            url: '/admin/print-cards',
+            method: 'POST',
+            data,
+            headers: tokenConfig('application/json')
+        });
+       return dispatch(printCardsSucceeded(responds.data));
+    }catch(errors) {
+        return dispatch(printCardsFailed(errors.response));
     }
 }

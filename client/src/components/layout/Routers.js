@@ -28,7 +28,8 @@ import AllStaff from '../pages/staffs/AllStaff';
 import StudentsInClassPerTerm from '../grade-book/StudentsInClassPerTerm';
 import SubjectsListPerTerm from '../grade-book/SubjectsListPerTerm';
 import Cards from '../scratch-cards/Cards';
-import ResultCheckerForm from '../pages/others/ResultCheckerForm';
+import CardsForPrinting from '../scratch-cards/CardsForPrinting';
+import ResultCheckerForm from '../grade-book/ResultCheckerForm';
 import ResultChecker from '../grade-book/ResultChecker';
 
 export default function Routers() {
@@ -95,8 +96,14 @@ export default function Routers() {
                 <AdminAuthRoute exact superOnly path="/admin/students/class/termly/subjects" >
                     <SubjectsListPerTerm />
                 </AdminAuthRoute>
-                <AdminAuthRoute exact superOnly path="/admin/scratch-cards" >
+                <AdminAuthRoute exact superOnly path="/admin/all/scratch-cards" >
+                    <Cards all/>
+                </AdminAuthRoute>
+                <AdminAuthRoute exact superOnly path="/admin/avaliable/scratch-cards" >
                     <Cards />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact superOnly path="/admin/print-cards" >
+                    <CardsForPrinting />
                 </AdminAuthRoute>
                 <AuthRoute exact path="/staff/dashboard/grade-book/:subject">
                     <GradeBook />
