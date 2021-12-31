@@ -9,13 +9,13 @@ const useStyles = makeStyles({
     flexContainer: {
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'space-between',
     },
     flexItem: {
         borderStyle: 'solid',
         borderColor: 'darkblue',
         padding: '0px 10px',
-        margin: '5px 5px',
-
+        margin: '5px 0px',
     },
     pin: {
         backgroundColor: 'darkgray',
@@ -36,7 +36,17 @@ const useStyles = makeStyles({
     btn: {
         cursor: 'pointer',
         color: '#0973b1',
-        borderColor : '#0973b1',
+        borderColor: '#0973b1',
+        margin: '5px 0px',
+    },
+    link: {
+        textAlign: 'center',
+        textDecoration: 'none',
+        borderColor: 'red',
+        padding: '0px 5px',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        margin: '5px 0px',
     }
 });
 
@@ -54,6 +64,35 @@ const CardsForPrinting = () => {
 
     const print = async () => {
         await printAsync();
+        dispatch(printCard(ids));
+        history.push('/admin/avaliable/scratch-cards');
+    }
+
+    const exportCsvJson = (type = 'json') => {
+        let jsonObj = type === 'json' ? [] : 'pin,serial number,max usage\r\n'
+        if (type === 'json') {
+            for (const card of data) {
+                if (ids.includes(card._id)) {
+                    const { pin, serial_number, max_usage } = card;
+                    jsonObj.push({ pin, serial_number, max_usage })
+                }
+            };
+        }
+
+        if (type === 'csv') {
+            for (const card of data) {
+                if (ids.includes(card._id)) {
+                    const { pin, serial_number, max_usage } = card;
+                    jsonObj += `${pin},${serial_number},${max_usage}\r\n`;
+                }
+            };
+        }
+        const blob = new Blob(type === 'json' ? [JSON.stringify(jsonObj, undefined, 4)] : [jsonObj], { type: `text/${type}` });
+        return URL.createObjectURL(blob);
+    }
+
+    const handleDownload = (event, type = 'json') => {
+        event.target.href = exportCsvJson(type);
         dispatch(printCard(ids));
         history.push('/admin/avaliable/scratch-cards');
     }
@@ -82,7 +121,13 @@ const CardsForPrinting = () => {
                                     }
                                 })}
                             </div>
-                            <button className={styles.btn} onClick={print}>Print</button>
+                            <div className={styles.flexContainer}>
+                                <button className={styles.btn} onClick={print}>Print</button>
+                                {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                <a className={styles.link} href='' download={'cards.json'} onClick={evt => handleDownload(evt, 'json')} style={{color: '#926a05', borderColor: '#926a05'}} >Export Json</a>
+                                {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                <a className={styles.link} href='' download={'cards.csv'} onClick={evt => handleDownload(evt, 'csv')} style={{color: 'green', borderColor: 'green'}} >Export csv</a>
+                            </div>
                         </>
                         : <div>
                             <p>No selected cards for printing</p>
