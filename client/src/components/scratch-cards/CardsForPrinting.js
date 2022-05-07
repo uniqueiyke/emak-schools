@@ -64,6 +64,7 @@ const CardsForPrinting = () => {
 
     const print = async () => {
         await printAsync();
+        console.log('after printing')
         dispatch(printCard(ids));
         history.push('/admin/avaliable/scratch-cards');
     }

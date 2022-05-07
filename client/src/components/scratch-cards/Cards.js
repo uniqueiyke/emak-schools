@@ -25,15 +25,6 @@ const Cards = ({ all }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const PrepareForPrinting = id => {
-        const cardsForPrinting = [];
-        for (const id of selected) {
-            const card = data.find(c => id.toString() === c._id.toString());
-            cardsForPrinting.push(card);
-        }
-        history.push('/admin/print-cards', { ids: selected });
-    }
-
     const onSelected = e => {
         if (e.target.checked) {
             setSelected([...selected, e.target.id]);
@@ -58,7 +49,7 @@ const Cards = ({ all }) => {
                     onClick={onSelected}
                 />)}
             </Grid>
-            <Button disabled={selected.length <= 0} onClick={PrepareForPrinting}>Print Cards</Button>
+            <Button disabled={selected.length <= 0} onClick={() =>  history.push('/admin/print-cards', { ids: selected })}>Print Cards</Button>
         </>
     }
     else {

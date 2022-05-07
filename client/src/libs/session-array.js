@@ -20,10 +20,10 @@ export const currentAcademicYear = () => {
 }
 
 export const currentTerm = () => {
-    if(month >= 1 && month <= 3){
+    if(month >= 1 && month <= 4){
         return "Second Term";
     }
-    if(month >= 4 && month <= 8){
+    if(month >= 5 && month <= 8){
         return "Third Term"
     }
     return "First Term"

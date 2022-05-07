@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 
 const Card = ({ card, onClick }) => {
     const styles = useStyles();
-    const [check, setCheck] = useState(false)
+    const [check, setCheck] = useState(false);
     const handleChange = e => {
         setCheck(!check)
         onClick(e)

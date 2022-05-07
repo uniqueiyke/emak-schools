@@ -16,7 +16,7 @@ export default function Home() {
         <Fragment>
             <Typography variant='h6' align='center'>
                 Welcome to Emak God's own schools. <br />
-                Home of academic excellent.
+                Home of academic excellence.
             </Typography>
             <SliderContainer />
             <br />
