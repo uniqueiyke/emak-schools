@@ -111,7 +111,11 @@ const ResultCheckerForm = () => {
             Please provide the <em className={styles.bolder}>correct</em> <em className={styles.emphasis}>academic year</em>, <em className={styles.emphasis}>term</em> and <em className={styles.emphasis}>class</em> including your class stream to get your results for the term.<br />
             <span className={styles.bolder}>Make sure your <em style={{color: '#a53838'}}>registration number</em> is correct</span>.<br /> 
             Provide the <span className={styles.bolder}>correct</span> <em style={{color: '#f54b4b', fontWeight: 'bolder'}}>pin</em> with matching <em style={{color: '#a37602', fontWeight: 'bolder'}}>serial number</em> as it is on your card.
-            <div className={styles.warning}>For a better printing experience, it is advisable to check the result with a laptop or  a desktop computer not mobile phone</div>
+            <div className={styles.warning}>
+                For a better printing experience, it is advisable to check the result with a laptop or  a desktop computer not mobile device.
+                <br/>
+                It is also advisable to use Google Chrome browser mainly when using mobile device to check result
+            </div>
         </Typography>
         <div className={styles.flexBox}>
             <FormControl fullWidth className={styles.flexItem}>
