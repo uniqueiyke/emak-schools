@@ -114,6 +114,7 @@ const ResultCheckerForm = () => {
             <div className={styles.warning}>
                 For a better printing experience, it is advisable to check the result with a laptop or  a desktop computer not mobile device.
                 <br/>
+                <br/>
                 It is also advisable to use Google Chrome browser mainly when using mobile device to check result
             </div>
         </Typography>
