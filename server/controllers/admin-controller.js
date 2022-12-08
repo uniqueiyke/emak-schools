@@ -10,6 +10,7 @@ const { isEmptyArrayOrObject, formatPhoneNumber } = require('../libs/utility-fun
 const { validateFormFields } = require('../libs/validate-form-fields');
 const createGradeBookManager = require('../models/session-term-schema');
 const { subjects, terms } = require('../libs/subjects');
+const { hashPW } = require('../libs/password_hash');
 
 exports.send_staff_register_token = async (req, res) => {
     try {
@@ -131,7 +132,7 @@ exports.update_staff_roles = async (req, res) => {
 
         const staffs = await Staff.find();
         res.json(staffs);
-    }catch (err) {
+    } catch (err) {
         res.status(401).json(err.message);
     }
 
@@ -145,8 +146,67 @@ exports.update_staff_sujects = async (req, res) => {
 
         const staffs = await Staff.find();
         res.json(staffs);
-    }catch (err) {
+    } catch (err) {
         res.status(401).json(err.message);
+    }
+
+}
+
+exports.admin_register_staff = async (req, res) => {
+    try {
+
+        //Validate the data from the user inputs
+        const validateErr = validateFormFields(req.body, {
+            password: 'password',
+            password_match: 'password_match',
+            username: 'min_length',
+            email: 'email',
+            phone_number: 'phone',
+        }, { minLength: 8 });
+        if (!isEmptyArrayOrObject(validateErr)) {
+            return res.status(404).json(validateErr);
+        }
+
+        const {
+            username,
+            email,
+            phone_number,
+            password,
+            roles
+        } = req.body;
+
+        //Check if the is a user with the provided email already
+        const alreadyAcct = await Staff.findOne({ $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }, { phone_number: phone_number }] });
+        if (alreadyAcct) {
+            let message = {};
+            if (alreadyAcct.username === username) {
+                message.username = `${username} is not available`;
+            }
+
+            if (alreadyAcct.email === email || alreadyAcct.phone_number === phone_number) {
+                message.email = `An account with either email: ${email} or phone number: ${phone_number} already exist`;
+            }
+            console.log(`error occured: ${message}`)
+            return res.status(400).json({ message });
+        }
+
+        const hash = await hashPW(password);
+
+        const newStaff = new Staff({
+            username,
+            email,
+            phone_number: formatPhoneNumber(phone_number),
+            password: hash,
+            roles,
+        });
+
+        await newStaff.save();
+
+        const staffs = await Staff.find()
+        res.json(staffs);
+    } catch (error) {
+        console.log(error.message);
+        res.status(401).json(error.message);
     }
 
 }

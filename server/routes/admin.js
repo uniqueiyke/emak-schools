@@ -6,7 +6,7 @@ const {
     send_staff_register_token, 
     fetch_all_students, fetch_current_students,
     create_result_manager, fetch_all_staffs, update_staff_roles,
-    update_staff_sujects,
+    update_staff_sujects, admin_register_staff,
 } = require('../controllers/admin-controller');
 
 const { create_scratch_cards, fetch_all_scratch_cards, fetch_scratch_cards, print_card } = require('../controllers/scratch-card-controller');
@@ -22,5 +22,6 @@ router.post('/create/scratch-cards', auth('super-admin'), create_scratch_cards);
 router.get('/fetch/all/scratch-cards', auth('super-admin'), fetch_all_scratch_cards);
 router.get('/fetch/scratch-cards', auth('super-admin'), fetch_scratch_cards);
 router.post('/print-cards', auth('super-admin'), print_card);
+router.post('/register/new-staff', auth('super-admin'), admin_register_staff);
 
 module.exports = router;

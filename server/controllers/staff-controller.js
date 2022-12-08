@@ -1,6 +1,3 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
 const Staff = require('../models/staff');
 const StaffRegToken = require('../models/staff-registration-token');
 const getApikey = require('../libs/gen-api-key');
@@ -12,15 +9,8 @@ const sendEmail = require('../libs/send-email');
 const StaffPasswordReset = require('../models/staff-password-reset');
 const passwordResetEamil = require('../libs/password-reset-email');
 const successfulPasswordReset = require('../libs/successful-password-reset');
-
-const signInToken = (userData) => {
-    return jwt.sign(
-        { user: { id: userData._id, roles: userData.roles } },
-        process.env.jwtSecret,
-        { expiresIn: 86400 },
-    )
-}
-const SALT_ROUND = 10;
+const { signInToken } = require('../libs/sign-in-token');
+const { hashPW, isPwMatch } = require('../libs/password_hash');
 
 exports.register_staff = async (req, res) => {
     try {
@@ -77,7 +67,7 @@ exports.register_staff = async (req, res) => {
             return res.status(400).json({ message: "This link has expired. Call the schooladministrator to resend another link." })
         }
 
-        const hash = await bcrypt.hash(req.body.password, SALT_ROUND);
+        const hash = await hashPW(req.body.password);
 
         const newStaff = new Staff({
             username,
@@ -101,7 +91,8 @@ exports.register_staff = async (req, res) => {
             staff_data: staff
         });
     } catch (error) {
-        res.json(error);
+        // res.json(error);
+        res.status(401).json(error.message);
     }
 
 }
@@ -116,7 +107,7 @@ exports.login_staff = async (req, res) => {
         if (!staff) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
-        const isMatch = await bcrypt.compare(password, staff.password);
+        const isMatch = await isPwMatch(password, staff.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
@@ -174,7 +165,6 @@ exports.confirm_staff_reg_token = async (req, res) => {
 
         res.json(data);
     } catch (err) {
-        console.log(err.message);
         res.status(404).json(err.message);
     }
 }
@@ -196,7 +186,7 @@ exports.update_staff_data = async (req, res) => {
             }
             else if (field === 'username') {
                 err = validateFormFields({ [field]: req.body[field] }, { [field]: 'min_length' }, { minLength: 8 });
-            }else if (field === 'subjects') {
+            } else if (field === 'subjects') {
                 err = validateFormFields({ [field]: req.body[field] }, { [field]: 'array' });
             } else {
                 err = validateFormFields({ [field]: req.body[field] }, {
@@ -282,7 +272,7 @@ exports.reset_password = async (req, res) => {
             return res.status(400).json({ message: "Unidentify user. you do not have an account with us" });
         }
 
-        const passwordHash = await bcrypt.hash(password, SALT_ROUND);
+        const passwordHash = await hashPW(password);
         staffPWReset.old_reset_codes.push(staffPWReset.reset_code);
         staffPWReset.reset_code = undefined;
         staffPWReset.old_passwords.push(staff.password);

@@ -41,6 +41,8 @@ import {
     IS_FETCHING_RESULTSLIP,
     PRINT_CARDS_FAILED,
     PRINT_CARDS_SUCCEEDED,
+    ADMIN_REGISTER_STAFF_SUCCEEDED,
+    ADMIN_REGISTER_STAFF_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -104,6 +106,18 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     data: null,
                     error: null,
                     isFetchingAllStaffs: true,
+                    isAdminRegisterstaff: false,
+                }
+            }
+
+        case ADMIN_REGISTER_STAFF_SUCCEEDED:
+            return {
+                ...state,
+                staffs: {
+                    data: action.payload,
+                    error: null,
+                    isFetchingAllStaffs: false,
+                    isAdminRegisterstaff: true,
                 }
             }
 
@@ -115,22 +129,25 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 staffs: {
                     data: action.payload,
                     error: null,
-                    isFetchingStudents: false,
+                    isFetchingAllStaffs: false,
+                    isAdminRegisterstaff: false,
                 }
             }
 
         case UPDATE_STAFF_SUBJECTS_FAILED:
         case UPDATE_STAFF_ROLES_FAILED:
         case ALL_STAFFS_FETCH_FAILED:
+        case ADMIN_REGISTER_STAFF_FAILED:
             return {
                 ...state,
                 staffs: {
                     data: null,
                     error: action.payload,
-                    isFetchingStudents: false,
+                    isFetchingAllStaffs: false,
+                    isAdminRegisterstaff: false,
                 }
             }
-
+ 
 
         case CREATE_RESULT_MANAGER_SUCCEEDED:
             return {

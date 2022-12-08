@@ -129,6 +129,7 @@ const ResultCheckerForm = () => {
                     onChange={handleValueChange}
                     error={(errState.isError && errState.errorMsg.reg_number) ? true : false}
                     type='text'
+                    placeholder='2012/ES001'
                 />
             </FormControl>
             <FormControl fullWidth className={styles.flexItem}>

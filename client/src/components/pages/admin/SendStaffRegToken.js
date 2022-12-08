@@ -133,7 +133,7 @@ export default function SendStaffRegDetails() {
             setRegData(initialDataState);
             setKeyCode('');
         } else {
-            console.log(errors);
+            // console.log(errors);
             setFormSubmitErr(errors);
         }
     }

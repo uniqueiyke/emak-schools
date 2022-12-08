@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Home from '../pages/Home';
 import About from '../pages/About';
 import Contacts from '../pages/Contacts';
-import StaffRegForm from '../pages/staffs/StaffRegForm';
+import StaffRegistration from '../pages/staffs/StaffRegistration';
 import StudentRegForm from '../pages/students/StudentRegForm';
 import StaffLogin from '../pages/staffs/StaffLogin';
 import StaffProfile from '../pages/staffs/StaffProfile';
@@ -25,6 +25,7 @@ import GradeScoreForm from '../grade-book/GradeScoreForm';
 import ResultSheet from '../grade-book/ResultSheet';
 import ResultSlipByAdmin from '../grade-book/ResultSlipByAdmin';
 import AllStaff from '../pages/staffs/AllStaff';
+import RegisterStaff from '../pages/admin/RegisterStaff';
 import StudentsInClassPerTerm from '../grade-book/StudentsInClassPerTerm';
 import SubjectsListPerTerm from '../grade-book/SubjectsListPerTerm';
 import Cards from '../scratch-cards/Cards';
@@ -49,7 +50,7 @@ export default function Routers() {
                     <ToAdminPanel />
                 </AdminAuthRoute>
                 <Route exact path="/staff/registration">
-                    <StaffRegForm />
+                    <StaffRegistration />
                 </Route>
                 <AuthRoute exact path="/staff/data/profile">
                     <StaffProfile />
@@ -89,6 +90,9 @@ export default function Routers() {
                 </AdminAuthRoute>
                 <AdminAuthRoute exact superOnly path="/admin/all-staff" >
                     <AllStaff />
+                </AdminAuthRoute>
+                <AdminAuthRoute exact superOnly path="/admin/register-staff" >
+                    <RegisterStaff />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact superOnly path="/admin/students/class-termly" >
                     <StudentsInClassPerTerm />

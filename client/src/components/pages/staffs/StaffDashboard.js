@@ -47,7 +47,7 @@ function StaffDashboard() {
                         {(data && !isAdmin(true) && data.last_name === '') &&
                             <Typography className={styles.errMsg}>
                                 Please add your name to continue.
-                                <Link className={styles.toLink} component={RouteLink} to='/staff/profile' > Profile</Link>
+                                <Link className={styles.toLink} component={RouteLink} to='/staff/data/profile' > Profile</Link>
                             </Typography>
                         }
                         {(data && !isAdmin(true) && isEmptyArray(data.subjects)) &&
@@ -72,8 +72,6 @@ function StaffDashboard() {
                                 >
                                     <Typography variant='h6' component='span' align='center' >Please select the academic year, term, class and the subject for the GradeBook</Typography>
                                 </SessionTermClassModal>
-
-
                             </>
 
                         }

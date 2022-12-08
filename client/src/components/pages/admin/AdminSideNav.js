@@ -71,7 +71,7 @@ export default function AdminSideNav(props) {
                         <ListItem
                             button
                             key={'Admin-Add-Staff'}
-                            onClick={() => handleMobileLinkClick('#')}
+                            onClick={() => handleMobileLinkClick('/admin/register-staff')}
                             className={classes.listItems}
                             disableGutters
                         >

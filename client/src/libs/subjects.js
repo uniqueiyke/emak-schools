@@ -226,6 +226,23 @@ export const subjects = [
         offer_by: "all",
         short_title: "CAF"
     },
+    {
+        serial_code: 29,
+        subject_code: "029",
+        label: "History",
+        value: "history",
+        offer_by: "all",
+        short_title: "HIS"
+    },
+    {
+        serial_code: 30,
+        subject_code: "030",
+        label: "Vocational Studies",
+        value: "Voc_Stud",
+        offer_by: "all",
+        short_title: "PVS"
+    },
+    
 ]
 
 

@@ -42,6 +42,8 @@ import {
     IS_FETCHING_RESULTSLIP,
     PRINT_CARDS_FAILED,
     PRINT_CARDS_SUCCEEDED,
+    ADMIN_REGISTER_STAFF_SUCCEEDED,
+    ADMIN_REGISTER_STAFF_FAILED,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -250,6 +252,16 @@ const fetchResultSlipFailed = err => ({
 
 const isFetchResultSlip = () => ({
     type: IS_FETCHING_RESULTSLIP,
+})
+
+const adminRegisterStaffSucceeded = data => ({
+    type: ADMIN_REGISTER_STAFF_SUCCEEDED,
+    payload: data,
+})
+
+const adminRegisterStaffFailed = err => ({
+    type: ADMIN_REGISTER_STAFF_FAILED,
+    payload: err,
 })
 
 export const sendStaffRegistrationToken =  data => async dispatch => {
@@ -532,5 +544,20 @@ export const printCard = data => async dispatch => {
        return dispatch(printCardsSucceeded(responds.data));
     }catch(errors) {
         return dispatch(printCardsFailed(errors.response));
+    }
+}
+
+export const adminRegisterStaff = (data) => async dispatch => {
+    try {
+        const response = await axios({
+            url: '/admin/register/new-staff',
+            method: 'POST',
+            data: data,
+            headers: tokenConfig('application/json')
+        });
+
+        dispatch(adminRegisterStaffSucceeded(response.data));
+    } catch (errors) {
+        dispatch(adminRegisterStaffFailed(errorParser(errors.response)));
     }
 }
