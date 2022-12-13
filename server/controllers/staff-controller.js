@@ -292,3 +292,41 @@ exports.reset_password = async (req, res) => {
         res.status(401).json(error.message);
     }
 }
+
+exports.staff_reset_password = async (req, res) => {
+    try {
+        const {
+            old_password,
+            new_password,
+            password_match,
+            email,
+            phone_number,
+            username,
+            id
+        } = req.body
+
+        if (new_password !== password_match) {
+            return res.status(401).json({ message: 'The old password you provided is incorrect', success: false })
+        }
+
+        const staff = await Staff.findOne({ _id: id });
+
+        const isMatch = await isPwMatch(old_password, staff.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials", success: false });
+        }
+
+        if (staff.email !== email || staff.phone_number !== phone_number || staff.username !== username) {
+            return res.status(401).json({ message: "Invalid credentials", success: false })
+        }
+
+        const hash = await hashPW(new_password);
+        console.log(hash)
+        staff.password = hash;
+        await staff.save();
+        res.json({message: 'Your password has been changed.', success: true})
+    }
+    catch (error) {
+        res.status(401).json({message: error.message, success: false});
+    }
+}

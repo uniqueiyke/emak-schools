@@ -12,6 +12,10 @@ const useStyle = makeStyles({
         textAlign: 'center',
         padding: 10,
     },
+    regNumCell: {
+        color: '#f5bb63',
+        textDecoration: 'underline',
+    },
     link:{
         color: 'white',
     },
@@ -31,13 +35,13 @@ const useStyle = makeStyles({
           },
     }
   })
-
+ 
 const StudentsTableBodyData = ({studentData, onDoubleClick, index, onClick}) => {
     const classes = useStyle();
     return (
         <TableRow onDoubleClick={onDoubleClick} className={classes.rows} >
             <TableCell className={clsx(classes.tableCell, classes.firstRow)} >{index + 1}</TableCell>
-            <TableCell className={classes.tableCell} align="right">{studentData.reg_number}</TableCell>
+            <TableCell className={clsx(classes.tableCell, classes.regNumCell)} align="right" onClick={(onClick)}>{studentData.reg_number}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.last_name}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.first_name}</TableCell>
             <TableCell className={classes.tableCell} align="right">{studentData.name.other_names}</TableCell>

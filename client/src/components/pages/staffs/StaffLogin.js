@@ -177,7 +177,7 @@ const StaffLogin = () => {
           className={styles.submit}
           fullWidth
         >
-          Send
+          login
         </Button>
         <Grid container>
             <Grid item xs>

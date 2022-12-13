@@ -186,6 +186,7 @@ const StudentsTable = ({ studentsData, caption }) => {
                     key={studentData._id}
                     studentData={studentData}
                     index={index}
+                    onClick={() => goToPath(`/admin/students/student/profile/${studentData._id}`)}
                   // inputProps={{ 'aria-labelledby': labelId }}
                   />)
                 })

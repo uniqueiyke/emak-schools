@@ -44,6 +44,8 @@ import {
     PRINT_CARDS_SUCCEEDED,
     ADMIN_REGISTER_STAFF_SUCCEEDED,
     ADMIN_REGISTER_STAFF_FAILED,
+    ADMIN_RESETPASSWORD_FAILED,
+    ADMIN_RESETPASSWORD_SUCCEEDED,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -261,6 +263,16 @@ const adminRegisterStaffSucceeded = data => ({
 
 const adminRegisterStaffFailed = err => ({
     type: ADMIN_REGISTER_STAFF_FAILED,
+    payload: err,
+})
+
+const adminRestPasswordSucceeded = data => ({
+    type: ADMIN_RESETPASSWORD_SUCCEEDED,
+    payload: data,
+})
+
+const adminRestPasswordFailed =err => ({
+    type: ADMIN_RESETPASSWORD_FAILED,
     payload: err,
 })
 
@@ -559,5 +571,20 @@ export const adminRegisterStaff = (data) => async dispatch => {
         dispatch(adminRegisterStaffSucceeded(response.data));
     } catch (errors) {
         dispatch(adminRegisterStaffFailed(errorParser(errors.response)));
+    }
+}
+
+export const adminRestPassword = data => async dispatch => {
+    try {
+        const response = await axios({
+            url: '/admin/reset-password',
+            method: 'POST',
+            data: data,
+            headers: tokenConfig('application/json'),
+        })
+
+        dispatch(adminRestPasswordSucceeded(response.data))
+    } catch (error) {
+        dispatch(adminRestPasswordFailed(errorParser(error.response)))
     }
 }

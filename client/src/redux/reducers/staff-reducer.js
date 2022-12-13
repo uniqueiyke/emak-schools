@@ -22,6 +22,8 @@ import {
     GRADEBOOK_SCORE_UPDATE_SUCCEEDED,
     GRADEBOOK_SCORE_UPDATE_FAILED,
     IS_UPDATING_GRADEBOOK_SCORE,
+    STAFF_RESETPASSWORD_SUCCEEDED,
+    STAFF_RESETPASSWORD_FAILED,
 } from '../actions/action-types'
 import initialState from './initial-state';
 
@@ -205,6 +207,25 @@ const staffReducer = (state = initialState({ staff: true }), action) => {
                     ...state,
                     isUpdatingScores: true,
                 }
+
+        case STAFF_RESETPASSWORD_SUCCEEDED: 
+            return {
+                ...state,
+                passwordReset: {
+                    data: action.payload,
+                    error: null,
+                }
+            }
+
+        case STAFF_RESETPASSWORD_FAILED:
+            return {
+                ...state,
+                passwordReset: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+
         default:
             return state
     }

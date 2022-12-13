@@ -10,6 +10,7 @@ import {
     CardActions,
     CardContent,
     Hidden,
+    Link,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -17,10 +18,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
 import StaffProfileContentHelper from './StaffProfileContentHelper';
 import { updateStaffData } from '../../../redux/actions/staff-action';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
 import { subjectTitle } from '../../../libs/subjects';
+import ChangePassword from './ChangePassword';
 // import {subjects} from '../../../libs/subjects';
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 10,
         marginBottom: 10
     },
+    linkBtn: {
+        cursor: 'pointer',
+    },
 }));
 
 export default function StaffProfileData({ staff }) {
@@ -50,6 +55,7 @@ export default function StaffProfileData({ staff }) {
     const [isUpdating, setIsUpdating] = useState(false);
     const dispatch = useDispatch();
     const [namesError, setNamesError] = useState(null);
+    const pwReset = useSelector(state => state.staff.passwordReset)
     const { data, isUpdatingStaffData } = staff;
 
     const initState = {
@@ -58,6 +64,7 @@ export default function StaffProfileData({ staff }) {
         other_names: data ? data.other_names : '',
     };
     const [names, setNames] = useState(initState);
+    const [isEditPassword, setIsEditPassword] = useState(false);
 
     useEffect(() => {
         if (staff.error) {
@@ -294,18 +301,30 @@ export default function StaffProfileData({ staff }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                 />
-                {/* <StaffProfileContentHelper
-                    staff={staff}
-                    fieldLabel='Mobile Phone Numder'
-                    // fieldType='tel'
-                    fieldName='subjects'
-                    title='Subjects'
-                    titleStyle={classes.title}
-                    rootStyle={classes.root}
-                    multipleSelect
-                    labelId='st-subjets'
-                    listOptions={subjects}
-                /> */}
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Card className={classes.root}>
+                        <CardContent>
+                            {
+                                isEditPassword
+                                    ? <ChangePassword
+                                        onCanceled={() => setIsEditPassword(false)}
+                                       staffData={{
+                                        email: data.email, 
+                                        phone_number: data.phone_number,
+                                        username: data.username,
+                                        id: data._id,
+                                      }}
+                                      pwData={pwReset.data}
+                                      pwError={pwReset.error}
+                                    />
+                                    : <Link
+                                        className={classes.linkBtn}
+                                        onClick={() => setIsEditPassword(true)}
+                                    >Change Your password</Link>
+                            }
+                        </CardContent>
+                    </Card>
+                </Grid>
             </Grid>
         </Container>
     )

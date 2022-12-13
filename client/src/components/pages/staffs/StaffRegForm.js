@@ -278,7 +278,7 @@ const StaffRegForm = ({ data, isRegCode, token, onRegister }) => {
 
 export default StaffRegForm;
 
-StaffRegForm.prototype = {
+StaffRegForm.propTypes = {
     data: PropTypes.array,
     isRegCode: PropTypes.bool,
     onRegister: PropTypes.func.isRequired,

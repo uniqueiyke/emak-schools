@@ -210,3 +210,35 @@ exports.admin_register_staff = async (req, res) => {
     }
 
 }
+
+exports.admin_reset_password = async (req, res) => {
+    try {
+        const {
+            new_password,
+            password_match,
+            email,
+            phone_number,
+            username,
+            id
+        } = req.body
+
+        if (new_password !== password_match) {
+            return res.status(401).json({ message: 'The password did not match', success: false })
+        }
+
+        const staff = await Staff.findOne({ _id: id });
+
+        if (staff.email !== email || staff.phone_number !== phone_number || staff.username !== username) {
+            return res.status(401).json({ message: 'No matching user', success: false })
+        }
+
+        const hash = await hashPW(new_password);
+        console.log(hash)
+        staff.password = hash;
+        await staff.save();
+        res.json({message: 'The staff password has been changed.', success: true})
+    }
+    catch (error) {
+        res.status(401).json({message: error.message, success: false});
+    }
+}

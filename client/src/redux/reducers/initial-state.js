@@ -40,6 +40,10 @@ const initialState = (options = defaulOptions) => {
                 data: null,
                 error: null,
             },
+            passwordReset: {
+                data: null,
+                error: null,
+            }
         }
     }
 
@@ -94,6 +98,10 @@ const initialState = (options = defaulOptions) => {
                 error: null,
                 isFetchingScratchCard: false,
             },
+            passwordReset: {
+                data: null,
+                error: null,
+            }
         }
     }
 

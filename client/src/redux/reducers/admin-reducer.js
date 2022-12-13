@@ -43,6 +43,8 @@ import {
     PRINT_CARDS_SUCCEEDED,
     ADMIN_REGISTER_STAFF_SUCCEEDED,
     ADMIN_REGISTER_STAFF_FAILED,
+    ADMIN_RESETPASSWORD_SUCCEEDED,
+    ADMIN_RESETPASSWORD_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -328,6 +330,25 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isFetchingResult: false,
                 },
             }
+
+        case ADMIN_RESETPASSWORD_SUCCEEDED: 
+            return {
+                ...state,
+                passwordReset: {
+                    data: action.payload,
+                    error: null,
+                }
+            }
+
+        case ADMIN_RESETPASSWORD_FAILED:
+            return {
+                ...state,
+                passwordReset: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+
         default:
             return state
     }

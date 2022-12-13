@@ -11,11 +11,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MultipleSelect from '../../other-components/MultipleSelect';
 import { roles } from '../../../libs/staff-roles';
 import { subjects, subjectTitle } from '../../../libs/subjects';
 import { updateStaffRoles, updateStaffSubjects } from '../../../redux/actions/admin-action';
+import { setPageTitle } from '../../../libs/utility-functions';
+import ChangePassword from './ChangePassword';
 
 const useStyles = makeStyles({
   root: {
@@ -45,7 +47,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function UpDateStaffDataDialog({ label, labelId, listOptions, open, onClose, onSubmit, value, onChange, name }) {
+function UpDateStaffDataDialog({ label, labelId, listOptions, open, onClose, onSubmit, value, onChange, name, dialogTitle }) {
+  setPageTitle('Staff List')
 
   return (
     <div>
@@ -57,7 +60,7 @@ function UpDateStaffDataDialog({ label, labelId, listOptions, open, onClose, onS
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{dialogTitle}</DialogTitle>
         <DialogContent>
           <MultipleSelect
             listOptions={listOptions}
@@ -90,8 +93,9 @@ const Staff = ({ staff }) => {
   const [updateSubjects, setUpdateSubjects] = useState(false);
   const [subjectsValue, setSubjectsValue] = useState(staff.subjects ? staff.subjects : []);
 
+  const [openResetPassword, toggleResetPassword] = useState(false);
   const dispatch = useDispatch()
-
+  const {data, error} = useSelector(state => state.admin.passwordReset);
   const handleRolesDailogClose = () => {
     setUpdateRole(false);
   }
@@ -159,6 +163,7 @@ const Staff = ({ staff }) => {
             label='Staff Roles'
             listOptions={roles}
             labelId='staff-roles'
+            dialogTitle={'Update Staff Roles'}
           />
         </Typography>
         <Typography component='h5' variant='subtitle1' align='left'>
@@ -181,11 +186,38 @@ const Staff = ({ staff }) => {
             label='Subjects'
             listOptions={subjects}
             labelId='subjectsID'
+            dialogTitle={"Update Staff Subjects"}
           />
         </Typography>
+        <Dialog
+          open={openResetPassword}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={() => {toggleResetPassword(false)}}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>Update Staff Password</DialogTitle>
+          <DialogContent>
+            <ChangePassword 
+            isAdmin={true} 
+            onCanceled={() => {toggleResetPassword(false)}} 
+            staffData={{
+              email: staff.email, 
+              phone_number: staff.phone_number,
+              username: staff.username,
+              id: staff._id
+            }}
+            pwError={error}
+            pwData={data}
+            />
+          </DialogContent>
+          <DialogActions>
+          </DialogActions>
+        </Dialog>
       </CardContent>
       <CardActions>
-
+        <Link className={classes.roleBtn} onClick={() => toggleResetPassword(true)} > reset staff password</Link>
       </CardActions>
     </Card>
   );

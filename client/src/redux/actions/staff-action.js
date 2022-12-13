@@ -22,6 +22,8 @@ import {
     GRADEBOOK_SCORE_UPDATE_SUCCEEDED,
     GRADEBOOK_SCORE_UPDATE_FAILED,
     IS_UPDATING_GRADEBOOK_SCORE,
+    STAFF_RESETPASSWORD_SUCCEEDED,
+    STAFF_RESETPASSWORD_FAILED,
 } from './action-types';
 
 import axios from 'axios';
@@ -136,6 +138,16 @@ const updateGradeBookScoreFailed = err => ({
 
 const isUpdatingGradeBookScore = err => ({
     type: IS_UPDATING_GRADEBOOK_SCORE,
+})
+
+const staffRestPasswordSucceeded = data => ({
+    type: STAFF_RESETPASSWORD_SUCCEEDED,
+    payload: data,
+})
+
+const staffRestPasswordFailed =err => ({
+    type: STAFF_RESETPASSWORD_FAILED,
+    payload: err,
 })
 
 
@@ -286,5 +298,21 @@ export const updateGradeBookScore = (data, params) => async dispatch => {
         dispatch(updateGradeBookScoreSucceeded(responds.data));
     }catch(errors) {
         dispatch(updateGradeBookScoreFailed(errorParser(errors.response)))
+    }
+}
+
+
+export const staffRestPassword = data => async dispatch => {
+    try {
+        const response = await axios({
+            url: '/staffs/reset-password',
+            method: 'POST',
+            data: data,
+            headers: tokenConfig('application/json'),
+        })
+
+        dispatch(staffRestPasswordSucceeded(response.data))
+    } catch (error) {
+        dispatch(staffRestPasswordFailed(errorParser(error.response)))
     }
 }

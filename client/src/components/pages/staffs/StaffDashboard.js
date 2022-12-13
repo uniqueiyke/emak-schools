@@ -25,6 +25,9 @@ const useStyles = makeStyles({
     toLink: {
         color: 'blue',
     },
+    nameTypo: {
+        color: '#9ad4ec'
+    },
 })
 function StaffDashboard() {
     setPageTitle('Dashboard');
@@ -40,7 +43,7 @@ function StaffDashboard() {
     else {
         return (
             <>
-                <Typography variant='h3'>Staff Dashboard</Typography>
+                <Typography className={styles.nameTypo} variant='subtitle2'>{`${data.last_name} ${data.first_name}`}</Typography>
 
                 <Grid container spacing={1}>
                     <Grid item xs={12} md={6} xl={4}>

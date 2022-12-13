@@ -249,7 +249,7 @@ export const validateFormFields = (inputFields, fieldsToValidate, options = defa
                     phoneField.fieldName = field;
                 }
                 else if (fieldsToValidate[field] === 'password') {
-                    formFieldsValidator.field(field).isPasswordStrong().withMessage('This password is too weak. Your password should have at least one upper case leter, one lower case letter, one nomber and one special character');
+                    formFieldsValidator.field(field).isPasswordStrong().withMessage('This password is too weak. Your password should have at least one upper case leter, one lower case letter, one number and one special character');
                 }
                 else if (fieldsToValidate[field] === 'max_length') {
                     formFieldsValidator.field(field).trim().isLength({ maxLength: options.maxLength }).withMessage('The text is too long');

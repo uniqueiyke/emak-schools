@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavDrawer from './NavDrawer';
 import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-
-import {drawerWidth} from "../../libs/css-constants";
-
+import { drawerWidth } from "../../libs/css-constants";
+import { useSelector } from "react-redux"
 const useStyles = makeStyles((theme) => ({
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -36,46 +35,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SideNav = ({toggleNav, mobileOpen, ...props}) => {
-    const classes = useStyles();
-    const { window } = props;
-
+const SideNav = ({ toggleNav, mobileOpen, ...props }) => {
+  const classes = useStyles();
+  const { window } = props;
   const container = window !== undefined ? () => window().document.body : undefined;
- 
-  return (
-        <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <NavDrawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={toggleNav}
-            classes={{
-                paper: classes.drawerPaper,
-              }}
-            ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-          >
+  const { data } = useSelector(state => state.staff.staff);
+  const [staffID, setStaffID] = useState('');
 
-          </NavDrawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <NavDrawer
-            classes={{
-                paper: classes.drawerPaper,
-              }}
-            variant="permanent"
-            open
-          ></NavDrawer>
-        </Hidden>
-      </nav>
-    )
+  useEffect(() => {
+    if(data && data._id.toString() === staffID){
+      setStaffID(data._id.toString())
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  return (
+    <nav className={classes.drawer} aria-label="mailbox folders">
+      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+      <Hidden smUp implementation="css">
+        <NavDrawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={toggleNav}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+
+        </NavDrawer>
+      </Hidden>
+      <Hidden xsDown implementation="css">
+        <NavDrawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          variant="permanent"
+          open
+        ></NavDrawer>
+      </Hidden>
+    </nav>
+  )
 }
 
 SideNav.propTypes = {
-    window: PropTypes.func,
-  };
+  window: PropTypes.func,
+};
 
 export default SideNav
