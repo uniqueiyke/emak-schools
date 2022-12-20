@@ -223,6 +223,22 @@ exports.subjects = {
         offer_by: "all",
         short_title: "CAF"
     },
+    history: {
+        serial_code: 29,
+        subject_code: "029",
+        label: "History",
+        value: "history",
+        offer_by: "all",
+        short_title: "HIS"
+    },
+    Voc_Stud: {
+        serial_code: 30,
+        subject_code: "030",
+        label: "Vocational Studies",
+        value: "Voc_Stud",
+        offer_by: "all",
+        short_title: "PVS"
+    },
 }
 
 
