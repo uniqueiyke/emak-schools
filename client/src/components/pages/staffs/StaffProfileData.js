@@ -23,6 +23,7 @@ import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
 import { subjectTitle } from '../../../libs/subjects';
 import ChangePassword from './ChangePassword';
+import { gender } from '../../../libs/students-data';
 // import {subjects} from '../../../libs/subjects';
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -274,6 +275,16 @@ export default function StaffProfileData({ staff }) {
                         </CardActions>
                     </Card>
                 </Grid>
+                <StaffProfileContentHelper
+                    staff={staff}
+                    fieldLabel='Gender'
+                    fieldName='gender'
+                    title='Gender'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    singleSelect
+                    listOptions={gender}
+                />
                 <StaffProfileContentHelper
                     staff={staff}
                     fieldLabel='Email'

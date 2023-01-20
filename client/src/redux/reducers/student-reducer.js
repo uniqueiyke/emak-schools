@@ -9,6 +9,10 @@ import {
     FETCH_RESULTSLIP_SUCCEEDED,
     FETCH_RESULTSLIP_FAILED,
     IS_FETCHING_RESULTSLIP,
+    UPDATE_PARENT_DATA_SUCCEEDED,
+    UPDATE_PARENT_DATA_FAILED,
+    ADD_PARENT_DATA_FAILED,
+    ADD_PARENT_DATA_SUCCEEDED,
 } from '../actions/action-types'
 import initialState from './initial-state';
 
@@ -19,7 +23,7 @@ const studentReducer = (state = initialState({ student: true }), action) => {
             return {
                 ...state,
                 student: {
-                    data: {...action.payload, new_registration: true},
+                    data: { ...action.payload, new_registration: true },
                     error: null,
                     isFetchingAStudent: false,
                 }
@@ -27,6 +31,8 @@ const studentReducer = (state = initialState({ student: true }), action) => {
 
         case FETCHING_A_STUDENT_SUCCEEDED:
         case UPDATE_STUDENT_DATA_SUCCEEDED:
+        case UPDATE_PARENT_DATA_SUCCEEDED:
+        case ADD_PARENT_DATA_SUCCEEDED:
             return {
                 ...state,
                 student: {
@@ -39,6 +45,8 @@ const studentReducer = (state = initialState({ student: true }), action) => {
         case NEW_STUDENT_REGISTRATION_FAILED:
         case FETCHING_A_STUDENT_FAILED:
         case UPDATE_STUDENT_DATA_FAILED:
+        case UPDATE_PARENT_DATA_FAILED:
+        case ADD_PARENT_DATA_FAILED:
             return {
                 ...state,
                 student: {
@@ -57,7 +65,8 @@ const studentReducer = (state = initialState({ student: true }), action) => {
                     isFetchingAStudent: true,
                 }
             }
-            case IS_FETCHING_RESULTSLIP:
+
+        case IS_FETCHING_RESULTSLIP:
             return {
                 ...state,
                 result: {
@@ -86,6 +95,7 @@ const studentReducer = (state = initialState({ student: true }), action) => {
                     isFetchingResult: false,
                 },
             }
+
         default:
             return state
     }

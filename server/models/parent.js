@@ -7,6 +7,7 @@ const ParentSchema = new Schema({
     phone_number: {type: String, default: ""},
     email: {type: String, lowercase: true , default: ""},
     occpation: {type: String, default: ""},
+    relationship: {type: String, default: "father", enum: ['father', 'mother', 'guardian']},
     office: {type: AddressSchema, default: () => ({})},
     children: [{type: Schema.Types.ObjectId, ref: 'Student'}],
 })

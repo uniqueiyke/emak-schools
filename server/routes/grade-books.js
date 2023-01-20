@@ -20,4 +20,17 @@ router.get('/fetch/subjects/class/term', staffAuth('super-admin'), fetch_termly_
 router.post('/delete/subject/from-class/termly-subjects', staffAuth('super-admin'), delete_subject_from_class_termly_subjects);
 router.post('/student/result/checker',  check_result);
 
+// router.get('/test', (req, res)=> {
+//     console.log(req.headers.date)
+//     console.log(req.headers['access-control-max-age'])
+//     console.log(req.headers.age)
+//     console.log(req.headers['access-control-expose-headers'])
+//     console.log(req.headers['user-agent'])
+//     console.log(req.headers.authorization)
+//     console.log(req.headers.cookie)
+//     console.log(req.headers.host)
+//     console.log(req.headers['last-modified'])
+//     console.log(req.headers.location)
+
+// })
 module.exports = router;

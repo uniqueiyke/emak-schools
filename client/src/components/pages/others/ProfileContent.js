@@ -15,28 +15,30 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import SendIcon from '@material-ui/icons/Send';
 import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
-import { isEmptyArrayOrObject, 
+import {
+    isEmptyArrayOrObject,
     formatPhoneNumber, parseInputValue,
-    formatDatePrint, isValidDate, 
+    formatDatePrint, isValidDate,
 } from '../../../libs/utility-functions';
 import SingleSelect from '../../other-components/SingleSelect';
-import { updateStudentData } from '../../../redux/actions/student-action';
+import MultipleSelect from '../../other-components/MultipleSelect';
+// import { updateStudentData } from '../../../redux/actions/student-action';
 const ProfileContent = ({
     profileData, rootStyle, titleStyle,
     title, fieldType, fieldName,
-    fieldLabel, select,
-    listOptions, labelId, onChange, className,
+    fieldLabel, select, onUpdate, multipleSelect,
+    listOptions, labelId, className,
 }) => {
 
     const { data } = profileData;
     const [editMode, isEditMode] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
-    const [editValue, setValue] = useState((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
+    const [editValue, setValue] = useState((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]) : '');
     const [valueError, setValueError] = useState(null);
 
     const dispatch = useDispatch();
     const checkVal = data[fieldName];
-    
+
     useEffect(() => {
         if (profileData.error) {
             const key = Object.keys(profileData.error.message)
@@ -45,9 +47,9 @@ const ProfileContent = ({
         }
         isEditMode(false);
         setIsUpdating(false);
-        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]) : '');
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [profileData.error, checkVal])
 
     const handleValueChange = e => {
@@ -55,7 +57,7 @@ const ProfileContent = ({
     }
 
     const cancelEditValue = () => {
-        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
+        setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]) : '');
         isEditMode(false);
         setValueError(null);
     }
@@ -70,6 +72,9 @@ const ProfileContent = ({
         else if (fieldName === 'phone_number') {
             err = validateFormFields({ [fieldName]: editValue }, { [fieldName]: 'phone' });
         }
+        else if (fieldName === 'classes_been') {
+            err = validateFormFields({ [fieldName]: editValue }, { [fieldName]: 'array' });
+        }
         else {
             err = validateFormFields({ [fieldName]: editValue }, { [fieldName]: '' });
         }
@@ -78,12 +83,12 @@ const ProfileContent = ({
             setValueError(err);
         } else {
             if (fieldName === 'phone_number') {
-                dispatch(updateStudentData({ [fieldName]: formatPhoneNumber(editValue) }, data._id));
+                dispatch(onUpdate({ [fieldName]: formatPhoneNumber(editValue) }, data._id));
             } else {
-                dispatch(updateStudentData({ [fieldName]: editValue }, data._id));
+                dispatch(onUpdate({ [fieldName]: editValue }, data._id));
             }
             setValueError(null);
-            setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]): '');
+            setValue((data && (data[fieldName] !== undefined || data[fieldName] !== 'undefined')) ? parseInputValue(data[fieldName]) : '');
             isEditMode(false);
             setIsUpdating(true);
         }
@@ -112,28 +117,56 @@ const ProfileContent = ({
                                         required
                                         error={valueError ? true : false}
                                     />
-                                    : <FormControl fullWidth >
-                                        <TextField
-                                            name={fieldName}
-                                            label={fieldLabel}
-                                            variant="outlined"
-                                            required
+                                    : multipleSelect
+                                        ?
+                                        <MultipleSelect
+                                            listOptions={listOptions}
+                                            labelId={labelId}
                                             helperText={(valueError && valueError[fieldName]) && valueError[fieldName]}
-                                            value={editValue}
+                                            label={fieldLabel}
                                             onChange={handleValueChange}
+                                            value={editValue}
+                                            name={fieldName}
+                                            required
                                             error={valueError ? true : false}
-                                            disabled={isUpdating}
-                                            type={fieldType ? fieldType : 'text'}
                                         />
-                                    </FormControl>
+                                        : <FormControl fullWidth >
+                                            <TextField
+                                                name={fieldName}
+                                                label={fieldLabel}
+                                                variant="outlined"
+                                                required
+                                                helperText={(valueError && valueError[fieldName]) && valueError[fieldName]}
+                                                value={editValue}
+                                                onChange={handleValueChange}
+                                                error={valueError ? true : false}
+                                                disabled={isUpdating}
+                                                type={fieldType ? fieldType : 'text'}
+                                            />
+                                        </FormControl>
                             }
 
                         </>
                         :
                         <Typography component='div' align='center'>
-                            <Typography color="textSecondary" component='span'>
-                                {!isValidDate(data[fieldName]) ? data[fieldName] : formatDatePrint(data[fieldName])}
-                            </Typography>
+                            {
+                                !data[fieldName] ? <Typography color='error' >{`Please provide this data(${title})`}</Typography>
+                                    : <Typography color="textSecondary" component='span'>
+                                        {
+                                            fieldName === 'classes_been' ?
+                                                data[fieldName].map(
+                                                    (c, index) => {
+                                                        if (index < data[fieldName].length - 1)
+                                                            return <Typography key={c} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${c.toUpperCase()}, `} </Typography>
+                                                        else
+                                                            return <Typography key={c} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${c.toUpperCase()} `} </Typography>
+                                                    }) :
+                                                !isValidDate(data[fieldName]) ?
+                                                    data[fieldName] :
+                                                    formatDatePrint(data[fieldName])
+                                        }
+                                    </Typography>
+                            }
                             <IconButton
                                 disabled={isUpdating}
                                 color='primary'
@@ -182,7 +215,6 @@ const ProfileContent = ({
                             </IconButton>
                         </>
                     }
-
                 </CardActions>
             </Card>
         </Grid>

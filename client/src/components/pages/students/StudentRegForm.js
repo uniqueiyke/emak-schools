@@ -46,6 +46,7 @@ const StudentRegForm = () => {
     blood_group: '',
     parent_last_name: '',
     parent_first_name: '',
+    relationship: 'father',
     parent_phone_number: '',
     parent_email: '',
     last_sch_attend: '',
@@ -88,11 +89,12 @@ const StudentRegForm = () => {
       blood_group: 'select',
       parent_last_name: 'min_length',
       parent_first_name: 'min_length',
+      relationship: 'min_length',
       parent_phone_number: 'phone',
       parent_email: 'email',
       last_sch_attend: 'min_length',
       parent_occpation: 'min_length'
-    }, { optionalFields: ['parent_email', 'date_of_birth', 'blood_group', 'genotype', 'other_names', 'last_sch_attend', 'parent_occpation'], minLength: 3 });
+    }, { optionalFields: ['parent_email', 'date_of_birth', 'blood_group', 'genotype', 'other_names', 'last_sch_attend'], minLength: 3 });
     if (isEmptyArrayOrObject(regDataErr)) {
       dispatch(registerStudent({
         ...regData,
@@ -242,6 +244,6 @@ const StudentRegForm = () => {
       </form>
     </>
   )
-}
+} 
 
 export default StudentRegForm

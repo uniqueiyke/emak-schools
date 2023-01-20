@@ -7,7 +7,7 @@ import useLogout from '../../hooks/useLogout';
 import { logoutStaff } from '../../redux/actions/staff-action';
 import { useHistory } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+// import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import { ListItemIcon } from '@material-ui/core';
 import { themeColor } from '../../libs/css-constants';
 import BallotIcon from '@material-ui/icons/Ballot';
@@ -61,15 +61,6 @@ export default function ConditionalNavLink({ onClose, ...props }) {
                 >
                     <ListItemIcon  ><DashboardIcon className={classes.listItemIcon} /></ListItemIcon>
                     <ListItemText disableTypography className={classes.listItemText} primary={'Dashboard'} />
-                </ListItem>
-                <ListItem
-                    button
-                    key={'profile'}
-                    onClick={() => handleMobileLinkClick('/staff/data/profile')}
-                    className={classes.listItems}
-                >
-                    <ListItemIcon ><AccountBoxIcon className={classes.listItemIcon} /></ListItemIcon>
-                    <ListItemText primary={'Profile'} className={classes.listItemText} disableTypography />
                 </ListItem>
                 {isAdmin() &&
                     <ListItem 

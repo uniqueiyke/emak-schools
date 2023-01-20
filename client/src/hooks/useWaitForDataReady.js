@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react';
 
 export default function useWaitForDataReady(data) {
     const intervalIDRef = useRef(null);
@@ -18,5 +18,5 @@ export default function useWaitForDataReady(data) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data])
 
-    return isDataReady
+    return isDataReady;
 }

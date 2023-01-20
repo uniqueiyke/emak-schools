@@ -2,7 +2,7 @@ const {Schema, model} = require('mongoose');
 const AddressSchema = require('./address-schema');
 const NameSchema = require('./name-schema');
 
-const classEnum = ["jss1", "jss2", "jss3", "ss1", "ss2", "ss3", "none"];
+const classEnum = ["jss1", "jss2", "jss3", "ss1", "ss2", "ss3", "graduate", "none"];
 const StudentRegSchema = new Schema({
     serial_number: {type: Number, require: true, unique: true},
     reg_number: {type: String, require: true, trim: true, unique: true},

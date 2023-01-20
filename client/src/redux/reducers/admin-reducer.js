@@ -45,6 +45,8 @@ import {
     ADMIN_REGISTER_STAFF_FAILED,
     ADMIN_RESETPASSWORD_SUCCEEDED,
     ADMIN_RESETPASSWORD_FAILED,
+    UPDATE_STUDENTS_CLASS_SUCCEEDED,
+    UPDATE_STUDENTS_CLASS_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -149,7 +151,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                     isAdminRegisterstaff: false,
                 }
             }
- 
+
 
         case CREATE_RESULT_MANAGER_SUCCEEDED:
             return {
@@ -331,7 +333,7 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
                 },
             }
 
-        case ADMIN_RESETPASSWORD_SUCCEEDED: 
+        case ADMIN_RESETPASSWORD_SUCCEEDED:
             return {
                 ...state,
                 passwordReset: {
@@ -344,6 +346,24 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 passwordReset: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+
+        case UPDATE_STUDENTS_CLASS_SUCCEEDED:
+            return {
+                ...state,
+                updateClass: {
+                    data: action.payload,
+                    error: null,
+                }
+            }
+
+        case UPDATE_STUDENTS_CLASS_FAILED:
+            return {
+                ...state,
+                updateClass: {
                     data: null,
                     error: action.payload,
                 }

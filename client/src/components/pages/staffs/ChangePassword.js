@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -12,8 +11,6 @@ import SendIcon from '@material-ui/icons/Send';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Avatar from '@material-ui/core/Avatar';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { isEmptyString, isEmptyArrayOrObject, setPageTitle } from '../../../libs/utility-functions';
@@ -156,9 +153,7 @@ const ChangePassword = ({onCanceled, isAdmin, staffData, pwError, pwData}) => {
           : "To change your password, you need to provide the old password and the new passowrd you will like to be using."
           }
         </Typography>
-        <Avatar className={styles.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+       <br />
         <form onSubmit={handleSubmit} noValidate>
           {!isAdmin && <FormControl
             className={styles.formField}
@@ -199,9 +194,9 @@ const ChangePassword = ({onCanceled, isAdmin, staffData, pwError, pwData}) => {
             required
             error={(formSubmitErr && formSubmitErr.new_password) ? !isEmptyString(formSubmitErr.new_password) : false}
             fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">New Password</InputLabel>
             <OutlinedInput
-              id="new_password"
+              // id="new_password"
               name="new_password"
               type={showPassword ? 'text' : 'password'}
               value={resetPW.new_password}
@@ -232,9 +227,8 @@ const ChangePassword = ({onCanceled, isAdmin, staffData, pwError, pwData}) => {
             required
             error={(formSubmitErr && formSubmitErr.password_match) ? !isEmptyString(formSubmitErr.password_match) : false}
             fullWidth>
-            <InputLabel htmlFor="password_match">Password Match</InputLabel>
+            <InputLabel htmlFor="password_match">Confirm New Password</InputLabel>
             <OutlinedInput
-              id="password_match"
               name="password_match"
               type={showPassword ? 'text' : 'password'}
               value={resetPW.password_match}

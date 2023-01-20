@@ -53,17 +53,18 @@ const SingleSelect = ({
           label={label}
           {...props}
         >
-          {listOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+          {listOptions.map((option) => {
+            const val = option.value ? option.value : option
+            return(<MenuItem key={val} value={val}>
               <GreenRadio
-                checked={value === option.value}
+                checked={value === val}
                 onChange={onChange}
                 value={value}
                 name={name}
               />
-              {option.label}
+              {option.label ? option.label : option}
             </MenuItem>
-          ))}
+          )})}
         </Select>
         <FormHelperText error={error}>{helperText}</FormHelperText>
       </FormControl>

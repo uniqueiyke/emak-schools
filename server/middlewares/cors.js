@@ -1,41 +1,38 @@
 const defaultOption = {
-    origin: '*',
-    methods: 'GET, HEAD, PUT, PATCH, POST',
-    headers: '*'
+    origin: '',
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST'],
+    headers: '',
+    allowAllOrigin: false,
+    allowAllHeaders: false,
 };
 
-/**
- * 
- * @param {Array} orsOption 
- */
-const parseCorsOption = (orsOption) => {
-    if(typeof(orsOption) === 'string'){
-        return orsOption;
-    }else if(typeof(origin) === 'object' && Array.isArray(headers)){
-        return orsOption.join(', ');
-    }
-    return '';
-}
-
-const parseCorsHeaders = (headers) => {
-    if(typeof(headers) === 'string'){
-        return  headers;
-    }else if(typeof(headers) === 'object' && Array.isArray(headers)){
+const parseHeaders = (headers) => {
+    if (typeof (headers) === 'string') {
+        return headers;
+    } else if (typeof (headers) === 'object' && Array.isArray(headers)) {
         return headers.join(', ');
     }
     return '';
 }
 
-const parseCorsMethods = (methods) => {
-    if(typeof(methods) === 'string'){
-        return  `${methods}, ${defaultOption.methods}`;
-    }else if(typeof(methods) === 'object' && Array.isArray(methods)){
-        return `${methods.join(', ')}, ${defaultOption.methods}`;
+const parseMethods = (methods) => {
+    if(methods){
+        const tempArr = [...defaultOption.methods];
+        
+            const sl = (typeof (methods) === 'string') ? methods.split(',')
+            : (typeof (methods) === 'object' && Array.isArray(methods)) ? [...methods]
+            : [];
+
+            for(let s of sl){
+                const st = s.toUpperCase().trim()
+                if(!defaultOption.methods.includes(st)){
+                    tempArr.push(st)
+                }
+            }
+            return tempArr.join(', ');
     }
-    return '';
+    return defaultOption.methods.join(', ');
 }
-
-
 
 /**
  * @description cors middleware to Access-Control-Allow-Origin
@@ -45,24 +42,46 @@ const parseCorsMethods = (methods) => {
  * @param {String | Array} origin 
  */
 const cors = (options = defaultOption) => {
-    const origin = options.origin;
-    const headers = parseCorsHeaders(options.headers ? options.headers : defaultOption.headers);
-    const methods = parseCorsMethods(options.methods ? options.methods : defaultOption.methods);
+    let origin = '';
+    let headers = '';
+    const methods = parseMethods(options.methods);
+    const allowAllOrigin = options.allowAllOrigin ? options.allowAllOrigin : defaultOption.allowAllOrigin;
+    const allowAllHeaders = options.allowAllHeaders ? options.allowAllHeaders : defaultOption.allowAllHeaders;
+    
+    if(typeof(options) === 'string'){
+        origin = options;
+    }else{
+        origin = options.origin;
+    }
+    
+    if(allowAllHeaders === true){
+        headers = '*';
+    }else {
+        headers = parseHeaders(options.headers ? options.headers : defaultOption.headers);
+    }
+    
     return (
         (req, res, next) => {
             res.set('Access-Control-Allow-Headers', headers);
             res.set('Access-Control-Allow-Methods', methods);
-            if(typeof(origin) === 'string'){
-                res.set('Access-Control-Allow-Origin', origin);
-            }else if(typeof(origin) === 'object' && Array.isArray(origin)){
+            if(allowAllOrigin === true) {
+                res.set('Access-Control-Allow-Origin', '*');
+            } else if (typeof (origin) === 'string') {
                 try {
-                    const url = new URL(req.header('Referer'));s
-                    if(origin.includes(url.origin))
+                    const url = new URL(origin);
+                    res.set('Access-Control-Allow-Origin', url.origin);
+                } catch (error) {
+                    return next()
+                }
+            } else if (typeof (origin) === 'object' && Array.isArray(origin)) {
+                try {
+                    const url = new URL(req.header('Referer'));
+                    if (origin.includes(url.origin))
                         res.set('Access-Control-Allow-Origin', url.origin);
                 } catch (error) {
                     return next()
                 }
-                    
+
             }
             next();
         }

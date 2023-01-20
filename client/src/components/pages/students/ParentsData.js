@@ -5,6 +5,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import PhoneIcon from '@material-ui/icons/Phone';
 import EmailIcon from '@material-ui/icons/Email';
 import { isEmptyString } from '../../../libs/utility-functions';
+import SingleSelect from '../../other-components/SingleSelect';
 
 const ParentsData = ({styles, parentData, inputErrMsg, handleDataChange}) => {
     return (
@@ -33,6 +34,18 @@ const ParentsData = ({styles, parentData, inputErrMsg, handleDataChange}) => {
                     helperText={(inputErrMsg && inputErrMsg.parent_first_name) && inputErrMsg.parent_first_name}
                 />
             </FormControl>
+            <SingleSelect
+                listOptions={[{label: 'Father', value: 'father'}, {label: 'Mother', value: 'mother'}, {label: 'Guardian', value: 'guardian'}]}
+                name='relationship'
+                value={parentData.relationship}
+                label={'Relationship with Student'}
+                labelId='relationshipId'
+                required
+                onChange={handleDataChange}
+                className={styles.formField}
+                error={(inputErrMsg && inputErrMsg.relationship) ? !isEmptyString(inputErrMsg.relationship) : false}
+                    helperText={(inputErrMsg && inputErrMsg.relationship) && inputErrMsg.relationship}
+            />
             <FormControl fullWidth className={styles.formField}>
                 <TextField name="parent_phone_number"
                     label="Phone Number"

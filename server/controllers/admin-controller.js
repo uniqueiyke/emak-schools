@@ -186,7 +186,6 @@ exports.admin_register_staff = async (req, res) => {
             if (alreadyAcct.email === email || alreadyAcct.phone_number === phone_number) {
                 message.email = `An account with either email: ${email} or phone number: ${phone_number} already exist`;
             }
-            console.log(`error occured: ${message}`)
             return res.status(400).json({ message });
         }
 
@@ -233,12 +232,70 @@ exports.admin_reset_password = async (req, res) => {
         }
 
         const hash = await hashPW(new_password);
-        console.log(hash)
         staff.password = hash;
         await staff.save();
         res.json({message: 'The staff password has been changed.', success: true})
     }
     catch (error) {
         res.status(401).json({message: error.message, success: false});
+    }
+}
+
+exports.update_student_class = async (req, res) => {
+    try {
+        const students = await Student.find({ status: 'student' }, [ 'current_class', 'status', 'graduated_at', 'classes_been']);
+        for(let student of students){
+            if(student.current_class === 'jss1'){
+                student.current_class = 'jss2';
+                if(!student.classes_been.includes('jss1')){
+                    student.classes_been.push('jss1');
+                }
+                if(!student.classes_been.includes('jss2')){
+                    student.classes_been.push('jss2');
+                }
+            }else if(student.current_class === 'jss2'){
+                student.current_class = 'jss3';
+                if(!student.classes_been.includes('jss2')){
+                    student.classes_been.push('jss2');
+                }
+                if(!student.classes_been.includes('jss3')){
+                    student.classes_been.push('jss3');
+                }
+            }else if(student.current_class === 'jss3'){
+                student.current_class = 'ss1';
+                if(!student.classes_been.includes('jss3')){
+                    student.classes_been.push('jss3');
+                }
+                if(!student.classes_been.includes('ss1')){
+                    student.classes_been.push('ss1');
+                }
+            }else if(student.current_class === 'ss1'){
+                student.current_class = 'ss2';
+                if(!student.classes_been.includes('ss1')){
+                    student.classes_been.push('ss1');
+                }
+                if(!student.classes_been.includes('ss2')){
+                    student.classes_been.push('ss2');
+                }
+            }else if(student.current_class === 'ss2'){
+                student.current_class = 'ss3';
+                if(!student.classes_been.includes('ss2')){
+                    student.classes_been.push('ss2');
+                }
+                if(!student.classes_been.includes('ss3')){
+                    student.classes_been.push('ss3');
+                }
+            }else if(student.current_class === 'ss3'){
+                student.current_class = 'graduate';
+                student.status = 'graduate';
+                if(!student.classes_been.includes('ss3')){
+                    student.classes_been.push('ss3');
+                }
+            }
+            await student.save();
+        }
+        res.json({message: 'Classes updated successfully'});
+    } catch (err) {
+        res.status(401).json(err.message);
     }
 }

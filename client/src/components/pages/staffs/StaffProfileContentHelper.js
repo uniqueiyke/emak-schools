@@ -143,14 +143,18 @@ const StaffProfileContentHelper = ({
                         <Typography component='div' align='center'>
                             <Typography color="textSecondary" component='span'>
                                 {
-                                    multipleSelect ? data[fieldName].map(
-                                        (s, index) => {
-                                            if (index < data[fieldName].length - 1)
-                                                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
-                                            else
-                                                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
-                                        }) : data[fieldName]
+                                    !data[fieldName] ? <Typography color='error' >{`Please provide your ${fieldName}`}</Typography>
+                                        : multipleSelect ? data[fieldName].map(
+                                            (s, index) => {
+                                                if (index < data[fieldName].length - 1)
+                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
+                                                else
+                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
+                                            })
+                                            : data[fieldName]
                                 }
+
+
                             </Typography>
                             <IconButton
                                 color='primary'

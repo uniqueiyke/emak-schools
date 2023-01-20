@@ -16,7 +16,6 @@ import SendIcon from '@material-ui/icons/Send';
 import { useDispatch } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
-import { updateStudentData } from '../../../redux/actions/student-action';
 import { makeStyles } from '@material-ui/core/styles';
 
 
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfileNamePage = ({
     profileData, rootStyle, titleStyle,
-    title,
+    title, onUpdate,
 }) => {
 
     const classes = useStyles();
@@ -85,7 +84,7 @@ const ProfileNamePage = ({
         if (!isEmptyArrayOrObject(err)) {
             setValueError(err);
         } else {
-            dispatch(updateStudentData(value, data._id));
+            dispatch(onUpdate(value, data._id));
             setValueError(null);
             setValue(initState)
             isEditMode(false);

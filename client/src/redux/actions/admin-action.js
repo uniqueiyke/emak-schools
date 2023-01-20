@@ -46,6 +46,8 @@ import {
     ADMIN_REGISTER_STAFF_FAILED,
     ADMIN_RESETPASSWORD_FAILED,
     ADMIN_RESETPASSWORD_SUCCEEDED,
+    UPDATE_STUDENTS_CLASS_SUCCEEDED,
+    UPDATE_STUDENTS_CLASS_FAILED,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -271,8 +273,18 @@ const adminRestPasswordSucceeded = data => ({
     payload: data,
 })
 
-const adminRestPasswordFailed =err => ({
+const adminRestPasswordFailed = err => ({
     type: ADMIN_RESETPASSWORD_FAILED,
+    payload: err,
+})
+
+const updateStudentsClassSucceeded = data => ({
+    type: UPDATE_STUDENTS_CLASS_SUCCEEDED,
+    payload: data,
+})
+
+const updateStudentsClassFailed = err => ({
+    type: UPDATE_STUDENTS_CLASS_FAILED,
     payload: err,
 })
 
@@ -586,5 +598,19 @@ export const adminRestPassword = data => async dispatch => {
         dispatch(adminRestPasswordSucceeded(response.data))
     } catch (error) {
         dispatch(adminRestPasswordFailed(errorParser(error.response)))
+    }
+}
+
+export const updateStudentClass = () => async dispatch => {
+    try {
+        const response = await axios({
+            url: '/admin/update-classes',
+            method: 'GET',
+            headers: tokenConfig('application/json'),
+        })
+
+        dispatch(updateStudentsClassSucceeded(response.data))
+    } catch (error) {
+        dispatch(updateStudentsClassFailed(errorParser(error.response)))
     }
 }

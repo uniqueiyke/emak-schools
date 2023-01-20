@@ -6,18 +6,16 @@ import Contacts from '../pages/Contacts';
 import StaffRegistration from '../pages/staffs/StaffRegistration';
 import StudentRegForm from '../pages/students/StudentRegForm';
 import StaffLogin from '../pages/staffs/StaffLogin';
-import StaffProfile from '../pages/staffs/StaffProfile';
 import AuthRoute from '../auth-components/AuthRoute';
 import StaffDashboard from '../pages/staffs/StaffDashboard';
 import Page404 from '../other-components/Page404';
 import ToAdminPanel from '../auth-components/ToAdminPanel';
 import ErrorBoundary from '../other-components/ErrorBoundary';
-import StudentProfile from '../pages/students/StudentProfile';
 import AdminAuthRoute from '../auth-components/AdminAuthRoute';
 import ResetPassword from '../pages/staffs/ResetPassword';
 import ConfirmEmail from '../pages/staffs/ConfirmEmail';
 import StudentSelectTable from '../grade-book/StudentSelectTable';
-// import TestApp from '../test-components/TestApp';
+import TestApp from '../test-components/TestApp';
 import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 import GradeBook from '../grade-book/GradeBook';
@@ -32,6 +30,7 @@ import Cards from '../scratch-cards/Cards';
 import CardsForPrinting from '../scratch-cards/CardsForPrinting';
 import ResultCheckerForm from '../grade-book/ResultCheckerForm';
 import ResultChecker from '../grade-book/ResultChecker';
+import StudentDashboard from '../pages/students/StudentDashboard';
 
 export default function Routers() {
     return (
@@ -52,9 +51,6 @@ export default function Routers() {
                 <Route exact path="/staff/registration">
                     <StaffRegistration />
                 </Route>
-                <AuthRoute exact path="/staff/data/profile">
-                    <StaffProfile />
-                </AuthRoute>
                 <Route exact path="/staffs/login">
                     <StaffLogin />
                 </Route>
@@ -80,7 +76,7 @@ export default function Routers() {
                     <StudentSelectTable />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact path="/admin/students/student/profile/:id">
-                    <StudentProfile />
+                    <StudentDashboard />
                 </AdminAuthRoute>
                 <AdminAuthRoute exact path="/admin/students/result-sheet">
                     <ResultSheet />
@@ -121,9 +117,9 @@ export default function Routers() {
                 <Route exact path="/student/result-checker/result-slip">
                     <ResultChecker />
                 </Route>
-                {/* <Route exact path="/test/components">
+                <Route exact path="/test/components">
                     <TestApp />
-                </Route> */}
+                </Route>
                 <Route path="*">
                     <Page404 />
                 </Route>

@@ -2,8 +2,11 @@ const date = new Date();
 const year = date.getFullYear();
 const month = date.getMonth() + 1;
 
-export const sessions = (startYear = year-1, numOfSessions = 3) => {
+export const sessions = (startYear = 2021, numOfSessions) => {
     const arrayOfSession = [];
+    if(!numOfSessions){
+        numOfSessions = year - startYear + 1;
+    }
     for (let index = 0; index < numOfSessions; index++) {
         const label = `${startYear + index}/${startYear + (index + 1)}`;
         arrayOfSession.push({label, value: label});

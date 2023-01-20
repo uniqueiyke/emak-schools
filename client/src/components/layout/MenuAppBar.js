@@ -139,14 +139,6 @@ export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
                 getContentAnchorEl={null}
               >
                 <MenuItem
-                  selected={currentPath('/staff/data/profile')}
-                  dense
-                  className={classes.menuItem}
-                  onClick={() => goToPath('/staff/data/profile')}
-                >
-                  Profile
-                </MenuItem>
-                <MenuItem
                   selected={currentPath('/staff/data/dashboard')}
                   dense
                   className={classes.menuItem}

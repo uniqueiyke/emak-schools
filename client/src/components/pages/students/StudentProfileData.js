@@ -13,6 +13,7 @@ import {
     classes as studentClass, 
     gender, studentStatus, graduationLevel,
 } from '../../../libs/students-data'
+import { updateStudentData } from '../../../redux/actions/student-action';
 import { setPageTitle } from '../../../libs/utility-functions';
 
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +64,7 @@ export default function StaffProfileData({ profileData }) {
                     profileData={profileData}
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -74,6 +76,7 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='gender'
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -85,6 +88,7 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='status'
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -96,6 +100,7 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='graduate level'
+                    onUpdate={updateStudentData}
                 />
                 {(profileData && profileData.data && profileData.data.status === 'student') &&
                     <ProfileContent
@@ -108,8 +113,21 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='currentclass'
+                    onUpdate={updateStudentData}
                 />
                 }
+                <ProfileContent
+                    profileData={profileData}
+                    multipleSelect
+                    listOptions={studentClass}
+                    fieldLabel='Classes Been In'
+                    fieldName='classes_been'
+                    title='Classes Been In'
+                    titleStyle={classes.title}
+                    rootStyle={classes.root}
+                    labelId='classesbeen'
+                    onUpdate={updateStudentData}
+                />
                 <ProfileContent
                     profileData={profileData}
                     select
@@ -120,6 +138,7 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     labelId='regclass'
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -129,6 +148,7 @@ export default function StaffProfileData({ profileData }) {
                     title='Born on'
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -138,6 +158,7 @@ export default function StaffProfileData({ profileData }) {
                     title='Last School Attended'
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -149,6 +170,7 @@ export default function StaffProfileData({ profileData }) {
                     rootStyle={classes.root}
                     titleStyle={classes.title}
                     title='Blood Group'
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -160,6 +182,7 @@ export default function StaffProfileData({ profileData }) {
                     titleStyle={classes.title}
                     rootStyle={classes.root}
                     title='Genotype'
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -169,6 +192,7 @@ export default function StaffProfileData({ profileData }) {
                     title='Registered on'
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -178,6 +202,7 @@ export default function StaffProfileData({ profileData }) {
                     title='Height'
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
                 <ProfileContent
                     profileData={profileData}
@@ -187,6 +212,7 @@ export default function StaffProfileData({ profileData }) {
                     title='Weight'
                     titleStyle={classes.title}
                     rootStyle={classes.root}
+                    onUpdate={updateStudentData}
                 />
             </Grid>
         </Container>

@@ -101,6 +101,10 @@ const initialState = (options = defaulOptions) => {
             passwordReset: {
                 data: null,
                 error: null,
+            },
+            updateClass: {
+                data: null,
+                error: null,
             }
         }
     }
