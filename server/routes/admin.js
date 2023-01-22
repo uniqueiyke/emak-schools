@@ -4,7 +4,7 @@ const auth = require('../middlewares/staff_auth');
 
 const { 
     send_staff_register_token, update_student_class,
-    fetch_all_students, fetch_current_students,
+    fetch_all_students, fetch_current_students, fetcch_parents,
     create_result_manager, fetch_all_staffs, update_staff_roles,
     update_staff_sujects, admin_register_staff, admin_reset_password,
 } = require('../controllers/admin-controller');
@@ -25,5 +25,6 @@ router.post('/print-cards', auth('super-admin'), print_card);
 router.post('/register/new-staff', auth('super-admin'), admin_register_staff);
 router.post('/reset-password', auth('super-admin'), admin_reset_password);
 router.get('/update-classes', auth('super-admin'), update_student_class);
+router.get('/parents', auth('super-admin'), fetcch_parents);
 
 module.exports = router;

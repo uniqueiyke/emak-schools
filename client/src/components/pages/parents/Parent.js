@@ -93,7 +93,7 @@ const Parent = ({ parent }) => {
                 addressLabel='Office Address'
                 titleStyle={classes.title}
                 rootStyle={classes.root}
-                // onUpdate={updateParentData}
+                onUpdate={updateParentData}
                 id={parent._id}
             />
         </>

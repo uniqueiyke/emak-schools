@@ -105,6 +105,10 @@ const initialState = (options = defaulOptions) => {
             updateClass: {
                 data: null,
                 error: null,
+            },
+            parents: {
+                data: null,
+                error: null,
             }
         }
     }

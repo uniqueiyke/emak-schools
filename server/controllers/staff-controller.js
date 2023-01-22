@@ -176,27 +176,52 @@ exports.update_staff_data = async (req, res) => {
         if (!staff) {
             return res.status(400).json({ message: "User not found" });
         }
-        for (const field of fields) {
-            let err = null;
-            if (field === 'email') {
-                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'email' });
-            }
-            else if (field === 'phone_number') {
-                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'phone' });
-            }
-            else if (field === 'username') {
-                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'min_length' }, { minLength: 8 });
-            } else if (field === 'subjects') {
-                err = validateFormFields({ [field]: req.body[field] }, { [field]: 'array' });
-            } else {
-                err = validateFormFields({ [field]: req.body[field] }, {
-                    [field]: 'min_length',
-                }, { optionalFields: ['other_names'], minLength: 3 })
-            }
+        if (fields.includes('address')) {
+            const err = validateFormFields(req.body, {
+                address: 'min_length',
+                town: 'min_length',
+                City: 'min_length',
+                postal_code: 'min_length',
+                State: 'select',
+                lga: 'select',
+                Country: 'select',
+            }, { optionalFields: ['town', 'City', 'postal_code'], minLength: 3 });
+
             if (!isEmptyArrayOrObject(err)) {
-                return res.status(400).json([err, 'updateErr']);
+                return res.status(401).json([err, 'User not found']);
+            } else {
+                const {
+                    address, town, City, postal_code,
+                    State, lga, Country,
+                } = req.body
+                staff.address = {
+                    address, town, City, postal_code,
+                    State, lga, Country,
+                }
             }
-            staff[field] = req.body[field];
+        } else {
+            for (const field of fields) {
+                let err = null;
+                if (field === 'email') {
+                    err = validateFormFields({ [field]: req.body[field] }, { [field]: 'email' });
+                }
+                else if (field === 'phone_number') {
+                    err = validateFormFields({ [field]: req.body[field] }, { [field]: 'phone' });
+                }
+                else if (field === 'username') {
+                    err = validateFormFields({ [field]: req.body[field] }, { [field]: 'min_length' }, { minLength: 8 });
+                } else if (field === 'subjects') {
+                    err = validateFormFields({ [field]: req.body[field] }, { [field]: 'array' });
+                } else {
+                    err = validateFormFields({ [field]: req.body[field] }, {
+                        [field]: 'min_length',
+                    }, { optionalFields: ['other_names'], minLength: 3 })
+                }
+                if (!isEmptyArrayOrObject(err)) {
+                    return res.status(400).json([err, 'updateErr']);
+                }
+                staff[field] = req.body[field];
+            }
         }
         await staff.save();
 
@@ -324,9 +349,9 @@ exports.staff_reset_password = async (req, res) => {
         console.log(hash)
         staff.password = hash;
         await staff.save();
-        res.json({message: 'Your password has been changed.', success: true})
+        res.json({ message: 'Your password has been changed.', success: true })
     }
     catch (error) {
-        res.status(401).json({message: error.message, success: false});
+        res.status(401).json({ message: error.message, success: false });
     }
 }

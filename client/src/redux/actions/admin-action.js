@@ -48,6 +48,8 @@ import {
     ADMIN_RESETPASSWORD_SUCCEEDED,
     UPDATE_STUDENTS_CLASS_SUCCEEDED,
     UPDATE_STUDENTS_CLASS_FAILED,
+    FETCH_PARENTS_SUCCEEDED,
+    FETCH_PARENTS_FAILED,
 } from './action-types';
 import errorParser from './error-parser';
 import tokenConfig from './token-config';
@@ -285,6 +287,16 @@ const updateStudentsClassSucceeded = data => ({
 
 const updateStudentsClassFailed = err => ({
     type: UPDATE_STUDENTS_CLASS_FAILED,
+    payload: err,
+})
+
+const fetchParentsSucceeded = data => ({
+    type: FETCH_PARENTS_SUCCEEDED,
+    payload: data,
+})
+
+const fetchParentsFailed = err => ({
+    type: FETCH_PARENTS_FAILED,
     payload: err,
 })
 
@@ -612,5 +624,19 @@ export const updateStudentClass = () => async dispatch => {
         dispatch(updateStudentsClassSucceeded(response.data))
     } catch (error) {
         dispatch(updateStudentsClassFailed(errorParser(error.response)))
+    }
+}
+
+export const fatchParents = () => async dispatch => {
+    try {
+        const response = await axios({
+            url: '/admin/parents',
+            method: 'GET',
+            headers: tokenConfig('application/json'),
+        })
+
+        dispatch(fetchParentsSucceeded(response.data))
+    } catch (error) {
+        dispatch(fetchParentsFailed(errorParser(error.response)))
     }
 }

@@ -21,6 +21,7 @@ import TabPanelContainer from '../../other-components/tab/TabPanelContainer';
 import { drawerWidth } from '../../../libs/css-constants';
 import Tab from '../../other-components/tab/Tab';
 import TabPanel from '../../other-components/tab/TabPanel';
+import AllParents from './AllParents';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -82,6 +83,8 @@ export default function AdminPanel() {
     const dispatch = useDispatch();
     const { data, error } = useSelector(state => state.admin.updateClass)
 
+    const isSuperAdmin = isAdmin(true);
+
     const updateClasses = () => {
         dispatch(updateStudentClass())
         setClassUpdateModalOpen(false)
@@ -92,16 +95,18 @@ export default function AdminPanel() {
             <MultiPageWidget>
                 <TabWrapper top={66} height={'40px'} className={classes.offset} onIndexChange={index => setCurrentIndex(index)}>
                     <Tab active={currentIndex === 0} index={0}>Staff Registration</Tab>
-                    {isAdmin(true) && <>
+                    {isSuperAdmin && <>
                         <Tab active={currentIndex === 1} index={1}>Result Management</Tab>
                         <Tab active={currentIndex === 2} index={2}>Card Management</Tab>
                     </>}
+                    {/* <Tab active={currentIndex === 3} index={3}>Others</Tab> */}
+                    <Tab active={currentIndex === (isSuperAdmin ? 3 : 1)} index={isSuperAdmin ? 3 : 1}>Others</Tab>
                 </TabWrapper>
-                <TabPanelContainer>
+                <TabPanelContainer marginTop={40}>
                     <TabPanel index={0} currentIndex={currentIndex}>
                         <SendStaffRegToken />
                     </TabPanel>
-                    {isAdmin(true) && <>
+                    {isSuperAdmin && <>
                         <TabPanel index={1} currentIndex={currentIndex}>
                             <div className={classes.divMargin}>
                                 <Button variant='outlined' className={classes.btnDiv} onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
@@ -162,6 +167,9 @@ export default function AdminPanel() {
                         </TabPanel>
                     </>
                     }
+                    <TabPanel index={isSuperAdmin ? 3 : 1} currentIndex={currentIndex}>
+                        <AllParents />
+                    </TabPanel>
                 </TabPanelContainer>
             </MultiPageWidget>
         </div>

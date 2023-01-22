@@ -47,6 +47,8 @@ import {
     ADMIN_RESETPASSWORD_FAILED,
     UPDATE_STUDENTS_CLASS_SUCCEEDED,
     UPDATE_STUDENTS_CLASS_FAILED,
+    FETCH_PARENTS_SUCCEEDED,
+    FETCH_PARENTS_FAILED,
 } from '../actions/action-types'
 
 import initialState from './initial-state'
@@ -364,6 +366,23 @@ const adminReducer = (state = initialState({ admin: true }), action) => {
             return {
                 ...state,
                 updateClass: {
+                    data: null,
+                    error: action.payload,
+                }
+            }
+
+        case FETCH_PARENTS_SUCCEEDED:
+            return {
+                ...state,
+                parents: {
+                    data: action.payload,
+                    error: null,
+                }
+            }
+        case FETCH_PARENTS_FAILED:
+            return {
+                ...state,
+                parents: {
                     data: null,
                     error: action.payload,
                 }

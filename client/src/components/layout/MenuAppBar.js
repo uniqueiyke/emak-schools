@@ -13,7 +13,6 @@ import { useHistory, useLocation, Link as RouterLink } from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
 import { logoutStaff } from '../../redux/actions/staff-action';
 import { useSelector } from 'react-redux';
-
 import { drawerWidth } from '../../libs/css-constants';
 import { CssBaseline } from '@material-ui/core';
 import { isAdmin } from '../../libs/client-page-auth';

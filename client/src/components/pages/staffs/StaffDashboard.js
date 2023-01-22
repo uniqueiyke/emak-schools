@@ -24,6 +24,7 @@ import TabPanel from '../../other-components/tab/TabPanel';
 import { drawerWidth } from '../../../libs/css-constants';
 import StaffProfileData from './StaffProfileData';
 import Address from '../others/Address';
+import { updateStaffData } from '../../../redux/actions/staff-action';
 
 const useStyles = makeStyles(theme => ({
     errMsg: {
@@ -54,7 +55,8 @@ function StaffDashboard() {
     const { data } = staff;
     const isDataReady = useWaitForDataReady(data);
     const [openGradeBookModal, setOpenGradeBookModal] = useState(false);
-    
+
+
     if (staff.isFetchingStaff || !isDataReady) {
         return <DataFetchingProgress />
     }
@@ -111,12 +113,12 @@ function StaffDashboard() {
                             <StaffProfileData staff={staff} />
                         </TabPanel>
                         <TabPanel index={2} currentIndex={currentIndex}>
-                        <Address
-                                    addressLabel={'Address'}
-                                    address={data.address}
-                                    id={data._id}
-                                    // onUpdate={updateStudentData}
-                                />
+                            <Address
+                                addressLabel={'Address'}
+                                address={data.address}
+                                id={data._id}
+                                onUpdate={updateStaffData}
+                            />
                         </TabPanel>
                     </TabPanelContainer>
                 </MultiPageWidget>

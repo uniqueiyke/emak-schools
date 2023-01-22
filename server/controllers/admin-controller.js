@@ -6,6 +6,7 @@ const staffRegRequestEmail = require('../libs/staff-reg-req-email');
 const StaffRegToken = require('../models/staff-registration-token');
 const Staff = require('../models/staff');
 const Student = require('../models/student');
+const Parent = require('../models/parent');
 const { isEmptyArrayOrObject, formatPhoneNumber } = require('../libs/utility-functions');
 const { validateFormFields } = require('../libs/validate-form-fields');
 const createGradeBookManager = require('../models/session-term-schema');
@@ -297,5 +298,15 @@ exports.update_student_class = async (req, res) => {
         res.json({message: 'Classes updated successfully'});
     } catch (err) {
         res.status(401).json(err.message);
+    }
+}
+
+exports.fetcch_parents = async (req, res) => {
+    try{
+        const parents = await Parent.find({},['name', 'phone_number', 'email', 'relationship', 'children'])
+        .populate('children', 'name');
+        res.json(parents)
+    }catch(error){
+        res.status(401).json(error.message);
     }
 }

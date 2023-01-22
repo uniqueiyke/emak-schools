@@ -9,8 +9,6 @@ import { Card, CardActions, CardContent, CardHeader, Hidden, IconButton, Typogra
 import useAddressEditor from '../../../hooks/useAddressEditor';
 import { validateFormFields } from '../../../libs/form-fields-validator';
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
-import { updateStudentData } from '../../../redux/actions/student-action';
-import { updateParentData } from '../../../redux/actions/student-action'
 
 const useStyle = makeStyles({
   header: {
@@ -62,11 +60,11 @@ const Address = ({ address, addressType, onUpdate, id, addressLabel }) => {
 
     if (isEmptyArrayOrObject(dataErr)) {
       if (addressType === 'res_home') {
-        dispatch(updateStudentData({...addressValues, address_type: 'res_home'}, id));
+        dispatch(onUpdate({...addressValues, address_type: 'res_home'}, id));
       }else if (addressType === 'pert_home') {
-        dispatch(updateStudentData({...addressValues, address_type: 'pert_home'}, id));
+        dispatch(onUpdate({...addressValues, address_type: 'pert_home'}, id));
       } else {
-        dispatch(updateParentData(addressValues, id));
+        dispatch(onUpdate(addressValues, id));
       } 
       setFormSubmitErr(null);
       isEditAddress(false);
