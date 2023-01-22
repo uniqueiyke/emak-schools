@@ -23,7 +23,7 @@ const MenuProps = {
 const GreenRadio = withStyles({
   root: {
     color: green[400],
-    '&$checked': {
+    '&:checked': {
       color: green[600],
     },
   },

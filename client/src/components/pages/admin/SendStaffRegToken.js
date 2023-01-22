@@ -49,14 +49,14 @@ const useStyles = makeStyles((theme) => ({
     cardActionBtnSend: {
         color: '#9e7a04',
         backgroundColor: '#30d5eb',
-        '& :hover': {
+        '&:hover': {
             color: '#30d5eb',
         },
     },
     cardActionBtnGen: {
         color: "#87e1ec",
         backgroundColor: 'brown',
-        '& :hover': {
+        '&:hover': {
             color: 'brown',
         },
     },

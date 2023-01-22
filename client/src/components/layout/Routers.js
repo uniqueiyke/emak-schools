@@ -15,7 +15,7 @@ import AdminAuthRoute from '../auth-components/AdminAuthRoute';
 import ResetPassword from '../pages/staffs/ResetPassword';
 import ConfirmEmail from '../pages/staffs/ConfirmEmail';
 import StudentSelectTable from '../grade-book/StudentSelectTable';
-import TestApp from '../test-components/TestApp';
+// import TestApp from '../test-components/TestApp';
 import CurrentStudentsList from '../pages/students/CurrentStudentsList';
 import StudentPresentAndPast from '../pages/students/StudentPresentAndPast';
 import GradeBook from '../grade-book/GradeBook';
@@ -118,7 +118,7 @@ export default function Routers() {
                     <ResultChecker />
                 </Route>
                 <Route exact path="/test/components">
-                    <TestApp />
+                    {/* <TestApp /> */}
                 </Route>
                 <Route path="*">
                     <Page404 />

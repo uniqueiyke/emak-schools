@@ -31,7 +31,6 @@ const ParentContact = ({parent}) => {
         <div className={styles.div}><span className={styles.span}>Email:</span> {parent.email}</div>
         <div className={styles.div}><span className={styles.span}>Relationship:</span> {parent.relationship}</div>
         <div className={styles.div}><span className={styles.span}>Child's Name:</span> {parent.children[0].name.last_name}, {parent.children[0].name.first_name} {parent.children[0].name.other_names}</div>
-        {/* <hr className={styles.hr}/> */}
     </div>
   )
 }

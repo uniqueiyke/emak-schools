@@ -35,14 +35,14 @@ const useStyles = makeStyles((theme) => ({
 
     bullet: {
         display: 'inline-block',
-        margin: '0 2px',
+        margin: '0px 2px',
         transform: 'scale(0.8)',
     },
     title: {
-        fontSize: 14,
+        fontSize: '14px',
     },
     pos: {
-        marginBottom: 12,
+        marginBottom: '12px',
     },
     btnDiv: {
         margin: '0px 10px',
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateColumns: 'auto auto',
         gap: theme.spacing(3),
         color: '#562fab',
-        border: 'solide 1',
+        border: 'solid 1px',
         borderColor: '#562fab',
 
     },
@@ -99,10 +99,9 @@ export default function AdminPanel() {
                         <Tab active={currentIndex === 1} index={1}>Result Management</Tab>
                         <Tab active={currentIndex === 2} index={2}>Card Management</Tab>
                     </>}
-                    {/* <Tab active={currentIndex === 3} index={3}>Others</Tab> */}
                     <Tab active={currentIndex === (isSuperAdmin ? 3 : 1)} index={isSuperAdmin ? 3 : 1}>Others</Tab>
                 </TabWrapper>
-                <TabPanelContainer marginTop={40}>
+                <TabPanelContainer marginTop={'40px'}>
                     <TabPanel index={0} currentIndex={currentIndex}>
                         <SendStaffRegToken />
                     </TabPanel>
