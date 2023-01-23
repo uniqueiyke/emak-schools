@@ -89,6 +89,7 @@ const AddParent = ({ student_id }) => {
                 handleAddressValuesChange={handleAddressValuesChange}
                 ng_state_lga={ng_state_lga}
                 countries_states={countries_states}
+                addressLabel='Office Address'
             />
             <Button onClick={onSubmit} >Submit</Button>
         </>

@@ -25,6 +25,6 @@ router.post('/print-cards', auth('super-admin'), print_card);
 router.post('/register/new-staff', auth('super-admin'), admin_register_staff);
 router.post('/reset-password', auth('super-admin'), admin_reset_password);
 router.get('/update-classes', auth('super-admin'), update_student_class);
-router.get('/parents', auth('super-admin'), fetcch_parents);
+router.get('/parents', auth('admin'), fetcch_parents);
 
 module.exports = router;
