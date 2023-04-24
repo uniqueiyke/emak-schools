@@ -13,7 +13,7 @@ import Errors from '../other-components/Errors';
 import { useSelector, useDispatch } from 'react-redux';
 import { gradeBook } from '../../redux/actions/staff-action';
 import { useHistory, useLocation } from 'react-router';
-import { subjectTitle } from '../../libs/subjects';
+import { subjectField } from '../../libs/subjects';
 import { setPageTitle } from '../../libs/utility-functions';
 
 const useStyles = makeStyles({
@@ -57,7 +57,7 @@ const GradeBook = () => {
   const { state } = useLocation();
   const { session, term, class_name, class_stream, subject } = state;
 
-  setPageTitle(`${class_name.toUpperCase()}${class_stream} - ${term.toUpperCase()} - ${session} ${subjectTitle(subject)}`);
+  setPageTitle(`${class_name.toUpperCase()}${class_stream} - ${term.toUpperCase()} - ${session} ${subjectField(subject, 'label')}`);
 
   useEffect(() => {
     dispatch(gradeBook({
@@ -73,7 +73,7 @@ const GradeBook = () => {
     <>
       {error && <Errors errors={error} goBack />}
       {data && (<>
-        <Typography align='center' variant='h5' >{subjectTitle(subject)} GradeBook, {class_name.toUpperCase()} {class_stream.toUpperCase()}</Typography>
+        <Typography align='center' variant='h5' >{subjectField(subject, 'label')} GradeBook, {class_name.toUpperCase()} {class_stream.toUpperCase()}</Typography>
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="subjects table">
             <TableHead>
@@ -94,7 +94,9 @@ const GradeBook = () => {
             <TableBody>
               {
                 data && (
-                  data.map((stu, i) => (
+                  data
+                  .sort((a,b) => parseInt(b.scores.total) - parseInt(a.scores.total) )
+                  .map((stu, i) => (
                     <TableRow className={classes.tRow} key={stu._id} onDoubleClick={() => history.push(`/staff/dashboard/grade-book/student/${stu._id}`, { ...stu, state })}>
                       <TableCell >{i + 1}</TableCell>
                       <TableCell align="left" className={classes.regNumTCell} onClick={() => history.push(`/staff/dashboard/grade-book/student/${stu._id}`, { ...stu, state })} >{stu.reg_number}</TableCell>

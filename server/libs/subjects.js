@@ -259,3 +259,46 @@ exports.terms = {
         short_title: "3rd"
     },
 }
+
+const subjectsKeys = Object.keys(this.subjects)
+
+const filterSubjectsByLevel = (type = 'obj', level = 'j') => {
+    level = (level.toLowerCase() === 's' || level.toLowerCase() === 'senior') ? 'senior' : 'junior';
+    type = type.toLowerCase() === 'arr' ? 'arr' : 'obj';
+    let filteredSubjects = type === 'arr' ? [] : {};
+
+    if (type === 'arr') {
+        if (level === 'senior') {
+            for (const key of subjectsKeys) {
+                if (this.subjects[key].offer_by !== 'junior') {
+                    filteredSubjects.push(this.subjects[key]);
+                }
+            }
+        } else {
+            for (const key of subjectsKeys) {
+                if (this.subjects[key].offer_by !== 'senior') {
+                    filteredSubjects.push(this.subjects[key]);
+                }
+            }
+        }
+    } else {
+        if (type === 'obj') {
+            if (level === 'senior') {
+                for (const key of subjectsKeys) {
+                    if (this.subjects[key].offer_by !== 'junior') {
+                        filteredSubjects[key] = this.subjects[key]
+                    }
+                }
+            } else {
+                for (const key of subjectsKeys) {
+                    if (this.subjects[key].offer_by !== 'senior') {
+                        filteredSubjects[key] = this.subjects[key]
+                    }
+                }
+            }
+        }
+    }
+    return filteredSubjects;
+}
+
+// console.log(filterSubjectsByLevel('obj', 'junior'))

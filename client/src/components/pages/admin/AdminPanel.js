@@ -94,19 +94,17 @@ export default function AdminPanel() {
         <div className={classes.root}>
             <MultiPageWidget>
                 <TabWrapper top={66} height={'40px'} className={classes.offset} onIndexChange={index => setCurrentIndex(index)}>
-                    <Tab active={currentIndex === 0} index={0}>Staff Registration</Tab>
                     {isSuperAdmin && <>
-                        <Tab active={currentIndex === 1} index={1}>Result Management</Tab>
-                        <Tab active={currentIndex === 2} index={2}>Card Management</Tab>
+                        <Tab active={currentIndex === 0} index={0}>Result Management</Tab>
+                        <Tab active={currentIndex === 1} index={1}>Card Management</Tab>
                     </>}
+                    <Tab active={currentIndex === (isSuperAdmin ? 2 : 0)} index={(isSuperAdmin ? 2 : 0)}>Staff Registration</Tab>
+
                     <Tab active={currentIndex === (isSuperAdmin ? 3 : 1)} index={isSuperAdmin ? 3 : 1}>Others</Tab>
                 </TabWrapper>
                 <TabPanelContainer marginTop={'40px'}>
-                    <TabPanel index={0} currentIndex={currentIndex}>
-                        <SendStaffRegToken />
-                    </TabPanel>
                     {isSuperAdmin && <>
-                        <TabPanel index={1} currentIndex={currentIndex}>
+                        <TabPanel index={0} currentIndex={currentIndex}>
                             <div className={classes.divMargin}>
                                 <Button variant='outlined' className={classes.btnDiv} onClick={() => setStudentClassModalOpen(true)}>Student In Class</Button>
                                 <SessionTermClassModal path="/admin/students/class-termly" open={studentClassModalOpen} onClose={() => setStudentClassModalOpen(false)}>
@@ -140,7 +138,7 @@ export default function AdminPanel() {
                             </div>
                             <ComputeResult />
                         </TabPanel>
-                        <TabPanel index={2} currentIndex={currentIndex}>
+                        <TabPanel index={1} currentIndex={currentIndex}>
                             <div className={classes.divMargin}>
                                 <Button variant='outlined' className={classes.btnDiv} onClick={() => setCardFormModalOpen(true)}>Generate Scratch Card Details</Button>
                                 <CardFormModal
@@ -166,6 +164,9 @@ export default function AdminPanel() {
                         </TabPanel>
                     </>
                     }
+                    <TabPanel index={(isSuperAdmin ? 2 : 0)} currentIndex={currentIndex}>
+                        <SendStaffRegToken />
+                    </TabPanel>
                     <TabPanel index={isSuperAdmin ? 3 : 1} currentIndex={currentIndex}>
                         <AllParents />
                     </TabPanel>

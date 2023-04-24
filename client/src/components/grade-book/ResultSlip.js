@@ -6,6 +6,7 @@ import schLogo from '../../images/sch-logo-250x180.png';
 import stamp from '../../images/stamp-141x100.png';
 import { getSchoolFromClass } from '../../libs/students-data';
 
+import { subjectField } from '../../libs/subjects';
 import printResultSlip from '../../libs/print-result-slip';
 import { setPageTitle, teachersRemake } from '../../libs/utility-functions';
 
@@ -228,7 +229,7 @@ const ResultSlip = ({ resultDetails, error }) => {
                                     {
                                         resultDetails.subjects.map(subject =>
                                             <tr key={subject._id} className={styles.tr} >
-                                                <th className={styles.thr} scope="row">{subject.title}</th>
+                                                <th className={styles.thr} scope="row">{subjectField(subject.title, 'label')}</th>
                                                 <td className={styles.td}>{subject.c_a}</td>
                                                 <td className={styles.td}>{subject.exam}</td>
                                                 <td className={styles.td}>{subject.total}</td>
@@ -243,23 +244,23 @@ const ResultSlip = ({ resultDetails, error }) => {
                                 <span className={styles.outerGroup}>
                                     <span>
                                         <span className={styles.lowerCap}>Total Mark:</span>
-                                        <em className={styles.otherSpan}>{resultDetails.total}</em>
+                                        <em className={styles.otherSpan}>{resultDetails.result.total}</em>
                                     </span>
                                     <span className={styles.innerGroup}>
                                         <span className={styles.lowerCap}>Average:    </span>
-                                        <em className={styles.otherSpan}>{resultDetails.average}</em>
+                                        <em className={styles.otherSpan}>{resultDetails.result.average}</em>
                                     </span>
                                 </span>
                                 <span className={styles.outerGroup}>
                                     <span>
                                         <span className={styles.lowerCap}>Class Position:    </span>
-                                        <em>{resultDetails.position}         </em>
+                                        <em>{resultDetails.result.position}         </em>
                                         <span className={styles.lowerCap}>out of    </span>
                                         <em>{resultDetails.number_of_students + 10}</em>
                                     </span>
                                     <span className={styles.innerGroup}>
                                         <span className={styles.lowerCap}>Status:  </span>
-                                        <span className={styles.otherSpan}>{resultDetails.average >= 40 ? 'Passed' : 'Failed'}</span>
+                                        <span className={styles.otherSpan}>{resultDetails.result.average >= 40 ? 'Passed' : 'Failed'}</span>
                                     </span>
                                 </span>
                             </p>

@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import { isEmptyArrayOrObject, setPageTitle } from '../../libs/utility-functions'
-import { subjectVal } from '../../libs/subjects';
+import { subjectField } from '../../libs/subjects';
 
 const useStyles = makeStyles({
   table: {
@@ -61,7 +61,11 @@ const ResultSheet = () => {
   setPageTitle(`${location.state.class_name.toUpperCase()}${location.state.class_stream} - ${location.state.term.toUpperCase()} - ${location.state.session} Result Sheet`);
   
   const { data, error, isFetchingResultSheet, isComputingResults } = results;
-
+  let subjectKeys;
+  if(data){
+    subjectKeys = Object.keys(data);
+  }
+  
   if(isFetchingResultSheet || isComputingResults ){
     return <DataFetchingProgress />
   } else
@@ -79,8 +83,8 @@ const ResultSheet = () => {
                 <TableCell align="left">Last Name</TableCell>
                 <TableCell align="left">First Name</TableCell>
                 {
-                  data[0].subjects.map((subj, i) =>
-                    <TableCell key={subj._id} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subjectVal(subj.title)}`, {...location.state, subject: subjectVal(subj.title)})} className={classes.subjectTitle}>{subj.title}</TableCell>)
+                  (data && subjectKeys) && data[subjectKeys[0]].subjects.map((subj, i) =>
+                    <TableCell key={subj.title} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subj.title}`, {...location.state, subject: subj.title})} className={classes.subjectTitle}>{subjectField(subj.title, 'label')}</TableCell>)
                 }
                 <TableCell align="left">Total</TableCell>
                 <TableCell align="left">Average</TableCell>
@@ -89,22 +93,27 @@ const ResultSheet = () => {
             </TableHead>
             <TableBody>
               {
-                data && (
-                  data.map((stu, i) => (
-                    <TableRow className={classes.tRow} key={stu.student._id} onDoubleClick={() => history.push('/admin/students/result-slip', {id: stu.student._id, ...location.state})}>
+                (data && subjectKeys) && (
+                  subjectKeys
+                  .sort((a, b) => data[b].result.average - data[a].result.average)
+                  .map((s, i) => {
+                    const {student, subjects, result} = data[s]
+                    
+                    return(
+                    <TableRow className={classes.tRow} key={student._id} onDoubleClick={() => history.push('/admin/students/result-slip', {id: student._id, ...location.state})}>
                       <TableCell >{i + 1}</TableCell>
-                      <TableCell align="left" className={classes.regNumTCell} onClick={() => history.push('/admin/students/result-slip', {id: stu.student._id, ...location.state})} >{stu.student.reg_number}</TableCell>
-                      <TableCell align="left">{stu.student.name.last_name}</TableCell>
-                      <TableCell align="left">{stu.student.name.first_name} </TableCell>
+                      <TableCell align="left" className={classes.regNumTCell} onClick={() => history.push('/admin/students/result-slip', {id: student._id, ...location.state})} >{student.reg_number}</TableCell>
+                      <TableCell align="left">{student.name.last_name}</TableCell>
+                      <TableCell align="left">{student.name.first_name} </TableCell>
                       {
-                        stu.subjects.map((subj, i) =>
+                        subjects.map((subj, i) =>
                           <TableCell key={subj._id} align="center">{subj.total ? subj.total : ''}</TableCell>)
                       }
-                      <TableCell align="center" component='td' >{stu.total}</TableCell>
-                      <TableCell align="center" component='td' >{stu.average}</TableCell>
-                      <TableCell align="center" component='td' >{stu.position}</TableCell>
+                      <TableCell align="center" component='td' >{result.total}</TableCell>
+                      <TableCell align="center" component='td' >{result.average}</TableCell>
+                      <TableCell align="center" component='td' >{result.position}</TableCell>
                     </TableRow>
-                  ))
+                  )})
                 )
               }
             </TableBody>

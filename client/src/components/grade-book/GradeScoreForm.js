@@ -10,7 +10,7 @@ import { useLocation, useHistory } from 'react-router';
 import { updateGradeBookScore } from '../../redux/actions/staff-action';
 import tokenConfig from '../../redux/actions/token-config';
 import axios from 'axios';
-import { subjectTitle } from '../../libs/subjects';
+import { subjectField } from '../../libs/subjects';
 import { setPageTitle } from '../../libs/utility-functions';
 
 const useStyle = makeStyles({
@@ -60,7 +60,7 @@ const GradeScoreForm = () => {
     const history = useHistory();
     const { _id, reg_number, name, state } = location.state;
 
-    setPageTitle(`${reg_number} - ${subjectTitle(state.subject)} Score Form`);
+    setPageTitle(`${reg_number} - ${subjectField(state.subject, 'label')} Score Form`);
     
     const dbScoreRef = useRef(initialScore);
 
@@ -147,7 +147,7 @@ const GradeScoreForm = () => {
 
     return (
         <div>
-            <Typography align='center' variant='h4' >{subjectTitle(state.subject)}</Typography>
+            <Typography align='center' variant='h4' >{subjectField(state.subject, 'label')}</Typography>
             <Typography className={classes.nameCl} align='center'>{`${name.last_name}, ${name.first_name} ${name.other_names}`}</Typography>
             <Typography align='center'>Reg. Number: <span className={classes.regCl}>{reg_number}</span> </Typography>
             <form onSubmit={handleSubmit}>

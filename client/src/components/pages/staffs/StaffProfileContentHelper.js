@@ -19,7 +19,7 @@ import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject, formatPhoneNumber } from '../../../libs/utility-functions';
 import SingleSelect from '../../other-components/SingleSelect';
 import MultipleSelect from '../../other-components/MultipleSelect';
-import { subjectTitle } from '../../../libs/subjects'
+import { subjectField } from '../../../libs/subjects'
 
 const StaffProfileContentHelper = ({
     staff, rootStyle, titleStyle,
@@ -147,9 +147,9 @@ const StaffProfileContentHelper = ({
                                         : multipleSelect ? data[fieldName].map(
                                             (s, index) => {
                                                 if (index < data[fieldName].length - 1)
-                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
+                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectField(s, 'label')}, `} </Typography>
                                                 else
-                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
+                                                    return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectField(s, 'label')} `} </Typography>
                                             })
                                             : data[fieldName]
                                 }

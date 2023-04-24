@@ -16,7 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DataFetchingProgress from '../other-components/DataFetchingProgress';
 import { isEmptyArrayOrObject, isNotEmptyObject, setPageTitle } from '../../libs/utility-functions'
 import { fetchTermlySubjects, deleteSubjectFromClass } from '../../redux/actions/admin-action';
-import { subjectTitle } from '../../libs/subjects';
+import { subjectField } from '../../libs/subjects';
 import MessageModalDailog from '../other-components/MessageModalDailog';
 
 const useStyles = makeStyles({
@@ -118,8 +118,8 @@ const SubjectsListPerTerm = () => {
                                     data && (
                                         data.map((subj, i) => (
                                             <TableRow className={classes.tRow} key={i} >
-                                                <TableCell >{i + 1}<DeleteIcon onClick={() => shouldDelete(subj)} className={classes.deleteBtnIcon} /></TableCell>
-                                                <TableCell align="left" ><span className={classes.subjectTitle} onClick={() => history.push(`/staff/dashboard/grade-book/${subj}`, { ...location.state, subject: subj })}>{subjectTitle(subj)}</span></TableCell>
+                                                <TableCell >{i + 1}<DeleteIcon onClick={() => shouldDelete(subj.title)} className={classes.deleteBtnIcon} /></TableCell>
+                                                <TableCell align="left" ><span className={classes.subjectTitle} onClick={() => history.push(`/staff/dashboard/grade-book/${subj.title}`, { ...location.state, subject: subj.title })}>{subjectField(subj.title, 'label')}</span></TableCell>
                                             </TableRow>
                                         ))
                                     )
@@ -134,7 +134,7 @@ const SubjectsListPerTerm = () => {
                         rejectAction={() => cancelDelete()}
                         variant='warning'
                     >
-                        Are you sure you want to delete {subjectTitle(subjectToDelete)}?<br />
+                        Are you sure you want to delete {subjectField(subjectToDelete, 'label')}?<br />
                         Know that this action cannot be undo. Once deleted, all the data will be lost and cannot be retrived back.
                     </MessageModalDailog>
                 </>)}

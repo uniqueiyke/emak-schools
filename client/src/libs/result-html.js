@@ -346,23 +346,23 @@ export const resultHtml = (resultDetails, state) => {
             <span class="outerGroup">
                 <span>
                     <span class="lowerCap">Total Mark:</span>
-                    <em class="otherSpan">${resultDetails.total}</em>
+                    <em class="otherSpan">${resultDetails.result.total}</em>
                 </span>
                 <span class="innerGroup">
                     <span class="lowerCap">Average:    </span>
-                    <em class="otherSpan">${resultDetails.average}</em>
+                    <em class="otherSpan">${resultDetails.result.average}</em>
                 </span>
             </span>
             <span class="outerGroup">
                 <span>
                     <span class="lowerCap">Class Position:    </span>
-                    <em>${resultDetails.position}         </em>
+                    <em>${resultDetails.result.position}         </em>
                     <span class="lowerCap">out of    </span>
                     <em>${resultDetails.number_of_students + 10}</em>
                 </span>
                 <span class="innerGroup">
                     <span class="lowerCap">Status:  </span>
-                    <span class="otherSpan">${resultDetails.average >= 40 ? 'Passed' : 'Failed'}</span>
+                    <span class="otherSpan">${resultDetails.result.average >= 40 ? 'Passed' : 'Failed'}</span>
                 </span>
             </span>
         </p>

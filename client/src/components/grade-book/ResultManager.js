@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import SingleSelect from '../other-components/SingleSelect';
-import { terms, filterSubjectsByClass } from '../../libs/subjects';
+import { terms, filterSubjectsByLevel, getLevelFromClass } from '../../libs/subjects';
 import { sessions, classStream } from '../../libs/session-array';
 import { classes } from '../../libs/students-data';
 
@@ -95,7 +95,7 @@ const ResultManager = ({
                     withSubject &&
                     (<div className={styles.flexItem}>
                         <SingleSelect
-                            listOptions={filterSubjectsByClass(vClass, subjPerTeacher)}
+                            listOptions={filterSubjectsByLevel('arr', getLevelFromClass(vClass), subjPerTeacher)}
                             label="Subject"
                             labelId="subject"
                             name="subject"

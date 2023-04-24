@@ -1,20 +1,22 @@
 const mongoose = require('mongoose');
-const createGradeBookManager = require('../models/session-term-schema');
 const { subjects, terms } = require('../libs/subjects');
-const gradeBookScore = require('../models/grade-book-score');
-const computeResults = require('../models/result');
 const Student = require('../models/student');
 const CardDetails = require('../models/card-details');
+const { getOneClass, getResultSlip } = require('../libs/utility-function');
 
 const toInt = val => {
     if (!val) return 0;
     return parseInt(val);
 }
 
-const paserStudentsData = (students_list, scores) => {
+const parseStudentsData = (students_list, scores) => {
     const students = [];
     for (const stu of students_list) {
-        const stu_scores = scores.find(val => val.stu_id._id.toString() === stu._id.toString())
+        const stu_scores = scores.find(s => {
+            // console.log(s)
+            return s.student.toString() === stu._id.toString()
+        })
+        // console.log(stu._id);
         if (!stu_scores) {
             students.push({
                 reg_number: stu.reg_number,
@@ -69,15 +71,12 @@ const parsePositions = async list => {
         const record = list[i];
         if (i === 0) {
             record.scores.position = setPosition(i + 1);
-            await record.save();
         } else {
             const prevRecord = list[i - 1]
             if (prevRecord.scores.total === record.scores.total) {
                 record.scores.position = prevRecord.scores.position;
-                await record.save();
             } else {
                 record.scores.position = setPosition(i + 1);
-                await record.save();
             }
         }
     }
@@ -85,32 +84,43 @@ const parsePositions = async list => {
     return list;
 }
 
+const isSubjectAdded = (grades, subject) => {
+    if (grades.length > 0) {
+        for (const grade of grades) {
+            if (grade.short_title === subject) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 exports.grade_book = async (req, res) => {
     const { session, term, class_name, subject } = req.query;
 
     try {
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name })
-            .populate('students_list', 'reg_number name');
-        if (!gradeBookManager) {
-            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true);
+        let cSub = oneClass.subjects.find(s => s.title === subject);
+        let stu_scores = [];
+        if (!cSub) {
+            cSub = {};
+            cSub.title = subject;
+            cSub.code = subjects[subject].subject_code;
+            oneClass.subjects.push(cSub);
+            await termGradeBook.save();
+        }
+        else {
+            cSub.grades = cSub.grades.sort((a, b) => toInt(b.scores.total) - toInt(a.scores.total))
+            stu_scores = await parsePositions(cSub.grades)
+            await termGradeBook.save();
         }
 
-        if (!gradeBookManager.subjects_list.includes(subject)) {
-            gradeBookManager.subjects_list.push(subject);
-            await gradeBookManager.save();
-        }
-
-        const GradeBookScore = gradeBookScore(`${subject}_${class_name}_${terms[term].short_title}_${session}`);
-        const allGradeBookScores = await GradeBookScore.find()
-            .sort('-scores.total');
-        const allScores = await parsePositions(allGradeBookScores);
-
-        return res.json(paserStudentsData(gradeBookManager.students_list, allScores));
+        const studentsData = parseStudentsData(oneClass.students, stu_scores)
+        return res.json(studentsData);
     }
     catch (err) {
-        console.log(err.message)
-        res.status(401).json(err.message);
+        console.log(err)
+        res.status(401).json(err);
     }
 }
 
@@ -118,24 +128,40 @@ exports.update_grade_book_score = async (req, res) => {
     const { session, term, class_name, subject } = req.query;
     const { scores, stu_id } = req.body;
     try {
-        const GradeBookScore = gradeBookScore(`${subject}_${class_name}_${terms[term].short_title}_${session}`);
-        let gradeBookScores = await GradeBookScore.findOne({ stu_id });
-        if (!gradeBookScores) {
-            gradeBookScores = new GradeBookScore({
-                scores,
-                stu_id,
-            })
-            gradeBookScores.scores.total = toInt(scores.first_quiz) + toInt(scores.second_quiz) + toInt(scores.third_quiz) + toInt(scores.c_a) + toInt(scores.exam);
-            await gradeBookScores.save();
-        } else {
-            gradeBookScores.scores = scores;
-            gradeBookScores.scores.total = toInt(scores.first_quiz) + toInt(scores.second_quiz) + toInt(scores.third_quiz) + toInt(scores.c_a) + toInt(scores.exam);
-            await gradeBookScores.save();
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name);
+        let cSub = oneClass.subjects.find(s => s.title === subject);
+
+        if (!cSub) {
+            throw Error(`GradeBook for ${session} acdemic session ${term} is not created`)
         }
-        const allScores = await GradeBookScore.find();
-        res.json(allScores);
+
+        const tScore = {};
+        tScore.first_quiz = scores.first_quiz;
+        tScore.second_quiz = scores.second_quiz;
+        tScore.third_quiz = scores.third_quiz;
+        tScore.c_a = scores.c_a;
+        tScore.exam = scores.exam;
+        tScore.total = toInt(scores.first_quiz) + toInt(scores.second_quiz) + toInt(scores.third_quiz) + toInt(scores.c_a) + toInt(scores.exam);
+
+        let stu_scores = cSub.grades.find(grade => grade.student.toString() === stu_id.toString())
+
+        if (!stu_scores) {
+            cSub.grades.push({
+                student: stu_id,
+                scores: tScore
+            })
+        } else {
+            cSub.grades = cSub.grades.filter(grade => grade.student.toString() !== stu_id.toString())
+            cSub.grades.push({
+                student: stu_id,
+                scores: tScore
+            })
+        }
+
+        await termGradeBook.save();
+        res.json(cSub.grades);
     } catch (err) {
-        console.log(err.message)
+        console.log(err)
         res.status(401).json(err.message);
     }
 }
@@ -143,8 +169,10 @@ exports.update_grade_book_score = async (req, res) => {
 exports.get_grade_book_score = async (req, res) => {
     const { session, term, class_name, subject, stu_id } = req.query;
     try {
-        const GradeBookScore = gradeBookScore(`${subject}_${class_name}_${terms[term].short_title}_${session}`);
-        const scores = await GradeBookScore.findOne({ stu_id })
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name);
+
+        let cSub = oneClass.subjects.find(s => s.title === subject);
+        let scores = cSub.grades.find(grade => grade.student.toString() === stu_id.toString())
         if (scores) { return res.json(scores.scores); }
         res.json({
             first_quiz: '',
@@ -160,99 +188,68 @@ exports.get_grade_book_score = async (req, res) => {
 }
 
 exports.compute_results = async (req, res) => {
-
+    const { session, term, class_name } = req.query;
     try {
-        const { session, term, class_name } = req.query;
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name });
-        const { students_list, subjects_list } = gradeBookManager;
-        const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        
-        //Check if collection already exist
-        const collectionName = `RT_${class_name}_${session}_${terms[term].short_title}`;
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        for(const collection of collections){
-            if(collection.name === collectionName){
-                await ComputeResult.collection.drop();
-                break;
-            }
-        }
-        
-        //Create new collection and add the data for each student
-        for (let i = 0; i < students_list.length; i++) {
-            const student = students_list[i];
-            const result = new ComputeResult({
-                student,
-            });
-            let numOfSubjects = 0;
-            for (let j = 0; j < subjects_list.length; j++) {
-                const subject = subjects_list[j];
-                const GradeBookScore = gradeBookScore(`${subject}_${class_name}_${terms[term].short_title}_${session}`);
-                const scores = await GradeBookScore.findOne({ stu_id: student });
-                if (scores) {
-                    numOfSubjects++;
-                    result.subjects.push({
-                        title: subjects[subject].label,
-                        c_a: scores.scores.first_quiz + scores.scores.second_quiz + scores.scores.third_quiz + scores.scores.c_a ,
-                        exam: scores.scores.exam,
-                        total: scores.scores.total,
-                        position: scores.scores.position,
-                    })
-                    
-                    if(scores.scores.total){
-                        if(!result.total){
-                            result.total = scores.scores.total;
-                        }else {
-                            result.total += scores.scores.total;
-                        }
-                    }else if(scores.scores.total === 0) {
-                        result.total = scores.scores.total;
-                    }
-                }else {
-                    result.subjects.push({
-                        title: subjects[subject].label,
-                        c_a: null,
-                        exam: null,
-                        total: null,
-                        position: '',
-                    })
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true);
+        const resultSheet = {};
+        oneClass.results = [] //Reset the result array
+        for (const student of oneClass.students) {
+            const oneStudentResult = [];
+            let grandTotal = 0;
+            for (const subject of oneClass.subjects) {
+                const sub = subject.grades.find(grade => grade.student.toString() === student._id.toString());
+                if (sub) {
+                    oneStudentResult.push({
+                        title: subject.title,
+                        total: toInt(sub.scores.total),
+                        _id: sub.scores._id,
+                    });
+                    grandTotal += toInt(sub.scores.total);
                 }
             }
-            
-            if(result.total && numOfSubjects > 0){
-                const avg = result.total / numOfSubjects;
-                result.average = parseFloat(avg.toFixed(2))
+            if (oneStudentResult.length > 0) {
+                resultSheet[student._id] = {student, subjects: oneStudentResult, result: null};
+                const average = grandTotal > 0 ? parseFloat((grandTotal / oneStudentResult.length).toFixed(2)) : 0;
+                if (grandTotal)
+                    oneClass.results.push({
+                        student,
+                        total: grandTotal,
+                        average,
+                        // position: '',
+                    });
             }
-            
-            await result.save();
         }
 
-        //Compute the overall position of each student
-        const gradeScores = await ComputeResult.find().populate('student', 'reg_number name').sort('-average');
-
-        for (let i = 0; i < gradeScores.length; i++) {
-            const record = gradeScores[i];
-
+        const sortedResult = oneClass.results.sort((r1, r2) => toInt(r2.total) - toInt(r1.total));
+        const classResults = [];
+        for (let i = 0; i < sortedResult.length; i++) {
+            const record = sortedResult[i];
             if (i === 0) {
                 record.position = setPosition(i + 1);
-                record.number_of_students = gradeScores.length
-                await record.save();
+                classResults.push(record);
             } else {
-                const prevRecord = gradeScores[i - 1]
+                const prevRecord = sortedResult[i - 1]
                 if (prevRecord.average === record.average) {
                     record.position = prevRecord.position;
-                    record.number_of_students = gradeScores.length
-                    await record.save();
+                    classResults.push(record);
                 } else {
                     record.position = setPosition(i + 1);
-                    record.number_of_students = gradeScores.length
-                    await record.save();
+                    classResults.push(record);
                 }
             }
+            
+            resultSheet[record.student._id].result =  {
+                total: record.total,
+                average: record.average,
+                position: record.position,
+            };
         }
-        res.json(gradeScores)
+        oneClass.results = classResults;
+        await termGradeBook.save();
+        res.json(resultSheet);
+
     } catch (err) {
-        console.log(err.message);
+        console.log(err);
         res.status(401).json(err.message)
     }
 }
@@ -261,10 +258,29 @@ exports.fetch_results_sheet = async (req, res) => {
 
     try {
         const { session, term, class_name } = req.query;
-        const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        const results = await ComputeResult.find()
-            .populate('student', 'reg_number name').sort('-average');
-        res.json(results)
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true);
+        const resultSheet = {};
+
+        for(const student of oneClass.students){
+            resultSheet[student._id] = {student, subjects: [], result: {}};
+        }
+
+        for(const subject of oneClass.subjects){
+            for(const grade of subject.grades){
+                resultSheet[grade.student].subjects.push({
+                    title: subject.title,
+                    total: toInt(grade.scores.total),
+                    _id: grade.scores._id,
+                });
+            }
+        }
+
+        for(const result of oneClass.results){
+            resultSheet[result.student].result = result;
+        }
+
+        res.json(resultSheet);
+
     } catch (err) {
         console.log(err);
         res.status(401).json(err.message)
@@ -272,13 +288,10 @@ exports.fetch_results_sheet = async (req, res) => {
 }
 
 exports.get_results_slip = async (req, res) => {
-
     try {
         const { session, term, class_name, stu_id } = req.query;
-        const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        const result = await ComputeResult.findOne({student: stu_id})
-            .populate('student', 'reg_number name gender');
-        res.json(result)
+        const resultSlip = await getResultSlip(session, term, class_name, stu_id);
+        res.json(resultSlip);
     } catch (err) {
         console.log(err);
         res.status(401).json(err.message)
@@ -289,14 +302,8 @@ exports.fetch_students_class_term = async (req, res) => {
     const { session, term, class_name } = req.query;
 
     try {
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name })
-            .populate('students_list', 'reg_number name gender date_of_birth');
-        if (!gradeBookManager) {
-            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
-        }
-
-        return res.json(gradeBookManager.students_list);
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true, 'students', 'reg_number name gender date_of_birth');
+        res.json(oneClass.students);
     }
     catch (err) {
         console.log(err.message)
@@ -308,19 +315,15 @@ exports.delete_student_from_class = async (req, res) => {
     const { session, term, class_name } = req.query;
 
     try {
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name });
-        if (!gradeBookManager) {
-            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true, 'students', 'reg_number name gender date_of_birth');
+        oneClass.students = oneClass.students.filter(student => student._id.toString() !== req.body.id.toString());
+        for (const subject of oneClass.subjects) {
+            if (subject.grades) {
+                subject.grades = subject.grades.filter(grade => grade.student._id.toString() !== req.body.id.toString());
+            }
         }
-
-        const newList = gradeBookManager.students_list.filter(id => id.toString() !== req.body.id.toString());
-        gradeBookManager.students_list = newList;
-        await gradeBookManager.save()
-
-        gradeBookManager = await GradeBookManager.findOne({ class_name })
-            .populate('students_list', 'reg_number name gender date_of_birth');
-        return res.json(gradeBookManager.students_list);
+        await termGradeBook.save();
+        res.json(oneClass.students);
     }
     catch (err) {
         console.log(err.message)
@@ -328,18 +331,17 @@ exports.delete_student_from_class = async (req, res) => {
     }
 }
 
-
 exports.fetch_termly_subjects = async (req, res) => {
     const { session, term, class_name } = req.query;
 
     try {
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name })
-        if (!gradeBookManager) {
-            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
-        }
-
-        return res.json(gradeBookManager.subjects_list);
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name);
+        const arr = [];
+        oneClass.subjects.reduce((prev, curr) => {
+            prev.push({ title: curr.title, code: curr.code });
+            return prev;
+        }, arr);
+        return res.json(arr);
     }
     catch (err) {
         console.log(err.message)
@@ -351,28 +353,15 @@ exports.delete_subject_from_class_termly_subjects = async (req, res) => {
     const { session, term, class_name } = req.query;
 
     try {
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name });
-        if (!gradeBookManager) {
-            return res.status(400).json({ message: `No ${class_name.replace('_', ' ').toUpperCase()} GradeBook created` })
-        }
-        // console.log(req.body);
-
-        const collectionName = `${req.body.subject}_${class_name}_${terms[term].short_title}_${session}`;
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        for(const collection of collections){
-            if(collection.name === collectionName){
-                const GradeBookScore = gradeBookScore(collectionName);
-                await GradeBookScore.collection.drop();
-                break;
-            }
-        }
-
-        const newList = gradeBookManager.subjects_list.filter(subject => subject !== req.body.subject);
-        gradeBookManager.subjects_list = newList;
-        await gradeBookManager.save()
-
-        return res.json(gradeBookManager.subjects_list);
+        const [oneClass, termGradeBook] = await getOneClass(session, term, class_name);
+        oneClass.subjects = oneClass.subjects.filter(subject => subject.title !== req.body.subject);
+        const arr = [];
+        oneClass.subjects.reduce((prev, curr) => {
+            prev.push({ title: curr.title, code: curr.code });
+            return prev;
+        }, arr);
+        await termGradeBook.save();
+        return res.json(arr);
     }
     catch (err) {
         console.log(err.message)
@@ -383,36 +372,34 @@ exports.delete_subject_from_class_termly_subjects = async (req, res) => {
 exports.check_result = async (req, res) => {
     try {
         const { session, term, class_name, reg_number, pin, serial_number } = req.body;
-        
-        const student = await Student.findOne({reg_number}, 'reg_number');
-        console.log(student);
-        if(!student){
-            return res.status(404).json({message: 'Invalid credentials'});
-        }
-        
-        const card = await CardDetails.findOne({pin, serial_number});
-        if(!card){
-            return res.status(404).json({message: 'Invalid credentials'});
+
+        const student = await Student.findOne({ reg_number }, 'reg_number');
+        // console.log(student);
+        if (!student) {
+            return res.status(404).json({ message: 'Invalid credentials' });
         }
 
-        if(card.student){
-            if(card.student.toString() !== student._id.toString()){
-                return res.status(404).json({message: 'Invalid credentials'});
+        const card = await CardDetails.findOne({ pin, serial_number });
+        if (!card) {
+            return res.status(404).json({ message: 'Invalid credentials' });
+        }
+
+        if (card.student) {
+            if (card.student.toString() !== student._id.toString()) {
+                return res.status(404).json({ message: 'Invalid credentials' });
             }
-            if(card.class !== class_name || card.term !== term || card.session !== session){
-                return res.status(401).json({message: 'You cannot use one card details for two different terms. Get a new card to gain access to this resources'});
+            if (card.class !== class_name || card.term !== term || card.session !== session) {
+                return res.status(401).json({ message: 'You cannot use one card details for two different terms. Get a new card to gain access to this resources' });
             }
         }
 
-        if(card.used_up){
-            return res.status(401).json({message: 'You cannot use this pin because you have exceed number of usage.'});
+        if (card.used_up) {
+            return res.status(401).json({ message: 'You cannot use this pin because you have exceed number of usage.' });
         }
 
-        const ComputeResult = computeResults(session, `${terms[term].short_title}`, class_name);
-        const result = await ComputeResult.findOne({student: student._id})
-            .populate('student', 'reg_number name gender');
-        if(!result){
-            return res.status(404).json({message: 'Is like the class you selected did not match your current class. Please crosss check your credentials and retry.'})
+        const resultSlip = await getResultSlip(session, term, class_name, student._id);
+        if (!resultSlip) {
+            return res.status(404).json({ message: 'Is like the class you selected did not match your current class. Please crosss check your credentials and retry.' })
         }
 
         card.student = student._id;
@@ -423,8 +410,8 @@ exports.check_result = async (req, res) => {
         card.term = term;
         card.session = session;
         await card.save();
-        
-        res.json(result)
+
+        res.json(resultSlip);
     } catch (err) {
         console.log(err);
         res.status(401).json(err.message)

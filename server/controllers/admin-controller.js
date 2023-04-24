@@ -9,9 +9,10 @@ const Student = require('../models/student');
 const Parent = require('../models/parent');
 const { isEmptyArrayOrObject, formatPhoneNumber } = require('../libs/utility-functions');
 const { validateFormFields } = require('../libs/validate-form-fields');
-const createGradeBookManager = require('../models/session-term-schema');
-const { subjects, terms } = require('../libs/subjects');
+const createGradeBookManager = require('../models/academic-year');
+const { terms } = require('../libs/subjects');
 const { hashPW } = require('../libs/password_hash');
+const { findClass } = require('../libs/utility-function');
 
 exports.send_staff_register_token = async (req, res) => {
     try {
@@ -75,36 +76,50 @@ exports.fetch_current_students = async (req, res) => {
     }
 }
 
-
 exports.create_result_manager = async (req, res) => {
     try {
         const { session, term, class_name, students_list } = req.body;
-
         let count = 0;
-        const GradeBookManager = createGradeBookManager(session, `${terms[term].short_title}`);
-        let gradeBookManager = await GradeBookManager.findOne({ class_name });
-        if (gradeBookManager) {
-            for (const stu_id of students_list) {
-                if (!gradeBookManager.students_list.includes(stu_id)) {
-                    gradeBookManager.students_list.push(stu_id);
-                    count++;
+        const GradeBookManager = createGradeBookManager(session);
+        let gradeBookTerm = await GradeBookManager.findOne({ term });
+
+        console.log(students_list)
+        if (gradeBookTerm) {
+            const cClass = findClass(gradeBookTerm.classes, class_name);
+            if (cClass) {
+                for (const stu_id of students_list) {
+                    const student = cClass.students.find(s => s.toString() === stu_id);
+                    if (!student) {
+                        cClass.students.push(stu_id);
+                        count++;
+                    }
                 }
+            } else {
+                gradeBookTerm.classes.push({
+                    class_name,
+                    students: students_list
+                });
+                count = students_list.length;
             }
-            await gradeBookManager.save();
         } else {
-            gradeBookManager = new GradeBookManager({
-                class_name,
-                students_list,
+            gradeBookTerm = new GradeBookManager({
+                term,
+                classes: [ {
+                    class_name,
+                    students: students_list,
+                }]
             })
-            await gradeBookManager.save();
+
             count = students_list.length;
         }
-        // const gradeBookManager = new GradeBookManager({})
-        const message = count > 0 ? `${count} students added` : 'No student added';
+
+        await gradeBookTerm.save();
+
+        const message = count > 0 ? `${count} ${count === 1 ? 'student' : 'students'} added to ${class_name.toUpperCase().replace('_', '')}` : 'No new student added. The students selected might have been added earlier.';
         res.json({ message: `Result Manager Created. ${message}` });
 
     } catch (error) {
-        // console.log(error.message)
+        console.log(error.message)
         if (error.code) {
             if (error.code === 11000) {
                 res.status(401).json({ message: 'You are trying to add a student in two different classes. This is not allowed.' })
@@ -235,78 +250,78 @@ exports.admin_reset_password = async (req, res) => {
         const hash = await hashPW(new_password);
         staff.password = hash;
         await staff.save();
-        res.json({message: 'The staff password has been changed.', success: true})
+        res.json({ message: 'The staff password has been changed.', success: true })
     }
     catch (error) {
-        res.status(401).json({message: error.message, success: false});
+        res.status(401).json({ message: error.message, success: false });
     }
 }
 
 exports.update_student_class = async (req, res) => {
     try {
-        const students = await Student.find({ status: 'student' }, [ 'current_class', 'status', 'graduated_at', 'classes_been']);
-        for(let student of students){
-            if(student.current_class === 'jss1'){
+        const students = await Student.find({ status: 'student' }, ['current_class', 'status', 'graduated_at', 'classes_been']);
+        for (let student of students) {
+            if (student.current_class === 'jss1') {
                 student.current_class = 'jss2';
-                if(!student.classes_been.includes('jss1')){
+                if (!student.classes_been.includes('jss1')) {
                     student.classes_been.push('jss1');
                 }
-                if(!student.classes_been.includes('jss2')){
+                if (!student.classes_been.includes('jss2')) {
                     student.classes_been.push('jss2');
                 }
-            }else if(student.current_class === 'jss2'){
+            } else if (student.current_class === 'jss2') {
                 student.current_class = 'jss3';
-                if(!student.classes_been.includes('jss2')){
+                if (!student.classes_been.includes('jss2')) {
                     student.classes_been.push('jss2');
                 }
-                if(!student.classes_been.includes('jss3')){
+                if (!student.classes_been.includes('jss3')) {
                     student.classes_been.push('jss3');
                 }
-            }else if(student.current_class === 'jss3'){
+            } else if (student.current_class === 'jss3') {
                 student.current_class = 'ss1';
-                if(!student.classes_been.includes('jss3')){
+                if (!student.classes_been.includes('jss3')) {
                     student.classes_been.push('jss3');
                 }
-                if(!student.classes_been.includes('ss1')){
+                if (!student.classes_been.includes('ss1')) {
                     student.classes_been.push('ss1');
                 }
-            }else if(student.current_class === 'ss1'){
+            } else if (student.current_class === 'ss1') {
                 student.current_class = 'ss2';
-                if(!student.classes_been.includes('ss1')){
+                if (!student.classes_been.includes('ss1')) {
                     student.classes_been.push('ss1');
                 }
-                if(!student.classes_been.includes('ss2')){
+                if (!student.classes_been.includes('ss2')) {
                     student.classes_been.push('ss2');
                 }
-            }else if(student.current_class === 'ss2'){
+            } else if (student.current_class === 'ss2') {
                 student.current_class = 'ss3';
-                if(!student.classes_been.includes('ss2')){
+                if (!student.classes_been.includes('ss2')) {
                     student.classes_been.push('ss2');
                 }
-                if(!student.classes_been.includes('ss3')){
+                if (!student.classes_been.includes('ss3')) {
                     student.classes_been.push('ss3');
                 }
-            }else if(student.current_class === 'ss3'){
+            } else if (student.current_class === 'ss3') {
                 student.current_class = 'graduate';
                 student.status = 'graduate';
-                if(!student.classes_been.includes('ss3')){
+                if (!student.classes_been.includes('ss3')) {
                     student.classes_been.push('ss3');
                 }
             }
             await student.save();
         }
-        res.json({message: 'Classes updated successfully'});
+        res.json({ message: 'Classes updated successfully' });
     } catch (err) {
         res.status(401).json(err.message);
     }
 }
 
 exports.fetcch_parents = async (req, res) => {
-    try{
-        const parents = await Parent.find({},['name', 'phone_number', 'email', 'relationship', 'children'])
-        .populate('children', 'name');
+    try {
+        const parents = await Parent.find({}, ['name', 'phone_number', 'email', 'relationship', 'children'])
+            .populate('children', 'name');
         res.json(parents)
-    }catch(error){
+    } catch (error) {
         res.status(401).json(error.message);
     }
 }

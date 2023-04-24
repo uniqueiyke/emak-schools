@@ -14,7 +14,7 @@ import Slide from '@material-ui/core/Slide';
 import { useDispatch, useSelector } from 'react-redux';
 import MultipleSelect from '../../other-components/MultipleSelect';
 import { roles } from '../../../libs/staff-roles';
-import { subjects, subjectTitle } from '../../../libs/subjects';
+import { subjects, subjectField } from '../../../libs/subjects';
 import { updateStaffRoles, updateStaffSubjects } from '../../../redux/actions/admin-action';
 import { setPageTitle } from '../../../libs/utility-functions';
 import ChangePassword from './ChangePassword';
@@ -171,9 +171,9 @@ const Staff = ({ staff }) => {
           {staff.subjects.map(
             (s, index) => {
               if (index < staff.subjects.length - 1)
-                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'orange' }} > {`${subjectTitle(s)}, `} </Typography>
+                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'orange' }} > {`${subjectField(s, 'label')}, `} </Typography>
               else
-                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'orange' }} > {`${subjectTitle(s)} `} </Typography>
+                return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'orange' }} > {`${subjectField(s, 'label')} `} </Typography>
             })}
           <Link className={classes.roleBtn} onClick={() => setUpdateSubjects(true)} > update</Link>
           <UpDateStaffDataDialog

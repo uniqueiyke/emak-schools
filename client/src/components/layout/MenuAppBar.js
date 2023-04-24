@@ -55,12 +55,26 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#4d380d',
       color: theme.palette.common.white,
     },
-    '&:focus': {
-      backgroundColor: '#00897b',
-      color: theme.palette.common.white,
-    },
   },
 }));
+
+
+function MenuItemB({ children, currentPath, onClick }) {
+
+  const classes = useStyles();
+
+  return <MenuItem
+    style={{
+      backgroundColor: currentPath && '#00897b',
+      color: currentPath && '#f5f5f5',
+    }}
+    dense
+    className={classes.menuItem}
+    onClick={onClick}
+  >
+    {children}
+  </MenuItem>
+}
 
 export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
   const classes = useStyles(props);
@@ -137,24 +151,20 @@ export default function MenuAppBar({ handleMenuButtonClick, ...props }) {
                 onClose={handleClose}
                 getContentAnchorEl={null}
               >
-                <MenuItem
-                  selected={currentPath('/staff/data/dashboard')}
-                  dense
-                  className={classes.menuItem}
+                <MenuItemB
+                  currentPath={currentPath('/staff/data/dashboard')}
                   onClick={() => goToPath('/staff/data/dashboard')}
                 >
                   Dashboard
-                </MenuItem>
+                </MenuItemB>
                 {
                   isAdmin() &&
-                  <MenuItem
-                    selected={currentPath('/admin/admin-panel')}
-                    dense
-                    className={classes.menuItem}
+                  <MenuItemB
+                    currentPath={currentPath('/admin/admin-panel')}
                     onClick={() => goToPath('/admin/admin-panel')}
                   >
                     AdminPanel
-                  </MenuItem>
+                  </MenuItemB>
                 }
                 <MenuItem
                   dense

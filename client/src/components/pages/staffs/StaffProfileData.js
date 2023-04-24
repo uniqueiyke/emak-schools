@@ -21,10 +21,10 @@ import { updateStaffData } from '../../../redux/actions/staff-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateFormFields } from '../../../libs/form-fields-validator'
 import { isEmptyArrayOrObject } from '../../../libs/utility-functions';
-import { subjectTitle } from '../../../libs/subjects';
+import { subjectField } from '../../../libs/subjects';
 import ChangePassword from './ChangePassword';
 import { gender } from '../../../libs/students-data';
-// import {subjects} from '../../../libs/subjects';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -141,9 +141,9 @@ export default function StaffProfileData({ staff }) {
                 {data.subjects.map(
                     (s, index) => {
                         if (index < data.subjects.length - 1)
-                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)}, `} </Typography>
+                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectField(s, 'label')}, `} </Typography>
                         else
-                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectTitle(s)} `} </Typography>
+                            return <Typography key={s} component='em' variant='subtitle1' style={{ color: 'brown' }} > {`${subjectField(s, 'label')} `} </Typography>
                     })}
 
             </Typography>
