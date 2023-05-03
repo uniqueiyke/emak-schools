@@ -68,6 +68,7 @@ const getResultSlip = async (session, term, class_name, studentID) => {
             const grade = subject.grades.find(grade => grade.student.toString() === studentID.toString());
                 resultSlip.subjects.push({
                     title: subject.title,
+                    code: subject.code,
                     c_a: toInt(grade.scores.total) - toInt(grade.scores.exam),
                     exam: toInt(grade.scores.exam),
                     total: toInt(grade.scores.total),

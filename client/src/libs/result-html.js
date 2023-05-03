@@ -1,4 +1,5 @@
 import { getSchoolFromClass } from './students-data';
+import { subjectField } from './subjects';
 import { teachersRemake } from './utility-functions';
 
 
@@ -6,7 +7,7 @@ const parseRows = (subjects) => {
     let rows = '';
     for (const subject of subjects) {
         rows += `<tr class="tr" >
-        <th class="thr" scope="row">${subject.title}</th>
+        <th class="thr" scope="row">${subjectField(subject.title, 'label')}</th>
         <td class="td">${subject.c_a}</td>
         <td class="td">${subject.exam}</td>
         <td class="td">${subject.total}</td>

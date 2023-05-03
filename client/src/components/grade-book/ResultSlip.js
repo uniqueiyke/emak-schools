@@ -227,7 +227,9 @@ const ResultSlip = ({ resultDetails, error }) => {
                                 </thead>
                                 <tbody className={styles.tbody}>
                                     {
-                                        resultDetails.subjects.map(subject =>
+                                        resultDetails.subjects
+                                        .sort((a, b) => parseInt(a.code) - parseInt(b.code))
+                                        .map(subject =>
                                             <tr key={subject._id} className={styles.tr} >
                                                 <th className={styles.thr} scope="row">{subjectField(subject.title, 'label')}</th>
                                                 <td className={styles.td}>{subject.c_a}</td>

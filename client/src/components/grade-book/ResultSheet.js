@@ -64,6 +64,7 @@ const ResultSheet = () => {
   let subjectKeys;
   if(data){
     subjectKeys = Object.keys(data);
+    // console.log(data[subjectKeys[0]].subjects)
   }
   
   if(isFetchingResultSheet || isComputingResults ){
@@ -83,8 +84,11 @@ const ResultSheet = () => {
                 <TableCell align="left">Last Name</TableCell>
                 <TableCell align="left">First Name</TableCell>
                 {
-                  (data && subjectKeys) && data[subjectKeys[0]].subjects.map((subj, i) =>
-                    <TableCell key={subj.title} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subj.title}`, {...location.state, subject: subj.title})} className={classes.subjectTitle}>{subjectField(subj.title, 'label')}</TableCell>)
+                  (data && subjectKeys) && data[subjectKeys[0]].subjects
+                  .sort((a, b) => parseInt(a.code) - parseInt(b.code))
+                  .map((subj, i) =>{
+                   return <TableCell key={subj._id} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subj.title}`, {...location.state, subject: subj.title})} className={classes.subjectTitle}>{subjectField(subj.title, 'label')}</TableCell>}
+                    )
                 }
                 <TableCell align="left">Total</TableCell>
                 <TableCell align="left">Average</TableCell>
@@ -98,7 +102,6 @@ const ResultSheet = () => {
                   .sort((a, b) => data[b].result.average - data[a].result.average)
                   .map((s, i) => {
                     const {student, subjects, result} = data[s]
-                    
                     return(
                     <TableRow className={classes.tRow} key={student._id} onDoubleClick={() => history.push('/admin/students/result-slip', {id: student._id, ...location.state})}>
                       <TableCell >{i + 1}</TableCell>
@@ -106,7 +109,9 @@ const ResultSheet = () => {
                       <TableCell align="left">{student.name.last_name}</TableCell>
                       <TableCell align="left">{student.name.first_name} </TableCell>
                       {
-                        subjects.map((subj, i) =>
+                        subjects
+                        .sort((a, b) => parseInt(a.code) - parseInt(b.code))
+                        .map((subj, i) =>
                           <TableCell key={subj._id} align="center">{subj.total ? subj.total : ''}</TableCell>)
                       }
                       <TableCell align="center" component='td' >{result.total}</TableCell>

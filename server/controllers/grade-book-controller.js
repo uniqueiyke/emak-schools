@@ -269,6 +269,7 @@ exports.fetch_results_sheet = async (req, res) => {
             for(const grade of subject.grades){
                 resultSheet[grade.student].subjects.push({
                     title: subject.title,
+                    code: subject.code,
                     total: toInt(grade.scores.total),
                     _id: grade.scores._id,
                 });
@@ -283,7 +284,7 @@ exports.fetch_results_sheet = async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status(401).json(err.message)
+        res.status(404).json(err.message)
     }
 }
 
