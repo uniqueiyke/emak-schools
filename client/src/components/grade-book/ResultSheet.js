@@ -112,7 +112,7 @@ const ResultSheet = () => {
                         subjects
                         .sort((a, b) => parseInt(a.code) - parseInt(b.code))
                         .map((subj, i) =>
-                          <TableCell key={subj._id} align="center">{subj.total ? subj.total : ''}</TableCell>)
+                          <TableCell key={subj.title} align="center">{subj.total ? subj.total : ''}</TableCell>)
                       }
                       <TableCell align="center" component='td' >{result.total}</TableCell>
                       <TableCell align="center" component='td' >{result.average}</TableCell>

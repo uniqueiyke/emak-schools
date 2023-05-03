@@ -260,19 +260,36 @@ exports.fetch_results_sheet = async (req, res) => {
         const { session, term, class_name } = req.query;
         const [oneClass, termGradeBook] = await getOneClass(session, term, class_name, true);
         const resultSheet = {};
+        const studentsList = [];
 
         for(const student of oneClass.students){
             resultSheet[student._id] = {student, subjects: [], result: {}};
+            studentsList.push(student._id.toString());
         }
 
         for(const subject of oneClass.subjects){
+            const studentsPerSubject = []; //List of students that do a subject
+
             for(const grade of subject.grades){
+                studentsPerSubject.push(grade.student.toString())
                 resultSheet[grade.student].subjects.push({
                     title: subject.title,
                     code: subject.code,
                     total: toInt(grade.scores.total),
                     _id: grade.scores._id,
                 });
+            }
+
+            const stuNotForSubject = studentsList.filter(s => !studentsPerSubject.includes(s))
+            if(Array.isArray(stuNotForSubject) && stuNotForSubject.length > 0){
+                for(const s of stuNotForSubject){
+                    resultSheet[s].subjects.push({
+                        title: subject.title,
+                        code: subject.code,
+                        total: '',
+                        _id: '',
+                    });
+                }
             }
         }
 
