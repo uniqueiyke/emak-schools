@@ -4,8 +4,10 @@ const Student = require('../models/student');
 const CardDetails = require('../models/card-details');
 const { getOneClass, getResultSlip } = require('../libs/utility-function');
 
-const toInt = val => {
+const toNumber = (val, type = 'int') => {
     if (!val) return 0;
+    if(type === 'f' || type === 'float')
+        return parseFloat(val);
     return parseInt(val);
 }
 
@@ -110,7 +112,7 @@ exports.grade_book = async (req, res) => {
             await termGradeBook.save();
         }
         else {
-            cSub.grades = cSub.grades.sort((a, b) => toInt(b.scores.total) - toInt(a.scores.total))
+            cSub.grades = cSub.grades.sort((a, b) => toNumber(b.scores.total) - toNumber(a.scores.total))
             stu_scores = await parsePositions(cSub.grades)
             await termGradeBook.save();
         }
@@ -141,7 +143,7 @@ exports.update_grade_book_score = async (req, res) => {
         tScore.third_quiz = scores.third_quiz;
         tScore.c_a = scores.c_a;
         tScore.exam = scores.exam;
-        tScore.total = toInt(scores.first_quiz) + toInt(scores.second_quiz) + toInt(scores.third_quiz) + toInt(scores.c_a) + toInt(scores.exam);
+        tScore.total = toNumber(scores.first_quiz) + toNumber(scores.second_quiz) + toNumber(scores.third_quiz) + toNumber(scores.c_a) + toNumber(scores.exam);
 
         let stu_scores = cSub.grades.find(grade => grade.student.toString() === stu_id.toString())
 
@@ -196,20 +198,41 @@ exports.compute_results = async (req, res) => {
         for (const student of oneClass.students) {
             const oneStudentResult = [];
             let grandTotal = 0;
+            let numberOfSubjects = 0;
             for (const subject of oneClass.subjects) {
                 const sub = subject.grades.find(grade => grade.student.toString() === student._id.toString());
                 if (sub) {
                     oneStudentResult.push({
                         title: subject.title,
-                        total: toInt(sub.scores.total),
+                        code: subject.code,
+                        total: toNumber(sub.scores.total),
                         _id: sub.scores._id,
                     });
-                    grandTotal += toInt(sub.scores.total);
+                    grandTotal += toNumber(sub.scores.total);
+                    numberOfSubjects++;
+                } else {
+                    oneStudentResult.push({
+                        title: subject.title,
+                        code: subject.code,
+                        total: '',
+                        _id: '',
+                    });
                 }
             }
-            if (oneStudentResult.length > 0) {
-                resultSheet[student._id] = {student, subjects: oneStudentResult, result: null};
-                const average = grandTotal > 0 ? parseFloat((grandTotal / oneStudentResult.length).toFixed(2)) : 0;
+            if (numberOfSubjects > 0 && oneStudentResult.length > 0) {
+                resultSheet[student._id] = { student, subjects: oneStudentResult, result: null };
+                let average = 0;
+                const clsName = oneClass.class_name.split('_')[0];
+                if( clsName === 'ss2' || clsName === 'ss3'){
+                    if (numberOfSubjects < 9) {
+                        average = grandTotal > 0 ? parseFloat((grandTotal / oneStudentResult.length).toFixed(2)) : 0;
+                    } else {
+                        average = grandTotal > 0 ? parseFloat((grandTotal / numberOfSubjects).toFixed(2)) : 0;
+                    }
+                }else{
+                    average = grandTotal > 0 ? parseFloat((grandTotal / oneClass.subjects.length).toFixed(2)) : 0;
+                }
+
                 if (grandTotal)
                     oneClass.results.push({
                         student,
@@ -220,7 +243,8 @@ exports.compute_results = async (req, res) => {
             }
         }
 
-        const sortedResult = oneClass.results.sort((r1, r2) => toInt(r2.total) - toInt(r1.total));
+        //sort the results by average in ascending order and insert positions
+        const sortedResult = oneClass.results.sort((r1, r2) => toNumber(r2.average, 'f') - toNumber(r1.average, 'f'));
         const classResults = [];
         for (let i = 0; i < sortedResult.length; i++) {
             const record = sortedResult[i];
@@ -237,8 +261,8 @@ exports.compute_results = async (req, res) => {
                     classResults.push(record);
                 }
             }
-            
-            resultSheet[record.student._id].result =  {
+
+            resultSheet[record.student._id].result = {
                 total: record.total,
                 average: record.average,
                 position: record.position,
@@ -262,27 +286,27 @@ exports.fetch_results_sheet = async (req, res) => {
         const resultSheet = {};
         const studentsList = [];
 
-        for(const student of oneClass.students){
-            resultSheet[student._id] = {student, subjects: [], result: {}};
+        for (const student of oneClass.students) {
+            resultSheet[student._id] = { student, subjects: [], result: {} };
             studentsList.push(student._id.toString());
         }
 
-        for(const subject of oneClass.subjects){
+        for (const subject of oneClass.subjects) {
             const studentsPerSubject = []; //List of students that do a subject
 
-            for(const grade of subject.grades){
+            for (const grade of subject.grades) {
                 studentsPerSubject.push(grade.student.toString())
                 resultSheet[grade.student].subjects.push({
                     title: subject.title,
                     code: subject.code,
-                    total: toInt(grade.scores.total),
+                    total: toNumber(grade.scores.total),
                     _id: grade.scores._id,
                 });
             }
 
             const stuNotForSubject = studentsList.filter(s => !studentsPerSubject.includes(s))
-            if(Array.isArray(stuNotForSubject) && stuNotForSubject.length > 0){
-                for(const s of stuNotForSubject){
+            if (Array.isArray(stuNotForSubject) && stuNotForSubject.length > 0) {
+                for (const s of stuNotForSubject) {
                     resultSheet[s].subjects.push({
                         title: subject.title,
                         code: subject.code,
@@ -293,7 +317,7 @@ exports.fetch_results_sheet = async (req, res) => {
             }
         }
 
-        for(const result of oneClass.results){
+        for (const result of oneClass.results) {
             resultSheet[result.student].result = result;
         }
 

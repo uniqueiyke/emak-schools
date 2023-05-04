@@ -87,7 +87,7 @@ const ResultSheet = () => {
                   (data && subjectKeys) && data[subjectKeys[0]].subjects
                   .sort((a, b) => parseInt(a.code) - parseInt(b.code))
                   .map((subj, i) =>{
-                   return <TableCell key={subj._id} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subj.title}`, {...location.state, subject: subj.title})} className={classes.subjectTitle}>{subjectField(subj.title, 'label')}</TableCell>}
+                   return <TableCell key={subj._id ? subj._id : subj.title} align="left" onClick={() =>  history.push(`/staff/dashboard/grade-book/${subj.title}`, {...location.state, subject: subj.title})} className={classes.subjectTitle}>{subjectField(subj.title, 'label')}</TableCell>}
                     )
                 }
                 <TableCell align="left">Total</TableCell>
@@ -112,7 +112,7 @@ const ResultSheet = () => {
                         subjects
                         .sort((a, b) => parseInt(a.code) - parseInt(b.code))
                         .map((subj, i) =>
-                          <TableCell key={subj.title} align="center">{subj.total ? subj.total : ''}</TableCell>)
+                          <TableCell key={subj._id ? subj._id : subj.title} align="center">{subj.total ? subj.total : ''}</TableCell>)
                       }
                       <TableCell align="center" component='td' >{result.total}</TableCell>
                       <TableCell align="center" component='td' >{result.average}</TableCell>
