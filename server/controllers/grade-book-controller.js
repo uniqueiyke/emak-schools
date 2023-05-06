@@ -15,10 +15,8 @@ const parseStudentsData = (students_list, scores) => {
     const students = [];
     for (const stu of students_list) {
         const stu_scores = scores.find(s => {
-            // console.log(s)
             return s.student.toString() === stu._id.toString()
         })
-        // console.log(stu._id);
         if (!stu_scores) {
             students.push({
                 reg_number: stu.reg_number,
